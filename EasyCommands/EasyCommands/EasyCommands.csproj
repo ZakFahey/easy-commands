@@ -41,10 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes.cs" />
+    <Compile Include="CommandInfo.cs" />
     <Compile Include="CommandParser.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="ParsingRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextOptions.cs" />
+    <Compile Include="UniqueCommandKey.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

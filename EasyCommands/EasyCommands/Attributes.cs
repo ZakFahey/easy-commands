@@ -1,16 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EasyCommands
 {
     /// <summary>
-    /// Attribute for a command delegate.
+    /// Attribute for a command delegate. Add to the top of a class to pass it to all delegates below.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class Command : Attribute
     {
-        //TODO: aliases
-        public string CommandName;
-        public string Subcommands;
+        public string[] Names { get; private set; }
+        
+        /// <param name="names">The aliases used to run the command</param>
+        public Command(params string[] names)
+        {
+            Names = names;
+        }
+    }
+
+    /// <summary>
+    /// Attribute a subcommand. Add to the top of a class to pass it to all delegates below.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    public class SubCommand : Attribute
+    {
+        public string[] Names { get; private set; }
+
+        /// <param name="names">The aliases used to run the command</param>
+        public SubCommand(params string[] names)
+        {
+            Names = names;
+        }
     }
 
     /// <summary>
@@ -29,7 +49,7 @@ namespace EasyCommands
     [AttributeUsage(AttributeTargets.Parameter)]
     public class ParamName : Attribute
     {
-        public string Name;
+        public string Name { get; private set; }
 
         public ParamName(string name)
         {

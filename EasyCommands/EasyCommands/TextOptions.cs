@@ -11,5 +11,19 @@ namespace EasyCommands
         public string ProperSyntax;
         public string WrongNumberOfArguments;
         public string CommandPrefix;
+        public string ShowSubcommands;
+        public string SubcommandsShort;
+
+        public static TextOptions Default()
+        {
+            return new TextOptions
+            {
+                ProperSyntax = "Proper syntax: @0",
+                WrongNumberOfArguments = "Incorrect number of arguments! Proper syntax: @0",
+                CommandPrefix = "",
+                ShowSubcommands = "@0 contains these subcommands:",
+                SubcommandsShort = " Subcommands:"
+            };
+        }
     }
 }

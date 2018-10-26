@@ -43,8 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\MathCommands.cs" />
+    <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="Commands\UserCommands.cs" />
-    <Compile Include="ExampleCommand.cs" />
+    <Compile Include="Attributes.cs" />
     <Compile Include="ExampleParsingRules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

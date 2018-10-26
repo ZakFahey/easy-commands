@@ -27,12 +27,7 @@ namespace EasyCommands
 
         public CommandParser()
         {
-            textOptions = new TextOptions
-            {
-                ProperSyntax = "Proper syntax: @0",
-                WrongNumberOfArguments = "Incorrect number of arguments! Proper syntax: @0",
-                CommandPrefix = ""
-            };
+            textOptions = TextOptions.Default();
         }
 
         private CommandParser(TextOptions textOptions)

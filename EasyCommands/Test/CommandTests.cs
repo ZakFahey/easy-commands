@@ -48,8 +48,8 @@ namespace EasyCommands.Test
         [Description("The subtract command works.")]
         public void TestSubtract()
         {
-            CommandParser.RunCommand(CurrentUser, "subtract 1 2");
-            Assert.AreEqual("1 + 2 = 3" + Environment.NewLine, ConsoleOutput.ToString());
+            CommandParser.RunCommand(CurrentUser, "subtract 10 5");
+            Assert.AreEqual("10 + 5 = 5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]
@@ -57,6 +57,14 @@ namespace EasyCommands.Test
         public void TestDivide()
         {
             CommandParser.RunCommand(CurrentUser, "divide 1 2");
+            Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The divide command works with its alias.")]
+        public void TestDiv()
+        {
+            CommandParser.RunCommand(CurrentUser, "div 1 2");
             Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -86,6 +94,14 @@ namespace EasyCommands.Test
         }
 
         [TestMethod]
+        [Description("Commands show the correct parameter name when overridden.")]
+        public void TestOverriddenParamName()
+        {
+            CommandParser.RunCommand(CurrentUser, "subtract");
+            Assert.AreEqual("Incorrect number of arguments! Proper syntax: subtract <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
         [Description("Commands with optional arguments work with the optional command omitted.")]
         public void TestOptionalArguments()
         {
@@ -99,6 +115,14 @@ namespace EasyCommands.Test
         {
             CommandParser.RunCommand(CurrentUser, "add3or4 1 2 3 4");
             Assert.AreEqual("sum = 10" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("Commands with optional arguments throw an error when given the wrong number of arguments and show the correct proper syntax.")]
+        public void TestOptionalArgumentsProperSyntax()
+        {
+            CommandParser.RunCommand(CurrentUser, "add3or4");
+            Assert.AreEqual("Incorrect number of arguments! Proper syntax: add3or4 <num1> <num2> <num3> [num4]" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]
@@ -151,6 +175,40 @@ namespace EasyCommands.Test
             User Jimmy = UserDatabase.GetUserByName("Jimmy");
             Assert.IsNotNull(Jimmy);
             Assert.AreEqual(Jimmy.FavoriteFood, "baked potatoes");
+        }
+
+        [TestMethod]
+        [Description("Blank commands with subcommands show the available subcommands.")]
+        public void TestSubCommand()
+        {
+            CommandParser.RunCommand(CurrentUser, "window");
+            Assert.AreEqual("window contains these subcommands:" + Environment.NewLine
+                + "window resize <width> <height>" + Environment.NewLine
+                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The window resize subcommand works.")]
+        public void TestWindowResize()
+        {
+            CommandParser.RunCommand(CurrentUser, "window resize 200 200");
+            Assert.AreEqual("Window dimensions set to 200 x 200." + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The window resize subcommand throws an error for negative values.")]
+        public void TestWindowResizeOutOfBounds()
+        {
+            CommandParser.RunCommand(CurrentUser, "window resize 100 -100");
+            Assert.AreEqual("height must be larger than 0!" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The window move subcommand works.")]
+        public void TestWindowMoved()
+        {
+            CommandParser.RunCommand(CurrentUser, "window move 100 100");
+            Assert.AreEqual("Window position set to (100, 100)." + Environment.NewLine, ConsoleOutput.ToString());
         }
     }
 }
