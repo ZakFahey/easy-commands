@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace EasyCommands
 {
+    public class ParserInitializationException : Exception
+    {
+        public ParserInitializationException(string message) : base(message)
+        {
+        }
+    }
+
     public class CommandRegistrationException : Exception
     {
         public CommandRegistrationException(string message) : base(message)

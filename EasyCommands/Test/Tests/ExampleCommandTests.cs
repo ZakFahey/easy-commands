@@ -1,24 +1,22 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EasyCommands;
 using Example;
 using System.IO;
-using Example;
 
-namespace EasyCommands.Test
+namespace EasyCommands.Test.Tests
 {
     [TestClass]
     public class ExampleCommandTests
     {
         User CurrentUser;
-        ExampleCommandParser CommandParser;
+        ExampleCommandHandler CommandHandler;
         StringWriter ConsoleOutput;
         
         public ExampleCommandTests()
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
-            CommandParser = new ExampleCommandParser();
-            CommandParser.RegisterCommandCallbacksInNamespace("Example.Commands");
+            CommandHandler = new ExampleCommandHandler();
+            CommandHandler.RegisterCommandCallbacks("Example.Commands");
             ConsoleOutput = new StringWriter();
         }
 
@@ -30,6 +28,7 @@ namespace EasyCommands.Test
         }
 
         //TODO: test documentation
+        //TODO: test for empty command, nonexistent command, nonexistent subcommand
 
         [TestCleanup]
         public void ResetConsoleOutput()
@@ -43,7 +42,7 @@ namespace EasyCommands.Test
         [Description("The add command works.")]
         public void TestAdd()
         {
-            CommandParser.RunCommand(CurrentUser, "add 1 2");
+            CommandHandler.RunCommand(CurrentUser, "add 1 2");
             Assert.AreEqual("1 + 2 = 3" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -51,7 +50,7 @@ namespace EasyCommands.Test
         [Description("The subtract command works.")]
         public void TestSubtract()
         {
-            CommandParser.RunCommand(CurrentUser, "subtract 10 5");
+            CommandHandler.RunCommand(CurrentUser, "subtract 10 5");
             Assert.AreEqual("10 + 5 = 5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -59,7 +58,7 @@ namespace EasyCommands.Test
         [Description("The divide command works.")]
         public void TestDivide()
         {
-            CommandParser.RunCommand(CurrentUser, "divide 1 2");
+            CommandHandler.RunCommand(CurrentUser, "divide 1 2");
             Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -67,7 +66,7 @@ namespace EasyCommands.Test
         [Description("The divide command works with its alias.")]
         public void TestDiv()
         {
-            CommandParser.RunCommand(CurrentUser, "div 1 2");
+            CommandHandler.RunCommand(CurrentUser, "div 1 2");
             Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -75,7 +74,7 @@ namespace EasyCommands.Test
         [Description("The divide command detects a divide by zero error.")]
         public void TestDivideByZero()
         {
-            CommandParser.RunCommand(CurrentUser, "divide 2 0");
+            CommandHandler.RunCommand(CurrentUser, "divide 2 0");
             Assert.AreEqual("Divide by zero error!" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -83,7 +82,7 @@ namespace EasyCommands.Test
         [Description("Commands throw an error when you input the wrong number of arguments.")]
         public void TestTooManyArguments()
         {
-            CommandParser.RunCommand(CurrentUser, "add 1 2 3");
+            CommandHandler.RunCommand(CurrentUser, "add 1 2 3");
             Assert.AreEqual("Incorrect number of arguments! Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -91,7 +90,7 @@ namespace EasyCommands.Test
         [Description("Commands throw an error when you input an invalid argument type.")]
         public void TestInvalidArgument()
         {
-            CommandParser.RunCommand(CurrentUser, "add 1 bleh");
+            CommandHandler.RunCommand(CurrentUser, "add 1 bleh");
             Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
                 + "Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
         }
@@ -100,7 +99,7 @@ namespace EasyCommands.Test
         [Description("Commands show the correct parameter name when overridden.")]
         public void TestOverriddenParamName()
         {
-            CommandParser.RunCommand(CurrentUser, "subtract");
+            CommandHandler.RunCommand(CurrentUser, "subtract");
             Assert.AreEqual("Incorrect number of arguments! Proper syntax: subtract <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -108,7 +107,7 @@ namespace EasyCommands.Test
         [Description("Commands with optional arguments work with the optional command omitted.")]
         public void TestOptionalArguments()
         {
-            CommandParser.RunCommand(CurrentUser, "add3or4 1 2 3");
+            CommandHandler.RunCommand(CurrentUser, "add3or4 1 2 3");
             Assert.AreEqual("sum = 6" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -116,7 +115,7 @@ namespace EasyCommands.Test
         [Description("Commands with optional arguments work with the optional command included.")]
         public void TestOptionalArguments2()
         {
-            CommandParser.RunCommand(CurrentUser, "add3or4 1 2 3 4");
+            CommandHandler.RunCommand(CurrentUser, "add3or4 1 2 3 4");
             Assert.AreEqual("sum = 10" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -124,7 +123,7 @@ namespace EasyCommands.Test
         [Description("Commands with optional arguments throw an error when given the wrong number of arguments and show the correct proper syntax.")]
         public void TestOptionalArgumentsProperSyntax()
         {
-            CommandParser.RunCommand(CurrentUser, "add3or4");
+            CommandHandler.RunCommand(CurrentUser, "add3or4");
             Assert.AreEqual("Incorrect number of arguments! Proper syntax: add3or4 <num1> <num2> <num3> [num4]" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -132,7 +131,7 @@ namespace EasyCommands.Test
         [Description("The myname command works.")]
         public void TestMyName()
         {
-            CommandParser.RunCommand(CurrentUser, "myname");
+            CommandHandler.RunCommand(CurrentUser, "myname");
             Assert.AreEqual("Your name is Admin." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -140,7 +139,7 @@ namespace EasyCommands.Test
         [Description("The favorite-food command to get a user's favorite food.")]
         public void TestFavoriteFoodGet()
         {
-            CommandParser.RunCommand(CurrentUser, "favorite-food Jeff");
+            CommandHandler.RunCommand(CurrentUser, "favorite-food Jeff");
             Assert.AreEqual("Jeff's favorite food is steak." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -148,7 +147,7 @@ namespace EasyCommands.Test
         [Description("The favorite-food command to get a user's favorite food.")]
         public void TestFavoriteFoodSet()
         {
-            CommandParser.RunCommand(CurrentUser, "favorite-food Blake bananas");
+            CommandHandler.RunCommand(CurrentUser, "favorite-food Blake bananas");
             User Blake = UserDatabase.GetUserByName("Blake");
             Assert.AreEqual(Blake.FavoriteFood, "bananas");
         }
@@ -157,16 +156,25 @@ namespace EasyCommands.Test
         [Description("Parameters are properly set when in quotes.")]
         public void TestParamsInQuotes()
         {
-            CommandParser.RunCommand(CurrentUser, "favorite-food Henry \"creamed corn\"");
+            CommandHandler.RunCommand(CurrentUser, "favorite-food Henry \"creamed corn\"");
             User Henry = UserDatabase.GetUserByName("Henry");
             Assert.AreEqual(Henry.FavoriteFood, "creamed corn");
+        }
+
+        [TestMethod]
+        [Description("Parameters are properly with escaped quotes.")]
+        public void TestParamsInEscapedQuotes()
+        {
+            CommandHandler.RunCommand(CurrentUser, "favorite-food Jessica \\\"tacos\\\"");
+            User Jessica = UserDatabase.GetUserByName("Jessica");
+            Assert.AreEqual(Jessica.FavoriteFood, "\\\"tacos\\\"");
         }
 
         [TestMethod]
         [Description("When a user isn't found, the correct error message is shown.")]
         public void TestUserNotFound()
         {
-            CommandParser.RunCommand(CurrentUser, "favorite-food Carl");
+            CommandHandler.RunCommand(CurrentUser, "favorite-food Carl");
             Assert.AreEqual("User Carl not found." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -174,7 +182,7 @@ namespace EasyCommands.Test
         [Description("Commands with the AllowSpaces attribute can include spaces without quotation marks.")]
         public void TestMultiWordArgument()
         {
-            CommandParser.RunCommand(CurrentUser, "add-user Jimmy baked potatoes");
+            CommandHandler.RunCommand(CurrentUser, "add-user Jimmy baked potatoes");
             User Jimmy = UserDatabase.GetUserByName("Jimmy");
             Assert.IsNotNull(Jimmy);
             Assert.AreEqual(Jimmy.FavoriteFood, "baked potatoes");
@@ -184,7 +192,7 @@ namespace EasyCommands.Test
         [Description("Blank commands with subcommands show the available subcommands.")]
         public void TestSubCommand()
         {
-            CommandParser.RunCommand(CurrentUser, "window");
+            CommandHandler.RunCommand(CurrentUser, "window");
             Assert.AreEqual("window contains these subcommands:" + Environment.NewLine
                 + "window resize <width> <height>" + Environment.NewLine
                 + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
@@ -194,7 +202,7 @@ namespace EasyCommands.Test
         [Description("The window resize subcommand works.")]
         public void TestWindowResize()
         {
-            CommandParser.RunCommand(CurrentUser, "window resize 200 200");
+            CommandHandler.RunCommand(CurrentUser, "window resize 200 200");
             Assert.AreEqual("Window dimensions set to 200 x 200." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -202,7 +210,7 @@ namespace EasyCommands.Test
         [Description("The window resize subcommand throws an error for negative values.")]
         public void TestWindowResizeOutOfBounds()
         {
-            CommandParser.RunCommand(CurrentUser, "window resize 100 -100");
+            CommandHandler.RunCommand(CurrentUser, "window resize 100 -100");
             Assert.AreEqual("height must be larger than 0!" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
@@ -210,7 +218,7 @@ namespace EasyCommands.Test
         [Description("The window move subcommand works.")]
         public void TestWindowMoved()
         {
-            CommandParser.RunCommand(CurrentUser, "window move 100 100");
+            CommandHandler.RunCommand(CurrentUser, "window move 100 100");
             Assert.AreEqual("Window position set to (100, 100)." + Environment.NewLine, ConsoleOutput.ToString());
         }
     }

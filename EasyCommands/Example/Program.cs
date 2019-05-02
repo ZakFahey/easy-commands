@@ -10,8 +10,8 @@ namespace Example
         static void Main(string[] args)
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
-            var commandParser = new ExampleCommandParser();
-            commandParser.RegisterCommandCallbacksInNamespace("Example.Commands");
+            var commandParser = new ExampleCommandHandler();
+            commandParser.RegisterCommandCallbacks("Example.Commands");
             Console.WriteLine("Input a command. Type `help` to see a list of commands.");
             while(true)
             {

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    public abstract class CommandParser<TSender>
+    public abstract class CommandHandler<TSender>
     {
         private IEnumerable<Type> _allTypes = null;
         /// <summary> A list of all types in the assembly. </summary>
@@ -23,14 +23,15 @@ namespace EasyCommands
                 return _allTypes;
             }
         }
-        private List<ParsingRules> parsingRules = new List<ParsingRules>();
         private TextOptions textOptions = TextOptions.Default();
+        private CommandRepository<TSender> commandRepository = new CommandRepository<TSender>();
+        private ArgumentParser argumentParser = new ArgumentParser();
 
         protected abstract void SendFailMessage(TSender sender, string message);
 
-        public void AddParsingRules(ParsingRules rules)
+        public void AddParsingRules(Type rules)
         {
-            parsingRules.Add(rules);
+            argumentParser.AddParsingRules(rules);
         }
 
         public void RegisterCustomAttribute(Type classToRegister)
@@ -49,7 +50,11 @@ namespace EasyCommands
 
         public void RegisterCommandCallbacks(Type classToRegister)
         {
-
+            if(classToRegister.BaseType != typeof(CommandCallbacks))
+            {
+                throw new ParserInitializationException("classToRegister must have the base class CommandCallbacks.");
+            }
+            //TODO: subcommands
         }
 
         public void RegisterCommandCallbacks(string namespaceToRegister)
@@ -61,14 +66,27 @@ namespace EasyCommands
             }
         }
 
-        public void RunCommand(TSender helperClass, string input)
+        public void RunCommand(TSender sender, string input)
         {
-
+            //TODO: quotes and phrases
+            var prms = input.Split(' ').ToList();
+            RunCommand(sender, prms[0], prms.GetRange(1, prms.Count - 1));
         }
 
-        public void RunCommand(TSender helperClass, string name, IEnumerable<string> parameters)
+        public void RunCommand(TSender sender, string name, IEnumerable<string> parameters)
         {
+            // TODO: subcommands need parameters to be off by 1
+            MethodInfo callback = commandRepository.GetCallback(name, parameters);
+            object instance = Activator.CreateInstance(callback.DeclaringType);
 
+            var invocationParams = new List<object> { sender };
+            foreach(ParameterInfo callbackParam in callback.GetParameters())
+            {
+
+                invocationParams.Add()
+            }
+
+            callback.Invoke(instance, invocationParams.ToArray());
         }
     }
 }

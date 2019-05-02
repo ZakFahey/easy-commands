@@ -7,7 +7,7 @@ using EasyCommands;
 
 namespace Example
 {
-    public class ExampleCommandParser : CommandParser<User>
+    public class ExampleCommandHandler : CommandHandler<User>
     {
         protected override void SendFailMessage(User sender, string message)
         {
@@ -16,9 +16,9 @@ namespace Example
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public ExampleCommandParser() : base()
+        public ExampleCommandHandler() : base()
         {
-            AddParsingRules(new ExampleParsingRules());
+            AddParsingRules(typeof(ExampleParsingRules));
         }
     }
 }

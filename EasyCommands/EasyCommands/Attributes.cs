@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace EasyCommands
 {
     /// <summary>
-    /// Attribute for a command delegate. Add to the top of a class to pass it to all delegates below.
+    /// Attribute for a command delegate.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class Command : Attribute
@@ -19,9 +19,9 @@ namespace EasyCommands
     }
 
     /// <summary>
-    /// Attribute a subcommand. Add to the top of a class to pass it to all delegates below.
+    /// Attribute a subcommand.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class SubCommand : Attribute
     {
         public string[] Names { get; private set; }
