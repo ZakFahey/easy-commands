@@ -8,7 +8,7 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command with sub-commands
     /// </summary>
-    public class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
+    class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
     }
 }

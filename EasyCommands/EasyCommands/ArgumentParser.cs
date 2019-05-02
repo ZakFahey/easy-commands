@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    public class ArgumentParser
+    class ArgumentParser
     {
         private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();
 

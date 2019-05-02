@@ -23,6 +23,7 @@ namespace EasyCommands
                 return _allTypes;
             }
         }
+
         private TextOptions textOptions = TextOptions.Default();
         private CommandRepository<TSender> commandRepository = new CommandRepository<TSender>();
         private ArgumentParser argumentParser = new ArgumentParser();
@@ -36,7 +37,7 @@ namespace EasyCommands
 
         public void RegisterCustomAttribute(Type classToRegister)
         {
-
+            //TODO
         }
 
         public void RegisterCustomAttributes(string namespaceToRegister)

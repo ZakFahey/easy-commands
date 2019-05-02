@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    public abstract class CommandDelegate<TSender>
+    abstract class CommandDelegate<TSender>
     {
         public abstract void Invoke(TSender sender, string[] args);
     }

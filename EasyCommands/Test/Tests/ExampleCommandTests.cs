@@ -27,15 +27,38 @@ namespace EasyCommands.Test.Tests
             Console.SetOut(ConsoleOutput);
         }
 
-        //TODO: test documentation
-        //TODO: test for empty command, nonexistent command, nonexistent subcommand
-
         [TestCleanup]
         public void ResetConsoleOutput()
         {
             StreamWriter standardOut = new StreamWriter(Console.OpenStandardOutput());
             standardOut.AutoFlush = true;
             Console.SetOut(standardOut);
+        }
+
+        //TODO: test documentation
+
+        [TestMethod]
+        [Description("Empty commands throw an error.")]
+        public void TestEmptyCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "");
+            Assert.AreEqual("Please enter a command." + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("Nonexistent commands throw an error.")]
+        public void TestInvalidCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "asdf 1 2 3");
+            Assert.AreEqual("Command \"asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("Nonexistent subcommands throw an error.")]
+        public void TestInvalidSubcommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "window asdf 1 2 3");
+            Assert.AreEqual("Command \"window asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]

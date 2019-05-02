@@ -13,6 +13,8 @@ namespace EasyCommands
         public string CommandPrefix;
         public string ShowSubcommands;
         public string SubcommandsShort;
+        public string CommandNotFound;
+        public string EmptyCommand;
 
         public static TextOptions Default()
         {
@@ -22,7 +24,9 @@ namespace EasyCommands
                 WrongNumberOfArguments = "Incorrect number of arguments! Proper syntax: @0",
                 CommandPrefix = "",
                 ShowSubcommands = "@0 contains these subcommands:",
-                SubcommandsShort = " Subcommands:"
+                SubcommandsShort = " Subcommands:",
+                CommandNotFound = "Command \"@0\" does not exist.",
+                EmptyCommand = "Please enter a command."
             };
         }
     }

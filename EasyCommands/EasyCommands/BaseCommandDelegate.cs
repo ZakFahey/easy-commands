@@ -8,7 +8,7 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command without sub-commands
     /// </summary>
-    public class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
+    class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
     {
         public override void Invoke(TSender sender, string[] args)
         {

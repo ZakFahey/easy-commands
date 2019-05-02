@@ -8,7 +8,7 @@ namespace EasyCommands.Test.Tests
     public class RegistrationTests
     {
         //TODO: ensure errors are thrown for things like ambiguous optional parameters and ambiguous phrases
-        //TODO: tests for nonexistent parse rule, command callback, and custom attribute format
+        //TODO: tests for nonexistent parse rule and custom attribute format
         //TODO: tests for invalid command-subcommand class structure
 
         [TestMethod]
