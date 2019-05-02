@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    public class CommandParser<TSender, TParsingRules> where TParsingRules : ParsingRules<TSender>, new()
+    public abstract class CommandParser<TSender>
     {
         private IEnumerable<Type> _allTypes = null;
         /// <summary> A list of all types in the assembly. </summary>
@@ -23,29 +23,41 @@ namespace EasyCommands
                 return _allTypes;
             }
         }
-        private TextOptions textOptions;
+        private List<ParsingRules> parsingRules = new List<ParsingRules>();
+        private TextOptions textOptions = TextOptions.Default();
 
-        public CommandParser()
+        protected abstract void SendFailMessage(TSender sender, string message);
+
+        public void AddParsingRules(ParsingRules rules)
         {
-            textOptions = TextOptions.Default();
+            parsingRules.Add(rules);
         }
 
-        private CommandParser(TextOptions textOptions)
-        {
-            this.textOptions = textOptions;
-        }
-
-        public void RegisterClass(Type classToRegister)
+        public void RegisterCustomAttribute(Type classToRegister)
         {
 
         }
 
-        public void RegisterNamespace(string namespaceToRegister)
+        public void RegisterCustomAttributes(string namespaceToRegister)
         {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister);
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CustomAttribute));
             foreach(Type type in types)
             {
-                RegisterClass(type);
+                RegisterCustomAttribute(type);
+            }
+        }
+
+        public void RegisterCommandCallbacks(Type classToRegister)
+        {
+
+        }
+
+        public void RegisterCommandCallbacks(string namespaceToRegister)
+        {
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks));
+            foreach(Type type in types)
+            {
+                RegisterCommandCallbacks(type);
             }
         }
 

@@ -21,13 +21,16 @@ namespace EasyCommands.Test
 
         //TODO: ensure errors are thrown for things like duplicate commands (accounting for different arguments and subcommands),
         //ambiguous optional parameters, and ambiguous phrases
+
+        //TODO: test invalid syntax for subcommands
+
         [TestMethod]
         [Description("Command registration throws an error when there are 2 duplicate commands.")]
         public void TestErrorIfDuplicateCommand()
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
-                var parser = new CommandParser<User, ExampleParsingRules>();
-                parser.RegisterClass(typeof(DuplicateTest0));
+                var parser = new ExampleCommandParser();
+                parser.RegisterCommandCallbacks(typeof(DuplicateTest0));
             });
         }
 
@@ -36,8 +39,8 @@ namespace EasyCommands.Test
         public void TestErrorIfDuplicateCommandWithAlias()
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
-                var parser = new CommandParser<User, ExampleParsingRules>();
-                parser.RegisterClass(typeof(DuplicateTest1));
+                var parser = new ExampleCommandParser();
+                parser.RegisterCommandCallbacks(typeof(DuplicateTest1));
             });
         }
 
@@ -46,8 +49,8 @@ namespace EasyCommands.Test
         public void TestErrorIfDuplicateSubcommand()
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
-                var parser = new CommandParser<User, ExampleParsingRules>();
-                parser.RegisterClass(typeof(DuplicateTest3));
+                var parser = new ExampleCommandParser();
+                parser.RegisterCommandCallbacks(typeof(SubcommandTest0));
             });
         }
 
@@ -55,8 +58,8 @@ namespace EasyCommands.Test
         [Description("Command registration doesn't throw an error if a command with the same name has a different number of arguments.")]
         public void TestDuplicateCommandWithDifferentArguments()
         {
-            var parser = new CommandParser<User, ExampleParsingRules>();
-            parser.RegisterClass(typeof(DuplicateTest2));
+            var parser = new ExampleCommandParser();
+            parser.RegisterCommandCallbacks(typeof(DuplicateTest2));
             //No error
         }
     }

@@ -12,4 +12,18 @@ namespace EasyCommands
         {
         }
     }
+
+    public class CommandExecutionException : Exception
+    {
+        public CommandExecutionException(string message) : base(message)
+        {
+        }
+    }
+
+    public class CommandParsingException : Exception
+    {
+        public CommandParsingException(string message) : base(message)
+        {
+        }
+    }
 }

@@ -7,15 +7,8 @@ using EasyCommands;
 
 namespace Example
 {
-    public class ExampleParsingRules : ParsingRules<User>
+    public class ExampleParsingRules : ParsingRules
     {
-        protected override void SendFailMessage(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
         [ParseRule]
         string ParseString(string arg)
         {

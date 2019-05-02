@@ -48,11 +48,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\DuplicateTest3.cs" />
+    <Compile Include="Commands\SimpleCommandTest.cs" />
+    <Compile Include="Commands\SubcommandTest3.cs" />
+    <Compile Include="Commands\SubcommandTest2.cs" />
+    <Compile Include="Commands\SubcommandTest1.cs" />
+    <Compile Include="Commands\SubcommandTest0.cs" />
     <Compile Include="Commands\DuplicateTest2.cs" />
     <Compile Include="Commands\DuplicateTest1.cs" />
     <Compile Include="Commands\DuplicateTest0.cs" />
-    <Compile Include="CommandTests.cs" />
+    <Compile Include="ExampleCommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationTests.cs" />
   </ItemGroup>

@@ -3,21 +3,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EasyCommands;
 using Example;
 using System.IO;
+using Example;
 
 namespace EasyCommands.Test
 {
     [TestClass]
-    public class CommandTests
+    public class ExampleCommandTests
     {
         User CurrentUser;
-        CommandParser<User, ExampleParsingRules> CommandParser;
+        ExampleCommandParser CommandParser;
         StringWriter ConsoleOutput;
         
-        public CommandTests()
+        public ExampleCommandTests()
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
-            CommandParser = new CommandParser<User, ExampleParsingRules>();
-            CommandParser.RegisterNamespace("Example.Commands");
+            CommandParser = new ExampleCommandParser();
+            CommandParser.RegisterCommandCallbacksInNamespace("Example.Commands");
             ConsoleOutput = new StringWriter();
         }
 
@@ -27,6 +28,8 @@ namespace EasyCommands.Test
             ConsoleOutput.Flush();
             Console.SetOut(ConsoleOutput);
         }
+
+        //TODO: test documentation
 
         [TestCleanup]
         public void ResetConsoleOutput()
@@ -89,7 +92,7 @@ namespace EasyCommands.Test
         public void TestInvalidArgument()
         {
             CommandParser.RunCommand(CurrentUser, "add 1 bleh");
-            Assert.AreEqual("Invalid syntax! @0 must be a whole number!" + Environment.NewLine
+            Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
                 + "Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
         }
 

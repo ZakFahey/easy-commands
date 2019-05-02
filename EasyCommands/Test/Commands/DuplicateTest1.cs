@@ -4,7 +4,7 @@ using Example;
 
 namespace EasyCommands.Test.Commands
 {
-    class DuplicateTest1
+    class DuplicateTest1 : CommandCallbacks
     {
         [Command("test", "write-something")]
         void Test(User sender)
@@ -18,6 +18,7 @@ namespace EasyCommands.Test.Commands
             Console.WriteLine("Hello!");
         }
 
+        // Registration should fail here because of the duplicate command
         [Command("write-something-else", "test")]
         void Test2(User sender)
         {

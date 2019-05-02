@@ -3,7 +3,7 @@ using EasyCommands;
 
 namespace Example.Commands
 {
-    class UserCommands
+    class UserCommands : CommandCallbacks
     {
         [Command("myname")]
         [CommandDocumentation("Returns your name.")]

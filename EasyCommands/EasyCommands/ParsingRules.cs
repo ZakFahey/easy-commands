@@ -6,22 +6,14 @@ using System.Threading.Tasks;
 
 namespace EasyCommands
 {
-    public abstract class ParsingRules<TSender>
+    public abstract class ParsingRules
     {
-        public TSender Sender;
-        public bool Failed = false;
-
-        private string attributeName;
-        private string validSyntax;
-        private TextOptions textOptions;
-
+        /// <summary>
+        /// Fails the parsing and sends an error message
+        /// </summary>
         public void Fail(string message)
         {
-            Failed = true;
-            SendFailMessage(string.Format(message, attributeName));
-            SendFailMessage(string.Format(textOptions.ProperSyntax, validSyntax));
+            throw new CommandParsingException(message);
         }
-
-        protected abstract void SendFailMessage(string message);
     }
 }

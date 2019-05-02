@@ -64,4 +64,12 @@ namespace EasyCommands
     public class AllowSpaces : Attribute
     {
     }
+
+    /// <summary>
+    /// Custom behavior you can add to a command or parameter.
+    /// </summary>
+    public abstract class CustomAttribute : Attribute
+    {
+        public virtual void Before() { }
+    }
 }
