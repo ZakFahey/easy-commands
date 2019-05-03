@@ -15,7 +15,7 @@ namespace Example.Commands
             Console.WriteLine($"Window dimensions set to {width} x {height}.");
         }
 
-        [SubCommand("move")]
+        [SubCommand] // If we do not include the command name, it can be inferred from the method name.
         [SubCommandDocumentation("Moves the window to a certain position.")]
         void Move(User sender, int left, int top)
         {

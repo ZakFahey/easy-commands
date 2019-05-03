@@ -101,8 +101,38 @@ namespace EasyCommands.Test.Tests
         public void TestSubcommandInNestedClassWithSingleCommand()
         {
             var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(SubcommandTest2));
+            handler.RegisterCommandCallbacks(typeof(SubcommandTest3));
             // No error
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error for a command class within a command.")]
+        public void TestErrorIfInvalidSubcommandStructure()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(SubcommandTest4));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error for a subcommand not encased in a command.")]
+        public void TestErrorIfInvalidSubcommandStructure2()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(SubcommandTest5));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error for subcommands more than 1 layer deep.")]
+        public void TestErrorIfInvalidSubcommandStructure3()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(SubcommandTest6));
+            });
         }
     }
 }

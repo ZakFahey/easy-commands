@@ -12,7 +12,7 @@ namespace Example.Commands
             Console.WriteLine($"{num1} + {num2} = {num1 + num2}");
         }
         
-        [Command("subtract")]
+        [Command] // If we do not include the command name, it can be inferred from the method name.
         [CommandDocumentation("Subtracts num2 from num1.")]
         void Subtract(
             User sender,

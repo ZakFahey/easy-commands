@@ -70,7 +70,7 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The subtract command works.")]
+        [Description("The subtract command works, inferring the command name from the method name.")]
         public void TestSubtract()
         {
             CommandHandler.RunCommand(CurrentUser, "subtract 10 5");
@@ -238,7 +238,7 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The window move subcommand works.")]
+        [Description("The window move subcommand works, inferring the command name from the method name.")]
         public void TestWindowMoved()
         {
             CommandHandler.RunCommand(CurrentUser, "window move 100 100");
