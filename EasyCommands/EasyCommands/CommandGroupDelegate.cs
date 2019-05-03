@@ -10,5 +10,16 @@ namespace EasyCommands
     /// </summary>
     class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
+        public CommandGroupDelegate(TextOptions options) : base(options) { }
+
+        public override List<ParameterInfo> GetParameters(int parameterCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Invoke(TSender sender, IEnumerable<object> args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

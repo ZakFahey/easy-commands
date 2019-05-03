@@ -7,16 +7,23 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    public class CommandRepository<TSender>
+    class CommandRepository<TSender>
     {
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();
+        private TextOptions textOptions;
 
-        public void RunCommand(ArgumentParser parser, string name, IEnumerable<string> parameters)
+        public CommandRepository(TextOptions options)
+        {
+            textOptions = options;
+        }
+
+        public CommandDelegate<TSender> GetCallback(string name, IEnumerable<string> parameters)
         {
             if(!commands.ContainsKey(name))
             {
-                throw new CommandParsingException($"Command ")
+                throw new CommandParsingException($"Command ");
             }
+            return null;
         }
     }
 }

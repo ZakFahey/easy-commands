@@ -24,11 +24,26 @@ namespace EasyCommands
             }
         }
 
-        private TextOptions textOptions = TextOptions.Default();
-        private CommandRepository<TSender> commandRepository = new CommandRepository<TSender>();
+        private TextOptions textOptions;
+        private CommandRepository<TSender> commandRepository;
         private ArgumentParser argumentParser = new ArgumentParser();
 
         protected abstract void SendFailMessage(TSender sender, string message);
+        protected abstract void Initialize();
+
+        public CommandHandler()
+        {
+            textOptions = TextOptions.Default();
+            commandRepository = new CommandRepository<TSender>(textOptions);
+            Initialize();
+        }
+
+        public CommandHandler(TextOptions options)
+        {
+            textOptions = options;
+            commandRepository = new CommandRepository<TSender>(textOptions);
+            Initialize();
+        }
 
         public void AddParsingRules(Type rules)
         {
@@ -55,7 +70,7 @@ namespace EasyCommands
             {
                 throw new ParserInitializationException("classToRegister must have the base class CommandCallbacks.");
             }
-            //TODO: subcommands
+            //TODO
         }
 
         public void RegisterCommandCallbacks(string namespaceToRegister)
@@ -76,18 +91,30 @@ namespace EasyCommands
 
         public void RunCommand(TSender sender, string name, IEnumerable<string> parameters)
         {
-            // TODO: subcommands need parameters to be off by 1
-            MethodInfo callback = commandRepository.GetCallback(name, parameters);
-            object instance = Activator.CreateInstance(callback.DeclaringType);
-
-            var invocationParams = new List<object> { sender };
-            foreach(ParameterInfo callbackParam in callback.GetParameters())
+            try
             {
-
-                invocationParams.Add()
+                // TODO: subcommands need parameters to be off by 1
+                CommandDelegate<TSender> callback = commandRepository.GetCallback(name, parameters);
+                var invocationParams = new object[parameters.Count()];
+                var callbackParams = callback.GetParameters(parameters.Count());
+                for(int i = 0; i < parameters.Count(); i++)
+                {
+                    invocationParams[i] = argumentParser.ParseArgument(callbackParams[i].ParameterType, parameters.ElementAt(i));
+                }
+                callback.Invoke(sender, invocationParams);
             }
-
-            callback.Invoke(instance, invocationParams.ToArray());
+            catch(CommandParsingException e)
+            {
+                SendFailMessage(sender, e.Message);
+            }
+            catch(CommandExecutionException e)
+            {
+                SendFailMessage(sender, e.Message);
+            }
+            catch(Exception e)
+            {
+                SendFailMessage(sender, $"The {name} command threw an error:\n{e}");
+            }
         }
     }
 }

@@ -9,6 +9,9 @@ namespace Example
 {
     public class ExampleCommandHandler : CommandHandler<User>
     {
+        public ExampleCommandHandler() : base() { }
+        public ExampleCommandHandler(TextOptions options) : base(options) { }
+
         protected override void SendFailMessage(User sender, string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -16,7 +19,7 @@ namespace Example
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public ExampleCommandHandler() : base()
+        protected override void Initialize()
         {
             AddParsingRules(typeof(ExampleParsingRules));
         }

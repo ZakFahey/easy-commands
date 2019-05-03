@@ -10,7 +10,17 @@ namespace EasyCommands
     /// </summary>
     class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
     {
-        public override void Invoke(TSender sender, string[] args)
+        /// <summary> Callbacks with the corresponding argument count </summary>
+        private Dictionary<int, MethodInfo> callbacks = new Dictionary<int, MethodInfo>();
+
+        public BaseCommandDelegate(TextOptions options) : base(options) { }
+
+        public override List<ParameterInfo> GetParameters(int parameterCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Invoke(TSender sender, IEnumerable<object> args)
         {
             throw new NotImplementedException();
         }

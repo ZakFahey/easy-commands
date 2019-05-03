@@ -35,11 +35,11 @@ namespace EasyCommands
             }
         }
 
-        public T ParseArgument<T>(string arg)
+        public object ParseArgument(Type t, string arg)
         {
-            var rule = parsingRules[typeof(T)];
+            var rule = parsingRules[t];
             object instance = Activator.CreateInstance(rule.DeclaringType);
-            return (T)rule.Invoke(instance, new object[] { arg });
+            return rule.Invoke(instance, new object[] { arg });
         }
 
         public bool ParseRuleExists(Type t)
