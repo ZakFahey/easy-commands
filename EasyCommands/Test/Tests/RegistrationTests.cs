@@ -7,17 +7,8 @@ namespace EasyCommands.Test.Tests
     [TestClass]
     public class RegistrationTests
     {
-        //TODO: ensure errors are thrown for things like ambiguous optional parameters and ambiguous phrases
-        //TODO: tests for nonexistent parse rule and custom attribute format
-        //TODO: tests for invalid command-subcommand class structure
-
-        [TestMethod]
-        [Description("Attributes are passed from classes to methods.")]
-        public void Test()
-        {
-            //TODO
-            Assert.Fail();
-        }
+        //TODO: tests for ambiguous optional parameters and ambiguous phrases
+        //TODO: tests for nonexistent custom attribute format
 
         [TestMethod]
         [Description("Command registration succeeds for a simple command callback class.")]
@@ -132,6 +123,36 @@ namespace EasyCommands.Test.Tests
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
                 handler.RegisterCommandCallbacks(typeof(SubcommandTest6));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if command has parameter with no corresponding parse rule.")]
+        public void TestErrorForNonexistentParseRule()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest0));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if there is no sender parameter.")]
+        public void TestErrorIfNoSenderParameter()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest1));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if the return type on a command callback isn't void.")]
+        public void TestErrorIfInvalidReturnType()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest2));
             });
         }
     }
