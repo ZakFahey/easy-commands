@@ -20,12 +20,12 @@ namespace EasyCommands
         {
             return new TextOptions
             {
-                ProperSyntax = "Proper syntax: @0",
-                WrongNumberOfArguments = "Incorrect number of arguments! Proper syntax: @0",
+                ProperSyntax = "Proper syntax: {0}",
+                WrongNumberOfArguments = "Incorrect number of arguments! Proper syntax: {0}",
                 CommandPrefix = "",
-                ShowSubcommands = "@0 contains these subcommands:",
+                ShowSubcommands = "{0} contains these subcommands:",
                 SubcommandsShort = " Subcommands:",
-                CommandNotFound = "Command \"@0\" does not exist.",
+                CommandNotFound = "Command \"{0}\" does not exist.",
                 EmptyCommand = "Please enter a command."
             };
         }
