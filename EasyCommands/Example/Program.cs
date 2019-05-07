@@ -11,7 +11,7 @@ namespace Example
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
             var commandParser = new ExampleCommandHandler();
-            commandParser.RegisterCommandCallbacks("Example.Commands");
+            commandParser.RegisterCommands("Example.Commands");
             Console.WriteLine("Input a command. Type `help` to see a list of commands.");
             while(true)
             {

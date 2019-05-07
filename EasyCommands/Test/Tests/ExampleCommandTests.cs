@@ -16,7 +16,7 @@ namespace EasyCommands.Test.Tests
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
             CommandHandler = new ExampleCommandHandler();
-            CommandHandler.RegisterCommandCallbacks("Example.Commands");
+            CommandHandler.RegisterCommands("Example.Commands");
             ConsoleOutput = new StringWriter();
         }
 
@@ -77,7 +77,7 @@ namespace EasyCommands.Test.Tests
         public void TestSubtract()
         {
             CommandHandler.RunCommand(CurrentUser, "subtract 10 5");
-            Assert.AreEqual("10 + 5 = 5" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("10 - 5 = 5" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]

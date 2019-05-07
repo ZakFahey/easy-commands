@@ -57,28 +57,60 @@ namespace EasyCommands
 
         public void RegisterCustomAttributes(string namespaceToRegister)
         {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CustomAttribute));
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CustomAttribute) && !t.IsNested);
             foreach(Type type in types)
             {
                 RegisterCustomAttribute(type);
             }
         }
 
-        public void RegisterCommandCallbacks(Type classToRegister)
+        public void RegisterCommands(Type classToRegister)
         {
+            // Register the base class as a command with subcommands if it is one
+            string[] classCommandNames = classToRegister.GetCommandNames<Command>();
+            if(classCommandNames != null)
+            {
+                commandRepository.RegisterCommandWithSubcommands(classCommandNames, classToRegister);
+                return;
+            }
+
+            // Enforce type
             if(classToRegister.BaseType != typeof(CommandCallbacks))
             {
-                throw new CommandRegistrationException("classToRegister must have the base class CommandCallbacks.");
+                throw new CommandRegistrationException($"{classToRegister.Name} must have the base class CommandCallbacks.");
             }
-            //TODO
+
+            // Register all commands in this class
+            foreach(MethodInfo command in classToRegister.GetMethods())
+            {
+                if(command.GetCommandNames<SubCommand>() != null)
+                {
+                    throw new CommandRegistrationException($"Unexpected SubCommand attribute in {classToRegister.Name}.{command.Name}.");
+                }
+                string[] commandNames = command.GetCommandNames<Command>();
+                if(commandNames != null)
+                {
+                    commandRepository.RegisterCommand(commandNames, command);
+                }
+            }
+
+            // Register any commands with subcommands
+            foreach(Type command in classToRegister.GetNestedTypes())
+            {
+                string[] commandNames = command.GetCommandNames<Command>();
+                if(commandNames != null)
+                {
+                    commandRepository.RegisterCommandWithSubcommands(commandNames, command);
+                }
+            }
         }
 
-        public void RegisterCommandCallbacks(string namespaceToRegister)
+        public void RegisterCommands(string namespaceToRegister)
         {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks));
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks) && !t.IsNested);
             foreach(Type type in types)
             {
-                RegisterCommandCallbacks(type);
+                RegisterCommands(type);
             }
         }
 

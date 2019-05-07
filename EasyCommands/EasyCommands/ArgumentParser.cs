@@ -15,7 +15,7 @@ namespace EasyCommands
         {
             if(rules.BaseType != typeof(ParsingRules))
             {
-                throw new ParserInitializationException("rules must have the base class ParsingRules.");
+                throw new ParserInitializationException($"{rules.Name} must have the base class ParsingRules.");
             }
             foreach(MethodInfo rule in rules.GetMethods())
             {

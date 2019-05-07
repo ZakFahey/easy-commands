@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace EasyCommands.Test.ParsingRules
 {
     // This should fail because it doesn't inherit from the ParsingRules class
-    public class InvalidParsingRules0
+    class InvalidParsingRules0
     {
         [ParseRule]
-        byte ParseByte(string arg)
+        public byte ParseByte(string arg)
         {
             return 0;
         }

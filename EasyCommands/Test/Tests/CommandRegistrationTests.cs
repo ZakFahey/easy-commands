@@ -15,7 +15,7 @@ namespace EasyCommands.Test.Tests
         public void TestSimpleCommands()
         {
             var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(SimpleCommandTest));
+            handler.RegisterCommands(typeof(SimpleCommandTest));
             // No error
             //TODO: Test that commands are successfully added
         }
@@ -26,7 +26,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(InvalidNameTest));
+                handler.RegisterCommands(typeof(InvalidNameTest));
             });
         }
 
@@ -36,7 +36,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(DuplicateTest0));
+                handler.RegisterCommands(typeof(DuplicateTest0));
             });
         }
 
@@ -46,7 +46,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(DuplicateTest1));
+                handler.RegisterCommands(typeof(DuplicateTest1));
             });
         }
 
@@ -56,7 +56,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(SubcommandTest0));
+                handler.RegisterCommands(typeof(SubcommandTest0));
             });
         }
 
@@ -65,7 +65,7 @@ namespace EasyCommands.Test.Tests
         public void TestSubcommand()
         {
             var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(SubcommandTest1));
+            handler.RegisterCommands(typeof(SubcommandTest1));
             // No error
         }
 
@@ -74,7 +74,7 @@ namespace EasyCommands.Test.Tests
         public void TestSubcommandInNestedClass()
         {
             var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(SubcommandTest2));
+            handler.RegisterCommands(typeof(SubcommandTest2));
             // No error
         }
 
@@ -83,7 +83,7 @@ namespace EasyCommands.Test.Tests
         public void TestSubcommandInNestedClassWithSingleCommand()
         {
             var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(SubcommandTest3));
+            handler.RegisterCommands(typeof(SubcommandTest3));
             // No error
         }
 
@@ -93,7 +93,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(SubcommandTest4));
+                handler.RegisterCommands(typeof(SubcommandTest4));
             });
         }
 
@@ -103,7 +103,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(SubcommandTest5));
+                handler.RegisterCommands(typeof(SubcommandTest5));
             });
         }
 
@@ -113,7 +113,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(SubcommandTest6));
+                handler.RegisterCommands(typeof(SubcommandTest6));
             });
         }
 
@@ -123,7 +123,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest0));
+                handler.RegisterCommands(typeof(CallbackSyntaxTest0));
             });
         }
 
@@ -133,7 +133,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest1));
+                handler.RegisterCommands(typeof(CallbackSyntaxTest1));
             });
         }
 
@@ -143,7 +143,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest2));
+                handler.RegisterCommands(typeof(CallbackSyntaxTest2));
             });
         }
 
@@ -153,7 +153,7 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommandCallbacks(typeof(InvalidClassTest));
+                handler.RegisterCommands(typeof(InvalidClassTest));
             });
         }
     }

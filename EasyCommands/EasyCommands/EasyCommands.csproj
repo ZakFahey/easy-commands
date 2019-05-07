@@ -49,6 +49,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandRepository.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ParsingRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextOptions.cs" />

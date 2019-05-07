@@ -22,15 +22,10 @@ namespace EasyCommands
     /// Attribute a subcommand.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class SubCommand : Attribute
+    public class SubCommand : Command
     {
-        public string[] Names { get; private set; }
-
         /// <param name="names">The aliases used to run the command</param>
-        public SubCommand(params string[] names)
-        {
-            Names = names;
-        }
+        public SubCommand(params string[] names) : base(names) { }
     }
 
     /// <summary>

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace EasyCommands.Test.ParsingRules
 {
-    public class InvalidParsingRules1 : EasyCommands.ParsingRules
+    class InvalidParsingRules1 : EasyCommands.ParsingRules
     {
         // This should fail because the input parameter isn't a string
         [ParseRule]
-        byte ParseByte(byte arg)
+        public byte ParseByte(byte arg)
         {
             return 0;
         }
