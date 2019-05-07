@@ -60,7 +60,6 @@
     <Compile Include="Commands\SubcommandTest2.cs" />
     <Compile Include="Commands\SubcommandTest1.cs" />
     <Compile Include="Commands\SubcommandTest0.cs" />
-    <Compile Include="Commands\DuplicateTest2.cs" />
     <Compile Include="Commands\DuplicateTest1.cs" />
     <Compile Include="Commands\DuplicateTest0.cs" />
     <Compile Include="Tests\ExampleCommandTests.cs" />

@@ -51,15 +51,6 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("Command registration doesn't throw an error if a command with the same name has a different number of arguments.")]
-        public void TestDuplicateCommandWithDifferentArguments()
-        {
-            var handler = new ExampleCommandHandler();
-            handler.RegisterCommandCallbacks(typeof(DuplicateTest2));
-            // No error
-        }
-
-        [TestMethod]
         [Description("Command registration throws an error when there are 2 duplicate subcommands for a command.")]
         public void TestErrorIfDuplicateSubcommand()
         {
