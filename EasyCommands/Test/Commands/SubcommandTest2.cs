@@ -8,16 +8,16 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should succeed with this nested class
         [Command("do")]
-        class DoCommand
+        class DoCommand : CommandCallbacks
         {
             [SubCommand("test")]
-            void Test(User sender)
+            public void Test(User sender)
             {
                 Console.WriteLine("Something");
             }
 
             [SubCommand("something")]
-            void Something(User sender)
+            public void Something(User sender)
             {
                 Console.WriteLine("Hello!");
             }

@@ -8,7 +8,7 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should fail with this because the name is invalid
         [Command("test test")]
-        void Test(User sender)
+        public void Test(User sender)
         {
             Console.WriteLine("Something");
         }

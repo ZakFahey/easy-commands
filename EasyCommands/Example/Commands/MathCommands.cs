@@ -7,14 +7,14 @@ namespace Example.Commands
     {
         [Command("add")]
         [CommandDocumentation("Adds two integers together.")]
-        void Add(User sender, int num1, int num2)
+        public void Add(User sender, int num1, int num2)
         {
             Console.WriteLine($"{num1} + {num2} = {num1 + num2}");
         }
         
         [Command] // If we do not include the command name, it can be inferred from the method name.
         [CommandDocumentation("Subtracts num2 from num1.")]
-        void Subtract(
+        public void Subtract(
             User sender,
             [ParamName("num1")]
             int num_1,
@@ -26,7 +26,7 @@ namespace Example.Commands
         
         [Command("divide", "div")]
         [CommandDocumentation("Divides num1 by num2.")]
-        void Divide(User sender, float num1, float num2)
+        public void Divide(User sender, float num1, float num2)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Example.Commands
         
         [Command("add3or4")]
         [CommandDocumentation("Adds 3 or 4 integers together.")]
-        void Add3or4(User sender, int num1, int num2, int num3, int num4 = 0)
+        public void Add3or4(User sender, int num1, int num2, int num3, int num4 = 0)
         {
             Console.WriteLine($"sum = {num1 + num2 + num3 + num4}");
         }

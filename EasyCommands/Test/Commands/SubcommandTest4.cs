@@ -8,10 +8,10 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should fail due to invalid command-subcommand structure
         [Command("do")]
-        class DoCommand
+        class DoCommand : CommandCallbacks
         {
             [Command("test")]
-            void Test(User sender)
+            public void Test(User sender)
             {
                 Console.WriteLine("Something");
             }

@@ -10,13 +10,13 @@ namespace Example
     public class ExampleParsingRules : ParsingRules
     {
         [ParseRule]
-        string ParseString(string arg)
+        public string ParseString(string arg)
         {
             return arg;
         }
 
         [ParseRule]
-        int ParseInt(string arg)
+        public int ParseInt(string arg)
         {
             int ret = 0;
             if(!int.TryParse(arg, out ret))
@@ -27,7 +27,7 @@ namespace Example
         }
 
         [ParseRule]
-        float ParseFloat(string arg)
+        public float ParseFloat(string arg)
         {
             float ret = 0;
             if(!float.TryParse(arg, out ret))
@@ -38,7 +38,7 @@ namespace Example
         }
 
         [ParseRule]
-        double ParseDouble(string arg)
+        public double ParseDouble(string arg)
         {
             double ret = 0;
             if(!double.TryParse(arg, out ret))
@@ -49,7 +49,7 @@ namespace Example
         }
 
         [ParseRule]
-        User ParseUser(string arg)
+        public User ParseUser(string arg)
         {
             User user = UserDatabase.GetUserByName(arg);
             if(user == null)
