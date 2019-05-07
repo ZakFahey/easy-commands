@@ -10,16 +10,26 @@ namespace EasyCommands
     /// </summary>
     class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
-        public CommandGroupDelegate(TextOptions options) : base(options) { }
+        //TODO: change this to a CommandDelegate to support sub-sub-sub-...-commands?
+        private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
 
-        public override List<ParameterInfo> GetParameters(int parameterCount)
-        {
-            throw new NotImplementedException();
-        }
+        public CommandGroupDelegate(TextOptions options, ArgumentParser parser, string name) : base(options, parser, name) { }
 
-        public override void Invoke(TSender sender, IEnumerable<object> args)
+        public override void Invoke(TSender sender, IEnumerable<string> args)
         {
-            throw new NotImplementedException();
+            if(args.Count() == 0)
+            {
+                //TODO: proper list
+                throw new CommandParsingException(string.Format(textOptions.ShowSubcommands, Name));
+            }
+            string subcommand = args.First();
+            if(!subcommands.ContainsKey(subcommand))
+            {
+                throw new CommandParsingException(
+                    string.Format(textOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
+                    + string.Format(textOptions.ShowSubcommands, Name));
+            }
+            subcommands[subcommand].Invoke(sender, args.ToList().GetRange(1, args.Count() - 1));
         }
     }
 }

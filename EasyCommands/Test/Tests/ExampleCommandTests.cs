@@ -58,7 +58,10 @@ namespace EasyCommands.Test.Tests
         public void TestInvalidSubcommand()
         {
             CommandHandler.RunCommand(CurrentUser, "window asdf 1 2 3");
-            Assert.AreEqual("Command \"window asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Command \"window asdf\" does not exist." + Environment.NewLine
+                + "window contains these subcommands:" + Environment.NewLine
+                + "window resize <width> <height>" + Environment.NewLine
+                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]

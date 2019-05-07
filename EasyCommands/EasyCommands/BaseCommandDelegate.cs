@@ -10,19 +10,29 @@ namespace EasyCommands
     /// </summary>
     class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
     {
-        /// <summary> Callbacks with the corresponding argument count </summary>
-        private Dictionary<int, MethodInfo> callbacks = new Dictionary<int, MethodInfo>();
+        private MethodInfo callback;
+        private ParameterInfo[] callbackParams;
 
-        public BaseCommandDelegate(TextOptions options) : base(options) { }
-
-        public override List<ParameterInfo> GetParameters(int parameterCount)
+        public BaseCommandDelegate(TextOptions options, ArgumentParser parser, string name, MethodInfo callback) : base(options, parser, name)
         {
-            throw new NotImplementedException();
+            this.callback = callback;
+            callbackParams = callback.GetParameters();
         }
 
-        public override void Invoke(TSender sender, IEnumerable<object> args)
+        public override void Invoke(TSender sender, IEnumerable<string> args)
         {
-            throw new NotImplementedException();
+            if(args.Count() != callbackParams.Count() - 1)
+            {
+                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, "test"));
+            }
+            var invocationParams = new object[callbackParams.Count()];
+            invocationParams[0] = sender;
+            for(int i = 1; i < callbackParams.Count(); i++)
+            {
+                invocationParams[i] = parser.ParseArgument(callbackParams[i].ParameterType, args.ElementAt(i - 1));
+            }
+            object instance = Activator.CreateInstance(callback.DeclaringType);
+            callback.Invoke(instance, invocationParams);
         }
     }
 }

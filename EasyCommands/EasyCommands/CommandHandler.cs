@@ -34,14 +34,14 @@ namespace EasyCommands
         public CommandHandler()
         {
             textOptions = TextOptions.Default();
-            commandRepository = new CommandRepository<TSender>(textOptions);
+            commandRepository = new CommandRepository<TSender>(textOptions, argumentParser);
             Initialize();
         }
 
         public CommandHandler(TextOptions options)
         {
             textOptions = options;
-            commandRepository = new CommandRepository<TSender>(textOptions);
+            commandRepository = new CommandRepository<TSender>(textOptions, argumentParser);
             Initialize();
         }
 
@@ -68,7 +68,7 @@ namespace EasyCommands
         {
             if(classToRegister.BaseType != typeof(CommandCallbacks))
             {
-                throw new ParserInitializationException("classToRegister must have the base class CommandCallbacks.");
+                throw new CommandRegistrationException("classToRegister must have the base class CommandCallbacks.");
             }
             //TODO
         }
@@ -93,15 +93,7 @@ namespace EasyCommands
         {
             try
             {
-                // TODO: subcommands need parameters to be off by 1
-                CommandDelegate<TSender> callback = commandRepository.GetCallback(name, parameters);
-                var invocationParams = new object[parameters.Count()];
-                var callbackParams = callback.GetParameters(parameters.Count());
-                for(int i = 0; i < parameters.Count(); i++)
-                {
-                    invocationParams[i] = argumentParser.ParseArgument(callbackParams[i].ParameterType, parameters.ElementAt(i));
-                }
-                callback.Invoke(sender, invocationParams);
+                commandRepository.Invoke(sender, name, parameters);
             }
             catch(CommandParsingException e)
             {

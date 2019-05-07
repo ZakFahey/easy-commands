@@ -11,19 +11,21 @@ namespace EasyCommands
     {
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();
         private TextOptions textOptions;
+        protected ArgumentParser parser;
 
-        public CommandRepository(TextOptions options)
+        public CommandRepository(TextOptions options, ArgumentParser parser)
         {
             textOptions = options;
+            this.parser = parser;
         }
 
-        public CommandDelegate<TSender> GetCallback(string name, IEnumerable<string> parameters)
+        public void Invoke(TSender sender, string name, IEnumerable<string> parameters)
         {
             if(!commands.ContainsKey(name))
             {
-                throw new CommandParsingException($"Command ");
+                throw new CommandParsingException(string.Format(textOptions.CommandNotFound, name));
             }
-            return null;
+            commands[name].Invoke(sender, parameters);
         }
     }
 }

@@ -5,7 +5,7 @@ using EasyCommands.Test.Commands;
 namespace EasyCommands.Test.Tests
 {
     [TestClass]
-    public class RegistrationTests
+    public class CommandRegistrationTests
     {
         //TODO: tests for ambiguous optional parameters and ambiguous phrases
         //TODO: tests for nonexistent custom attribute format
@@ -144,6 +144,16 @@ namespace EasyCommands.Test.Tests
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
                 handler.RegisterCommandCallbacks(typeof(CallbackSyntaxTest2));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if the return type on a command callback isn't void.")]
+        public void TestErrorIfInvalidCallbackClass()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommandCallbacks(typeof(InvalidClassTest));
             });
         }
     }

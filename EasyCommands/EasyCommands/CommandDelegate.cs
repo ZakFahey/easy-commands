@@ -8,13 +8,17 @@ namespace EasyCommands
     abstract class CommandDelegate<TSender>
     {
         protected TextOptions textOptions;
+        protected ArgumentParser parser;
 
-        public abstract void Invoke(TSender sender, IEnumerable<object> args);
-        public abstract List<ParameterInfo> GetParameters(int parameterCount);
+        public string Name { get; private set; }
 
-        public CommandDelegate(TextOptions options)
+        public abstract void Invoke(TSender sender, IEnumerable<string> args);
+
+        public CommandDelegate(TextOptions options, ArgumentParser parser, string name)
         {
             textOptions = options;
+            this.parser = parser;
+            Name = name;
         }
     }
 }
