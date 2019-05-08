@@ -7,10 +7,8 @@ namespace EasyCommands.Test.Tests
     [TestClass]
     public class CommandRegistrationTests
     {
-        //TODO: tests for ambiguous optional parameters
         //TODO: tests for nonexistent custom attribute format
         //TODO: what happens when nulls are passed into things?
-        //TODO: error should throw if a command contains both a phrase and an optional parameter
 
         [TestMethod]
         [Description("Command registration succeeds for a simple command callback class.")]
