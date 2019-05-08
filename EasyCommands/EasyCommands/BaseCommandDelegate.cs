@@ -21,13 +21,13 @@ namespace EasyCommands
 
         public override void Invoke(TSender sender, IEnumerable<string> args)
         {
-            if(args.Count() != callbackParams.Count() - 1)
+            if(args.Count() != callbackParams.Length - 1)
             {
                 throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, "test"));
             }
-            var invocationParams = new object[callbackParams.Count()];
+            var invocationParams = new object[callbackParams.Length];
             invocationParams[0] = sender;
-            for(int i = 1; i < callbackParams.Count(); i++)
+            for(int i = 1; i < callbackParams.Length; i++)
             {
                 invocationParams[i] = parser.ParseArgument(callbackParams[i].ParameterType, args.ElementAt(i - 1));
             }

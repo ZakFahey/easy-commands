@@ -114,18 +114,12 @@ namespace EasyCommands
             }
         }
 
-        public void RunCommand(TSender sender, string input)
+        public void RunCommand(TSender sender, string command)
         {
-            //TODO: quotes and phrases
-            var prms = input.Split(' ').ToList();
-            RunCommand(sender, prms[0], prms.GetRange(1, prms.Count - 1));
-        }
-
-        public void RunCommand(TSender sender, string name, IEnumerable<string> parameters)
-        {
+            command = command.Trim(' ');
             try
             {
-                commandRepository.Invoke(sender, name, parameters);
+                commandRepository.Invoke(sender, command);
             }
             catch(CommandParsingException e)
             {
@@ -137,7 +131,7 @@ namespace EasyCommands
             }
             catch(Exception e)
             {
-                SendFailMessage(sender, $"The {name} command threw an error:\n{e}");
+                SendFailMessage(sender, $"The command threw an error:\n{e}");
             }
         }
     }

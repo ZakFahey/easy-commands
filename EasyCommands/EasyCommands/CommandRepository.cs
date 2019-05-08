@@ -53,8 +53,26 @@ namespace EasyCommands
             AddCommand(newCommand, names);
         }
 
-        public void Invoke(TSender sender, string name, IEnumerable<string> parameters)
+        public void Invoke(TSender sender, string command)
         {
+            if(command == null)
+            {
+                throw new ArgumentNullException();
+            }
+            command = command.Trim(' ');
+            int firstSpace = command.IndexOf(' ');
+            string name;
+            string parameters;
+            if(firstSpace == -1)
+            {
+                name = command;
+                parameters = "";
+            }
+            else
+            {
+                name = command.Substring(0, firstSpace);
+                parameters = command.Substring(firstSpace + 1);
+            }
             if(string.IsNullOrEmpty(name))
             {
                 throw new CommandParsingException(string.Format(textOptions.EmptyCommand, name));
