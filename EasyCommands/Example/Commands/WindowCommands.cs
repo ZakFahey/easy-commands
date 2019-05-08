@@ -7,11 +7,14 @@ namespace Example.Commands
     [CommandDocumentation("Manipulates the console window.")]
     public class WindowCommands : CommandCallbacks
     {
+
         [SubCommand("resize")]
         [SubCommandDocumentation("Resizes the window.")]
         public void Resize(User sender, int width, int height)
         {
-            Console.SetWindowSize(width, height);
+            var win = Window.GetConsoleWindow();
+            Window.GetWindowRect(win, out Window.RECT rect);
+            Window.MoveWindow(win, rect.Left, rect.Top, width, height, true);
             Console.WriteLine($"Window dimensions set to {width} x {height}.");
         }
 
@@ -19,7 +22,9 @@ namespace Example.Commands
         [SubCommandDocumentation("Moves the window to a certain position.")]
         public void Move(User sender, int left, int top)
         {
-            Console.SetWindowPosition(left, top);
+            var win = Window.GetConsoleWindow();
+            Window.GetWindowRect(win, out Window.RECT rect);
+            Window.MoveWindow(win, left, top, rect.Right - rect.Left, rect.Bottom - rect.Top, true);
             Console.WriteLine($"Window position set to ({left}, {top}).");
         }
     }

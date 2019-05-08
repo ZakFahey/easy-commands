@@ -36,5 +36,18 @@ namespace EasyCommands
             }
             return attribute.Names;
         }
+
+        public static (string first, string last) SplitAfterFirstSpace(this string str)
+        {
+            int firstSpace = str.IndexOf(' ');
+            if(firstSpace == -1)
+            {
+                return (str, "");
+            }
+            else
+            {
+                return (str.Substring(0, firstSpace), str.Substring(firstSpace + 1));
+            }
+        }
     }
 }

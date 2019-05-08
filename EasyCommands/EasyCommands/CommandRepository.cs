@@ -37,6 +37,7 @@ namespace EasyCommands
             }
 
             var newCommand = new CommandGroupDelegate<TSender>(textOptions, parser, names[0]);
+            bool anySubcommands = false;
 
             foreach(MethodInfo subcommand in command.GetMethods())
             {
@@ -44,11 +45,17 @@ namespace EasyCommands
                 {
                     throw new CommandRegistrationException($"Unexpected Command attribute in {command.Name}.{subcommand.Name}.");
                 }
-                string[] subcommandNames = command.GetCommandNames<SubCommand>();
+                string[] subcommandNames = subcommand.GetCommandNames<SubCommand>();
                 if(subcommandNames != null)
                 {
+                    anySubcommands = true;
                     newCommand.AddSubcommand(subcommand, subcommandNames);
                 }
+            }
+            
+            if(!anySubcommands)
+            {
+                throw new CommandRegistrationException($"{command.Name} must contain at least one subcommand.");
             }
 
             AddCommand(newCommand, names);
@@ -62,8 +69,7 @@ namespace EasyCommands
             }
             command = command.Trim(' ');
             int firstSpace = command.IndexOf(' ');
-            string name;
-            string parameters;
+            (string name, string parameters) = command.SplitAfterFirstSpace();
             if(firstSpace == -1)
             {
                 name = command;

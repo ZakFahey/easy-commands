@@ -35,7 +35,8 @@ namespace EasyCommands.Test.Tests
             Console.SetOut(standardOut);
         }
 
-        //TODO: test documentation
+        //TODO: test documentation/help command
+        //TODO: test optional phrase
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
@@ -167,7 +168,7 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Blake bananas");
             User Blake = UserDatabase.GetUserByName("Blake");
-            Assert.AreEqual(Blake.FavoriteFood, "bananas");
+            Assert.AreEqual("bananas", Blake.FavoriteFood);
         }
 
         [TestMethod]
@@ -176,16 +177,16 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Henry \"creamed corn\"");
             User Henry = UserDatabase.GetUserByName("Henry");
-            Assert.AreEqual(Henry.FavoriteFood, "creamed corn");
+            Assert.AreEqual("creamed corn", Henry.FavoriteFood);
         }
 
         [TestMethod]
-        [Description("Parameters are properly with escaped quotes.")]
+        [Description("Parameters are properly set with escaped quotes.")]
         public void TestParamsInEscapedQuotes()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Jessica \\\"tacos\\\"");
             User Jessica = UserDatabase.GetUserByName("Jessica");
-            Assert.AreEqual(Jessica.FavoriteFood, "\"tacos\"");
+            Assert.AreEqual("\"tacos\"", Jessica.FavoriteFood);
         }
 
         [TestMethod]
@@ -203,7 +204,7 @@ namespace EasyCommands.Test.Tests
             CommandHandler.RunCommand(CurrentUser, "add-user Jimmy baked potatoes");
             User Jimmy = UserDatabase.GetUserByName("Jimmy");
             Assert.IsNotNull(Jimmy);
-            Assert.AreEqual(Jimmy.FavoriteFood, "baked potatoes");
+            Assert.AreEqual("baked potatoes", Jimmy.FavoriteFood);
         }
 
         [TestMethod]
@@ -220,21 +221,13 @@ namespace EasyCommands.Test.Tests
         [Description("The window resize subcommand works.")]
         public void TestWindowResize()
         {
-            CommandHandler.RunCommand(CurrentUser, "window resize 200 200");
-            Assert.AreEqual("Window dimensions set to 200 x 200." + Environment.NewLine, ConsoleOutput.ToString());
-        }
-
-        [TestMethod]
-        [Description("The window resize subcommand throws an error for negative values.")]
-        public void TestWindowResizeOutOfBounds()
-        {
-            CommandHandler.RunCommand(CurrentUser, "window resize 100 -100");
-            Assert.AreEqual("height must be larger than 0!" + Environment.NewLine, ConsoleOutput.ToString());
+            CommandHandler.RunCommand(CurrentUser, "window resize 800 600");
+            Assert.AreEqual("Window dimensions set to 800 x 600." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]
         [Description("The window move subcommand works, inferring the command name from the method name.")]
-        public void TestWindowMoved()
+        public void TestWindowMove()
         {
             CommandHandler.RunCommand(CurrentUser, "window move 100 100");
             Assert.AreEqual("Window position set to (100, 100)." + Environment.NewLine, ConsoleOutput.ToString());

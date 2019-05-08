@@ -11,7 +11,7 @@ namespace EasyCommands.Test.Commands
         public class DoCommand : CommandCallbacks
         {
             [Command("test")]
-            class TestSubcommand : CommandCallbacks
+            public class TestSubcommand : CommandCallbacks
             {
                 [SubCommand("test")]
                 public void Test(User sender)

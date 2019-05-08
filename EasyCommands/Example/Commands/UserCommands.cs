@@ -37,6 +37,10 @@ namespace Example.Commands
             [AllowSpaces]
             string favoriteFood)
         {
+            if(UserDatabase.GetUserByName(name) != null)
+            {
+                Fail($"User {name} already exists!");
+            }
             UserDatabase.AddUser(name, favoriteFood);
             Console.WriteLine($"Added user {name} with favorite food {favoriteFood}.");
         }

@@ -10,6 +10,7 @@ namespace EasyCommands.Test.Tests
         //TODO: tests for ambiguous optional parameters
         //TODO: tests for nonexistent custom attribute format
         //TODO: what happens when nulls are passed into things?
+        //TODO: error should throw if a command contains both a phrase and an optional parameter
 
         [TestMethod]
         [Description("Command registration succeeds for a simple command callback class.")]
@@ -183,7 +184,17 @@ namespace EasyCommands.Test.Tests
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommands(typeof(AllowSpacesTest));
+                handler.RegisterCommands(typeof(AllowSpacesTest0));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if a command has both optional parameters and a parameter with an AllowSpaces attribute.")]
+        public void TestErrorIfAllowSpacesWithOptionalParameter()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(AllowSpacesTest1));
             });
         }
     }

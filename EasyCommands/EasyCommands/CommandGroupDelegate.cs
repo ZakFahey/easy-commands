@@ -15,21 +15,21 @@ namespace EasyCommands
 
         public CommandGroupDelegate(TextOptions options, ArgumentParser parser, string name) : base(options, parser, name) { }
 
-        public override void Invoke(TSender sender, IEnumerable<string> args)
+        public override void Invoke(TSender sender, string args)
         {
-            if(args.Count() == 0)
+            if(args.Length == 0)
             {
                 //TODO: proper list
                 throw new CommandParsingException(string.Format(textOptions.ShowSubcommands, Name));
             }
-            string subcommand = args.First();
+            (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
             if(!subcommands.ContainsKey(subcommand))
             {
                 throw new CommandParsingException(
                     string.Format(textOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
                     + string.Format(textOptions.ShowSubcommands, Name));
             }
-            subcommands[subcommand].Invoke(sender, args.ToList().GetRange(1, args.Count() - 1));
+            subcommands[subcommand].Invoke(sender, subcommandArgs);
         }
 
         public void AddSubcommand(BaseCommandDelegate<TSender> command, string[] names)
