@@ -5,7 +5,7 @@ using Example;
 namespace EasyCommands.Test.Commands
 {
     // Registration should fail because the class doesn't inherit from CommandCallbacks
-    class InvalidClassTest
+    class InvalidClassTest0
     {
         [Command("test")]
         public void Test(User sender)

@@ -7,7 +7,7 @@ namespace EasyCommands.Test.Tests
     [TestClass]
     public class CommandRegistrationTests
     {
-        //TODO: tests for ambiguous optional parameters and ambiguous phrases
+        //TODO: tests for ambiguous optional parameters
         //TODO: tests for nonexistent custom attribute format
 
         [TestMethod]
@@ -118,6 +118,16 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
+        [Description("Command registration throws an error when a command class doesn't contain any subcommands.")]
+        public void TestErrorIfInvalidSubcommandStructure4()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(SubcommandTest7));
+            });
+        }
+
+        [TestMethod]
         [Description("Command registration throws an error if command has parameter with no corresponding parse rule.")]
         public void TestErrorForNonexistentParseRule()
         {
@@ -148,12 +158,32 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("Command registration throws an error if the return type on a command callback isn't void.")]
+        [Description("Command registration throws an error if the command class doesn't inherit from CommandCallbacks.")]
         public void TestErrorIfInvalidCallbackClass()
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommands(typeof(InvalidClassTest));
+                handler.RegisterCommands(typeof(InvalidClassTest0));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if the subcommand class doesn't inherit from CommandCallbacks.")]
+        public void TestErrorIfInvalidCallbackClass2()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(InvalidClassTest1));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if a command uses multiple AllowSpaces attributes.")]
+        public void TestErrorIfMultipleAllowSpaces()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(AllowSpacesTest));
             });
         }
     }

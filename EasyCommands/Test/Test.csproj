@@ -50,10 +50,13 @@
   <ItemGroup>
     <Compile Include="Commands\CallbackSyntaxTest2.cs" />
     <Compile Include="Commands\CallbackSyntaxTest1.cs" />
+    <Compile Include="Commands\InvalidClassTest1.cs" />
     <Compile Include="Commands\InvalidNameTest.cs" />
     <Compile Include="Commands\SimpleCommandTest.cs" />
     <Compile Include="Commands\CallbackSyntaxTest0.cs" />
-    <Compile Include="Commands\InvalidClassTest.cs" />
+    <Compile Include="Commands\InvalidClassTest0.cs" />
+    <Compile Include="Commands\AllowSpacesTest.cs" />
+    <Compile Include="Commands\SubcommandTest7.cs" />
     <Compile Include="Commands\SubcommandTest6.cs" />
     <Compile Include="Commands\SubcommandTest5.cs" />
     <Compile Include="Commands\SubcommandTest4.cs" />
