@@ -54,7 +54,7 @@ namespace Example
             User user = UserDatabase.GetUserByName(arg);
             if(user == null)
             {
-                Fail($"User {arg} not found.");
+                Fail($"User {arg} not found.", false);
             }
             return user;
         }

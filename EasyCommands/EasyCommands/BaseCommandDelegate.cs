@@ -16,8 +16,11 @@ namespace EasyCommands
         private int minLength;
         private int maxLength;
 
+        public string SyntaxDocumentation { get; private set; }
+
         public BaseCommandDelegate(TextOptions options, ArgumentParser parser, string name, MethodInfo callback) : base(options, parser, name)
         {
+            //TODO: the fact that method parameters are off by 1 compared to user-inputted command parameters makes this code confusing
             this.callback = callback;
             callbackParams = callback.GetParameters();
             maxLength = callbackParams.Length - 1;
@@ -27,6 +30,14 @@ namespace EasyCommands
                 minLength = maxLength;
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
+            SyntaxDocumentation = Name;
+            for(int i = 1; i < callbackParams.Length; i++)
+            {
+                ParamName nameOverride = callbackParams[i].GetCustomAttribute<ParamName>();
+                string paramName = nameOverride == null ? callbackParams[i].Name : nameOverride.Name;
+                SyntaxDocumentation += i > minLength ? $" [{paramName}]" : $" <{paramName}>";
+            }
+
 
             if(minLength != maxLength && phraseIndex >= 0)
             {
@@ -104,7 +115,7 @@ namespace EasyCommands
         {
             if(args.Count() < minLength || args.Count() > maxLength)
             {
-                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, "test"));
+                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, SyntaxDocumentation));
             }
             var invocationParams = new object[callbackParams.Length];
             invocationParams[0] = sender;
@@ -116,7 +127,9 @@ namespace EasyCommands
                 }
                 else
                 {
-                    invocationParams[i] = parser.ParseArgument(callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name);
+                    //TODO: textOptions formatting should be elsewhere
+                    invocationParams[i] = parser.ParseArgument(
+                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, string.Format(textOptions.ProperSyntax, SyntaxDocumentation));
                 }
             }
             object instance = Activator.CreateInstance(callback.DeclaringType);

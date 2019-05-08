@@ -10,7 +10,6 @@ namespace EasyCommands
     /// </summary>
     class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
-        //TODO: change this to a CommandDelegate to support sub-sub-sub-...-commands?
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
 
         public CommandGroupDelegate(TextOptions options, ArgumentParser parser, string name) : base(options, parser, name) { }
@@ -20,14 +19,15 @@ namespace EasyCommands
             if(args.Length == 0)
             {
                 //TODO: proper list
-                throw new CommandParsingException(string.Format(textOptions.ShowSubcommands, Name));
+                throw new CommandParsingException($"{string.Format(textOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
             }
             (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
             if(!subcommands.ContainsKey(subcommand))
             {
                 throw new CommandParsingException(
                     string.Format(textOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
-                    + string.Format(textOptions.ShowSubcommands, Name));
+                    + string.Format(textOptions.ShowSubcommands, Name) + "\n"
+                    + SubcommandList());
             }
             subcommands[subcommand].Invoke(sender, subcommandArgs);
         }
@@ -46,7 +46,12 @@ namespace EasyCommands
 
         public void AddSubcommand(MethodInfo command, string[] names)
         {
-            AddSubcommand(new BaseCommandDelegate<TSender>(textOptions, parser, names[0], command), names);
+            AddSubcommand(new BaseCommandDelegate<TSender>(textOptions, parser, $"{Name} {names[0]}", command), names);
+        }
+
+        public string SubcommandList()
+        {
+            return string.Join("\n", subcommands.Values.Select(sub => sub.SyntaxDocumentation));
         }
     }
 }

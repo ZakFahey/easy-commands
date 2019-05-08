@@ -15,7 +15,10 @@ namespace Example
         protected override void SendFailMessage(User sender, string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
+            foreach(string line in message.Split('\n'))
+            {
+                Console.WriteLine(line);
+            }
             Console.ForegroundColor = ConsoleColor.White;
         }
 

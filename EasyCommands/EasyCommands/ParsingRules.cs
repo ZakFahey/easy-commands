@@ -9,13 +9,21 @@ namespace EasyCommands
     public abstract class ParsingRules
     {
         public string ParameterName;
+        public string ProperSyntax;
 
         /// <summary>
         /// Fails the parsing and sends an error message
         /// </summary>
-        public void Fail(string message)
+        /// <param name="message">The error message to show</param>
+        /// <param name="showProperSyntax">Whether to prompt the user with the proper syntax for the command</param>
+        public void Fail(string message, bool showProperSyntax = true)
         {
-            throw new CommandParsingException(string.Format(message, ParameterName));
+            string msg = string.Format(message, ParameterName);
+            if(showProperSyntax)
+            {
+                msg += "\n" + ProperSyntax;
+            }
+            throw new CommandParsingException(msg);
         }
     }
 }

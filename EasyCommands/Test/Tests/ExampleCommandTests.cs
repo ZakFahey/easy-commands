@@ -37,6 +37,7 @@ namespace EasyCommands.Test.Tests
 
         //TODO: test documentation/help command
         //TODO: test optional phrase
+        //TODO: documentation for aliases
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
