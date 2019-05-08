@@ -28,16 +28,7 @@ namespace Example.Commands
         [CommandDocumentation("Divides num1 by num2.")]
         public void Divide(User sender, float num1, float num2)
         {
-            try
-            {
-                Console.WriteLine($"{num1} / {num2} = {num1 / num2}");
-            }
-            catch(ArithmeticException)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Divide by zero error!");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
+            Console.WriteLine($"{num1} / {num2} = {num1 / num2}");
         }
         
         [Command("add3or4")]

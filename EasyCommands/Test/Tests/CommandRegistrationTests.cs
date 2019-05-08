@@ -9,6 +9,7 @@ namespace EasyCommands.Test.Tests
     {
         //TODO: tests for ambiguous optional parameters
         //TODO: tests for nonexistent custom attribute format
+        //TODO: what happens when nulls are passed into things?
 
         [TestMethod]
         [Description("Command registration succeeds for a simple command callback class.")]
@@ -16,8 +17,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SimpleCommandTest));
-            // No error
-            //TODO: Test that commands are successfully added
+            Assert.AreEqual(2, handler.NumCommands);
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest1));
-            // No error
+            Assert.AreEqual(1, handler.NumCommands);
         }
 
         [TestMethod]
@@ -75,7 +75,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest2));
-            // No error
+            Assert.AreEqual(1, handler.NumCommands);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest3));
-            // No error
+            Assert.AreEqual(2, handler.NumCommands);
         }
 
         [TestMethod]

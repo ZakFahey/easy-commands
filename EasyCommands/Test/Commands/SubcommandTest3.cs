@@ -8,7 +8,7 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should succeed with a combination of commands and subcommands
         [Command("do")]
-        class DoCommand : CommandCallbacks
+        public class DoCommand : CommandCallbacks
         {
             [SubCommand("test")]
             public void Test(User sender)

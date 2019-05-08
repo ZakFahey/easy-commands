@@ -8,7 +8,7 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should fail due to invalid command-subcommand structure
         [Command("do")]
-        class DoCommand : CommandCallbacks
+        public class DoCommand : CommandCallbacks
         {
             [Command("test")]
             class TestSubcommand : CommandCallbacks

@@ -8,12 +8,14 @@ namespace EasyCommands
 {
     public abstract class ParsingRules
     {
+        public string ParameterName;
+
         /// <summary>
         /// Fails the parsing and sends an error message
         /// </summary>
         public void Fail(string message)
         {
-            throw new CommandParsingException(message);
+            throw new CommandParsingException(string.Format(message, ParameterName));
         }
     }
 }

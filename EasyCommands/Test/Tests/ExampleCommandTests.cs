@@ -97,14 +97,6 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The divide command detects a divide by zero error.")]
-        public void TestDivideByZero()
-        {
-            CommandHandler.RunCommand(CurrentUser, "divide 2 0");
-            Assert.AreEqual("Divide by zero error!" + Environment.NewLine, ConsoleOutput.ToString());
-        }
-
-        [TestMethod]
         [Description("Commands throw an error when you input the wrong number of arguments.")]
         public void TestTooManyArguments()
         {
@@ -193,7 +185,7 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Jessica \\\"tacos\\\"");
             User Jessica = UserDatabase.GetUserByName("Jessica");
-            Assert.AreEqual(Jessica.FavoriteFood, "\\\"tacos\\\"");
+            Assert.AreEqual(Jessica.FavoriteFood, "\"tacos\"");
         }
 
         [TestMethod]

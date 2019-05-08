@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace EasyCommands
 {
@@ -12,11 +11,13 @@ namespace EasyCommands
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();
         private TextOptions textOptions;
         protected ArgumentParser parser;
+        public int NumCommands { get; private set; }
 
         public CommandRepository(TextOptions options, ArgumentParser parser)
         {
             textOptions = options;
             this.parser = parser;
+            NumCommands = 0;
         }
 
         public void RegisterCommand(string[] names, MethodInfo command)
@@ -92,8 +93,14 @@ namespace EasyCommands
                 {
                     throw new CommandRegistrationException($"Failed to register command \"{name}\" because it is a duplicate.");
                 }
+                if(!Regex.IsMatch(name, @"^[a-z0-9\-]*$"))
+                {
+                    throw new CommandRegistrationException($"Failed to register command \"{name}\". " +
+                        $"Commands may only contain lowercase letters, numbers, and the dash symbol.");
+                }
                 commands[name] = command;
             }
+            NumCommands++;
         }
     }
 }

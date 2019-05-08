@@ -5,7 +5,7 @@ namespace Example.Commands
 {
     [Command("window")]
     [CommandDocumentation("Manipulates the console window.")]
-    class WindowCommands : CommandCallbacks
+    public class WindowCommands : CommandCallbacks
     {
         [SubCommand("resize")]
         [SubCommandDocumentation("Resizes the window.")]

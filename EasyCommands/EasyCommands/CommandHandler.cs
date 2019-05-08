@@ -31,6 +31,11 @@ namespace EasyCommands
         protected abstract void SendFailMessage(TSender sender, string message);
         protected abstract void Initialize();
 
+        public int NumCommands
+        {
+            get => commandRepository.NumCommands;
+        }
+
         public CommandHandler()
         {
             textOptions = TextOptions.Default();

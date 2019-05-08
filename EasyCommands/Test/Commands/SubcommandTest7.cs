@@ -8,7 +8,7 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should fail because this command doesn't contain any subcommands
         [Command("test")]
-        class TestCommand : CommandCallbacks
+        public class TestCommand : CommandCallbacks
         {
         }
     }

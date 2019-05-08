@@ -21,7 +21,7 @@ namespace Example
             int ret = 0;
             if(!int.TryParse(arg, out ret))
             {
-                Fail("Invalid syntax! @0 must be a whole number!");
+                Fail("Invalid syntax! {0} must be a whole number!");
             }
             return ret;
         }
@@ -32,7 +32,7 @@ namespace Example
             float ret = 0;
             if(!float.TryParse(arg, out ret))
             {
-                Fail("Invalid syntax! @0 must be a number!");
+                Fail("Invalid syntax! {0} must be a number!");
             }
             return ret;
         }
@@ -43,7 +43,7 @@ namespace Example
             double ret = 0;
             if(!double.TryParse(arg, out ret))
             {
-                Fail("Invalid syntax! @0 must be a number!");
+                Fail("Invalid syntax! {0} must be a number!");
             }
             return ret;
         }

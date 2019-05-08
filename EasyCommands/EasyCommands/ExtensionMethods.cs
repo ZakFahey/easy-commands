@@ -15,7 +15,7 @@ namespace EasyCommands
         public static string CamelCaseToDashes(this string str)
         {
             // Source: https://stackoverflow.com/a/18781533
-            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "-" + x.ToString() : x.ToString()));
+            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "-" + x.ToString().ToLower() : x.ToString().ToLower()));
         }
 
         /// <summary>
