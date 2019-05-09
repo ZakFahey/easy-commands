@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Example;
-using System.IO;
 using System.Collections.Generic;
 
 namespace EasyCommands.Test.Tests
@@ -11,29 +10,25 @@ namespace EasyCommands.Test.Tests
     {
         User CurrentUser;
         ExampleCommandHandler CommandHandler;
-        StringWriter ConsoleOutput;
+        ConsoleReader ConsoleReader;
         
         public ExampleCommandTests()
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
             CommandHandler = new ExampleCommandHandler();
             CommandHandler.RegisterCommands("Example.Commands");
-            ConsoleOutput = new StringWriter();
         }
 
         [TestInitialize]
         public void SetConsoleOutput()
         {
-            ConsoleOutput.Flush();
-            Console.SetOut(ConsoleOutput);
+            ConsoleReader = new ConsoleReader();
         }
 
         [TestCleanup]
         public void ResetConsoleOutput()
         {
-            StreamWriter standardOut = new StreamWriter(Console.OpenStandardOutput());
-            standardOut.AutoFlush = true;
-            Console.SetOut(standardOut);
+            ConsoleReader.Close();
         }
 
         //TODO: test documentation/help command
@@ -46,7 +41,7 @@ namespace EasyCommands.Test.Tests
         public void TestEmptyCommand()
         {
             CommandHandler.RunCommand(CurrentUser, "");
-            Assert.AreEqual("Please enter a command." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Please enter a command.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -54,7 +49,7 @@ namespace EasyCommands.Test.Tests
         public void TestInvalidCommand()
         {
             CommandHandler.RunCommand(CurrentUser, "asdf 1 2 3");
-            Assert.AreEqual("Command \"asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Command \"asdf\" does not exist.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -62,10 +57,11 @@ namespace EasyCommands.Test.Tests
         public void TestInvalidSubcommand()
         {
             CommandHandler.RunCommand(CurrentUser, "window asdf 1 2 3");
-            Assert.AreEqual("Command \"window asdf\" does not exist." + Environment.NewLine
-                + "window contains these subcommands:" + Environment.NewLine
-                + "window resize <width> <height>" + Environment.NewLine
-                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Command \"window asdf\" does not exist.", ConsoleReader.ReadLine());
+            Assert.AreEqual("window contains these subcommands:", ConsoleReader.ReadLine());
+            ConsoleReader.AssertOutputContains(
+                "window resize <width> <height>",
+                "window move <left> <top>");
         }
 
         [TestMethod]
@@ -73,7 +69,7 @@ namespace EasyCommands.Test.Tests
         public void TestAdd()
         {
             CommandHandler.RunCommand(CurrentUser, "add 1 2");
-            Assert.AreEqual("1 + 2 = 3" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("1 + 2 = 3", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -81,7 +77,7 @@ namespace EasyCommands.Test.Tests
         public void TestSubtract()
         {
             CommandHandler.RunCommand(CurrentUser, "subtract 10 5");
-            Assert.AreEqual("10 - 5 = 5" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("10 - 5 = 5", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -89,7 +85,7 @@ namespace EasyCommands.Test.Tests
         public void TestDivide()
         {
             CommandHandler.RunCommand(CurrentUser, "divide 1 2");
-            Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("1 / 2 = 0.5", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -97,7 +93,7 @@ namespace EasyCommands.Test.Tests
         public void TestDiv()
         {
             CommandHandler.RunCommand(CurrentUser, "div 1 2");
-            Assert.AreEqual("1 / 2 = 0.5" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("1 / 2 = 0.5", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -105,7 +101,7 @@ namespace EasyCommands.Test.Tests
         public void TestTooManyArguments()
         {
             CommandHandler.RunCommand(CurrentUser, "add 1 2 3");
-            Assert.AreEqual("Incorrect number of arguments! Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Incorrect number of arguments! Proper syntax: add <num1> <num2>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -113,8 +109,8 @@ namespace EasyCommands.Test.Tests
         public void TestInvalidArgument()
         {
             CommandHandler.RunCommand(CurrentUser, "add 1 bleh");
-            Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
-                + "Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Invalid syntax! num2 must be a whole number!", ConsoleReader.ReadLine());
+            Assert.AreEqual("Proper syntax: add <num1> <num2>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -122,8 +118,8 @@ namespace EasyCommands.Test.Tests
         public void TestInvalidArgument2()
         {
             CommandHandler.RunCommand(CurrentUser, "subtract 1 bleh");
-            Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
-                + "Proper syntax: subtract <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Invalid syntax! num2 must be a whole number!", ConsoleReader.ReadLine());
+            Assert.AreEqual("Proper syntax: subtract <num1> <num2>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -131,7 +127,7 @@ namespace EasyCommands.Test.Tests
         public void TestOverriddenParamName()
         {
             CommandHandler.RunCommand(CurrentUser, "subtract");
-            Assert.AreEqual("Incorrect number of arguments! Proper syntax: subtract <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Incorrect number of arguments! Proper syntax: subtract <num1> <num2>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -139,7 +135,7 @@ namespace EasyCommands.Test.Tests
         public void TestOptionalArguments()
         {
             CommandHandler.RunCommand(CurrentUser, "add3or4 1 2 3");
-            Assert.AreEqual("sum = 6" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("sum = 6", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -147,7 +143,7 @@ namespace EasyCommands.Test.Tests
         public void TestOptionalArguments2()
         {
             CommandHandler.RunCommand(CurrentUser, "add3or4 1 2 3 4");
-            Assert.AreEqual("sum = 10" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("sum = 10", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -155,7 +151,7 @@ namespace EasyCommands.Test.Tests
         public void TestOptionalArgumentsProperSyntax()
         {
             CommandHandler.RunCommand(CurrentUser, "add3or4");
-            Assert.AreEqual("Incorrect number of arguments! Proper syntax: add3or4 <num1> <num2> <num3> [num4]" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Incorrect number of arguments! Proper syntax: add3or4 <num1> <num2> <num3> [num4]", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -163,7 +159,7 @@ namespace EasyCommands.Test.Tests
         public void TestMyName()
         {
             CommandHandler.RunCommand(CurrentUser, "myname");
-            Assert.AreEqual("Your name is Admin." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Your name is Admin.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -171,7 +167,7 @@ namespace EasyCommands.Test.Tests
         public void TestFavoriteFoodGet()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Jeff");
-            Assert.AreEqual("Jeff's favorite food is steak." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Jeff's favorite food is steak.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -206,7 +202,7 @@ namespace EasyCommands.Test.Tests
         public void TestUserNotFound()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Carl");
-            Assert.AreEqual("User Carl not found." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("User Carl not found.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -224,9 +220,10 @@ namespace EasyCommands.Test.Tests
         public void TestSubCommand()
         {
             CommandHandler.RunCommand(CurrentUser, "window");
-            Assert.AreEqual("window contains these subcommands:" + Environment.NewLine
-                + "window resize <width> <height>" + Environment.NewLine
-                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("window contains these subcommands:", ConsoleReader.ReadLine());
+            ConsoleReader.AssertOutputContains(
+                "window resize <width> <height>",
+                "window move <left> <top>");
         }
 
         [TestMethod]
@@ -234,7 +231,7 @@ namespace EasyCommands.Test.Tests
         public void TestWindowResize()
         {
             CommandHandler.RunCommand(CurrentUser, "window resize 800 600");
-            Assert.AreEqual("Window dimensions set to 800 x 600." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Window dimensions set to 800 x 600.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -242,7 +239,7 @@ namespace EasyCommands.Test.Tests
         public void TestWindowMove()
         {
             CommandHandler.RunCommand(CurrentUser, "window move 100 100");
-            Assert.AreEqual("Window position set to (100, 100)." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Window position set to (100, 100).", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -250,34 +247,17 @@ namespace EasyCommands.Test.Tests
         public void TestHelp()
         {
             CommandHandler.RunCommand(CurrentUser, "help");
-            string[] lines = ConsoleOutput.ToString().Split('\n', Environment.NewLine[0]);
-            Assert.AreEqual("Available commands:", lines[0]);
-            
-            // Verify that the commands are there, regardless of order
-            var actual = new HashSet<string>();
-            for(int i = 1; i < lines.Length; i++)
-            {
-                if(lines[i].Length > 0) actual.Add(lines[i]);
-            }
-            var expected = new HashSet<string>()
-            {
+            Assert.AreEqual("Available commands:", ConsoleReader.ReadLine());
+            ConsoleReader.AssertOutputContains(
                 "add <num1> <num2>",
                 "subtract <num1> <num2>",
                 "divide <num1> <num2>",
                 "add3or4 <num1> <num2> <num3> [num4]",
-                "myname",
+                "myname ",
                 "favorite-food <querying> [food]",
                 "add-user <name> <favoriteFood>",
                 "window <resize|move>",
-                "help [command] [subcommand]"
-            };
-            if(!expected.SetEquals(actual))
-            {
-                Assert.Fail(
-                    "Console output not equal to expected output." +
-                    "\nExpected:\n" + string.Join("\n", expected) +
-                    "\nActual:\n" + string.Join("\n", actual));
-            }
+                "help [command] [subcommand]");
         }
 
         [TestMethod]
@@ -285,7 +265,7 @@ namespace EasyCommands.Test.Tests
         public void TestHelpWithCommand()
         {
             CommandHandler.RunCommand(CurrentUser, "help add");
-            Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -293,7 +273,7 @@ namespace EasyCommands.Test.Tests
         public void TestHelpWithNonexistentCommand()
         {
             CommandHandler.RunCommand(CurrentUser, "help asdf");
-            Assert.AreEqual("Command \"asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Command \"asdf\" does not exist.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -301,7 +281,7 @@ namespace EasyCommands.Test.Tests
         public void TestHelpWithSubcommand()
         {
             CommandHandler.RunCommand(CurrentUser, "help window move");
-            Assert.AreEqual("Moves the window to a certain position. Syntax: window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Moves the window to a certain position. Syntax: window move <left> <top>", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -309,9 +289,10 @@ namespace EasyCommands.Test.Tests
         public void TestHelpWithCommandWithSubcommands()
         {
             CommandHandler.RunCommand(CurrentUser, "help window");
-            Assert.AreEqual("Manipulates the console window. Subcommands:\n"
-                + "window resize <width> <height>\n"
-                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+            Assert.AreEqual("Manipulates the console window. Subcommands:", ConsoleReader.ReadLine());
+            ConsoleReader.AssertOutputContains(
+                "window resize <width> <height>",
+                "window move <left> <top>");
         }
     }
 }
