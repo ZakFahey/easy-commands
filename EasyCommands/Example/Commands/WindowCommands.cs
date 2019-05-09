@@ -5,11 +5,11 @@ namespace Example.Commands
 {
     [Command("window")]
     [CommandDocumentation("Manipulates the console window.")]
-    public class WindowCommands : CommandCallbacks
+    public class WindowCommands : CommandCallbacks<User>
     {
 
         [SubCommand("resize")]
-        [SubCommandDocumentation("Resizes the window.")]
+        [CommandDocumentation("Resizes the window.")]
         public void Resize(User sender, int width, int height)
         {
             var win = Window.GetConsoleWindow();
@@ -19,7 +19,7 @@ namespace Example.Commands
         }
 
         [SubCommand] // If we do not include the command name, it can be inferred from the method name.
-        [SubCommandDocumentation("Moves the window to a certain position.")]
+        [CommandDocumentation("Moves the window to a certain position.")]
         public void Move(User sender, int left, int top)
         {
             var win = Window.GetConsoleWindow();

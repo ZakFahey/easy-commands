@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EasyCommands.Test.Commands
 {
-    class CallbackSyntaxTest2 : CommandCallbacks
+    class CallbackSyntaxTest2 : CommandCallbacks<User>
     {
         // Registration should fail because the command has the wrong return value
         [Command("test")]

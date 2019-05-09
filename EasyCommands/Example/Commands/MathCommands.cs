@@ -3,7 +3,7 @@ using EasyCommands;
 
 namespace Example.Commands
 {
-    class MathCommands : CommandCallbacks
+    class MathCommands : CommandCallbacks<User>
     {
         [Command("add")]
         [CommandDocumentation("Adds two integers together.")]

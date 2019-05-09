@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace EasyCommands
 {
-    public abstract class ParsingRules
+    public abstract class ParsingRules<TSender>
     {
         public string ParameterName;
         public string ProperSyntax;
+        public CommandHandler<TSender> CommandHandler;
 
         /// <summary>
         /// Fails the parsing and sends an error message

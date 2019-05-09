@@ -5,7 +5,7 @@ using Example;
 namespace EasyCommands.Test.Commands
 {
     [Command("do")]
-    class SubcommandTest0 : CommandCallbacks
+    class SubcommandTest0 : CommandCallbacks<User>
     {
         [SubCommand("test")]
         public void Test(User sender)

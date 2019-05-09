@@ -4,11 +4,11 @@ using Example;
 
 namespace EasyCommands.Test.Commands
 {
-    class SubcommandTest3 : CommandCallbacks
+    class SubcommandTest3 : CommandCallbacks<User>
     {
         // Registration should succeed with a combination of commands and subcommands
         [Command("do")]
-        public class DoCommand : CommandCallbacks
+        public class DoCommand : CommandCallbacks<User>
         {
             [SubCommand("test")]
             public void Test(User sender)

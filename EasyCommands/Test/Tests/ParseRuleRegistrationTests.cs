@@ -33,7 +33,7 @@ namespace EasyCommands.Test.Tests
             Assert.ThrowsException<ParserInitializationException>(() =>
             {
                 var handler = new ExampleCommandHandler();
-                handler.AddParsingRules(typeof(InvalidParsingRules1));
+                handler.AddParsingRules(typeof(InvalidParsingRules1<User>));
             });
         }
     }

@@ -4,7 +4,7 @@ using Example;
 
 namespace EasyCommands.Test.Commands
 {
-    class DuplicateTest0 : CommandCallbacks
+    class DuplicateTest0 : CommandCallbacks<User>
     {
         [Command("test")]
         public void Test(User sender)

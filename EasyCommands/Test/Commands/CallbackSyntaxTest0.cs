@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EasyCommands.Test.Commands
 {
-    class CallbackSyntaxTest0 : CommandCallbacks
+    class CallbackSyntaxTest0 : CommandCallbacks<User>
     {
         // Registration should fail because it uses a nonexistent parse rule
         [Command("test")]

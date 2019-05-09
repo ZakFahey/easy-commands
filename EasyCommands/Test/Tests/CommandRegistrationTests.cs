@@ -16,7 +16,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SimpleCommandTest));
-            Assert.AreEqual(2, handler.NumCommands);
+            Assert.AreEqual(2, handler.CommandList.Count);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest1));
-            Assert.AreEqual(1, handler.NumCommands);
+            Assert.AreEqual(1, handler.CommandList.Count);
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest2));
-            Assert.AreEqual(1, handler.NumCommands);
+            Assert.AreEqual(1, handler.CommandList.Count);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace EasyCommands.Test.Tests
         {
             var handler = new ExampleCommandHandler();
             handler.RegisterCommands(typeof(SubcommandTest3));
-            Assert.AreEqual(2, handler.NumCommands);
+            Assert.AreEqual(2, handler.CommandList.Count);
         }
 
         [TestMethod]

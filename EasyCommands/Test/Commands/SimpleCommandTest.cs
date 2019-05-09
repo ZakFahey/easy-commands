@@ -5,7 +5,7 @@ using Example;
 namespace EasyCommands.Test.Commands
 {
     // Registration should succeed with this
-    class SimpleCommandTest : CommandCallbacks
+    class SimpleCommandTest : CommandCallbacks<User>
     {
         [Command("test")]
         public void Test(User sender)

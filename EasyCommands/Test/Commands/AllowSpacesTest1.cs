@@ -4,7 +4,7 @@ using Example;
 
 namespace EasyCommands.Test.Commands
 {
-    class AllowSpacesTest1 : CommandCallbacks
+    class AllowSpacesTest1 : CommandCallbacks<User>
     {
         // Registration should fail because there is an AllowSpaces attribute along with an optional parameter
         [Command("test")]

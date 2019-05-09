@@ -7,7 +7,7 @@ using EasyCommands;
 
 namespace Example
 {
-    public class ExampleParsingRules : ParsingRules
+    public class ExampleParsingRules<TSender> : ParsingRules<TSender>
     {
         [ParseRule]
         public string ParseString(string arg)

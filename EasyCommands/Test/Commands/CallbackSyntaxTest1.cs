@@ -5,7 +5,7 @@ using System.IO;
 
 namespace EasyCommands.Test.Commands
 {
-    class CallbackSyntaxTest1 : CommandCallbacks
+    class CallbackSyntaxTest1 : CommandCallbacks<User>
     {
         // Registration should fail because it doesn't include the sender parameter
         [Command("test")]

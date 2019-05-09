@@ -8,17 +8,22 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command with sub-commands
     /// </summary>
-    class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
+    public class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
+        private List<BaseCommandDelegate<TSender>> subcommandList = new List<BaseCommandDelegate<TSender>>();
 
-        public CommandGroupDelegate(TextOptions options, ArgumentParser parser, string name) : base(options, parser, name) { }
+        public CommandGroupDelegate(TextOptions options, ArgumentParser<TSender> parser, string name) : base(options, parser, name) { }
+
+        public override string SyntaxDocumentation()
+        {
+            return $"{Name} <{string.Join("|", subcommandList.Select(sub => sub.Name))}>";
+        }
 
         public override void Invoke(TSender sender, string args)
         {
             if(args.Length == 0)
             {
-                //TODO: proper list
                 throw new CommandParsingException($"{string.Format(textOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
             }
             (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
@@ -42,6 +47,7 @@ namespace EasyCommands
                 }
                 subcommands[name] = command;
             }
+            subcommandList.Add(command);
         }
 
         public void AddSubcommand(MethodInfo command, string[] names)
@@ -51,7 +57,7 @@ namespace EasyCommands
 
         public string SubcommandList()
         {
-            return string.Join("\n", subcommands.Values.Select(sub => sub.SyntaxDocumentation));
+            return string.Join("\n", subcommandList.Select(sub => sub.SyntaxDocumentation()));
         }
     }
 }

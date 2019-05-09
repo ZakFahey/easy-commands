@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\MathCommands.cs" />
     <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="Commands\UserCommands.cs" />

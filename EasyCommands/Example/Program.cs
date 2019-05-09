@@ -10,12 +10,12 @@ namespace Example
         static void Main(string[] args)
         {
             CurrentUser = UserDatabase.GetUserByName("Admin");
-            var commandParser = new ExampleCommandHandler();
-            commandParser.RegisterCommands("Example.Commands");
+            var commandHandler = new ExampleCommandHandler();
+            commandHandler.RegisterCommands("Example.Commands");
             Console.WriteLine("Input a command. Type `help` to see a list of commands.");
             while(true)
             {
-                commandParser.RunCommand(CurrentUser, Console.ReadLine());
+                commandHandler.RunCommand(CurrentUser, Console.ReadLine());
             }
         }
     }

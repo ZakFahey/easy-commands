@@ -24,7 +24,7 @@ namespace Example
 
         protected override void Initialize()
         {
-            AddParsingRules(typeof(ExampleParsingRules));
+            AddParsingRules(typeof(ExampleParsingRules<User>));
         }
     }
 }

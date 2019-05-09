@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -10,14 +11,19 @@ namespace EasyCommands
     {
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();
         private TextOptions textOptions;
-        protected ArgumentParser parser;
-        public int NumCommands { get; private set; }
+        private List<CommandDelegate<TSender>> commandList = new List<CommandDelegate<TSender>>();
 
-        public CommandRepository(TextOptions options, ArgumentParser parser)
+        protected ArgumentParser<TSender> parser;
+
+        public ReadOnlyCollection<CommandDelegate<TSender>> CommandList
+        {
+            get => commandList.AsReadOnly();
+        }
+
+        public CommandRepository(TextOptions options, ArgumentParser<TSender> parser)
         {
             textOptions = options;
             this.parser = parser;
-            NumCommands = 0;
         }
 
         public void RegisterCommand(string[] names, MethodInfo command)
@@ -27,7 +33,7 @@ namespace EasyCommands
 
         public void RegisterCommandWithSubcommands(string[] names, Type command)
         {
-            if(command.BaseType != typeof(CommandCallbacks))
+            if(command.BaseType != typeof(CommandCallbacks<TSender>))
             {
                 throw new CommandRegistrationException($"{command.Name} must have the base class CommandCallbacks.");
             }
@@ -106,7 +112,7 @@ namespace EasyCommands
                 }
                 commands[name] = command;
             }
-            NumCommands++;
+            commandList.Add(command);
         }
     }
 }

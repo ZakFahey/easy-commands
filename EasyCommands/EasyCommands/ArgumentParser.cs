@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace EasyCommands
 {
-    class ArgumentParser
+    public class ArgumentParser<TSender>
     {
         private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();
 
         public void AddParsingRules(Type rules)
         {
-            if(rules.BaseType != typeof(ParsingRules))
+            if(rules.BaseType != typeof(ParsingRules<TSender>))
             {
                 throw new ParserInitializationException($"{rules.Name} must have the base class ParsingRules.");
             }
@@ -38,7 +38,7 @@ namespace EasyCommands
         public object ParseArgument(Type t, string arg, string parameterName, string properSyntax)
         {
             var rule = parsingRules[t];
-            ParsingRules instance = (ParsingRules)Activator.CreateInstance(rule.DeclaringType);
+            ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
             instance.ParameterName = parameterName;
             instance.ProperSyntax = properSyntax;
             try

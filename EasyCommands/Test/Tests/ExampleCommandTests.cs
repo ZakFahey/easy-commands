@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Example;
 using System.IO;
+using System.Collections.Generic;
 
 namespace EasyCommands.Test.Tests
 {
@@ -36,7 +37,6 @@ namespace EasyCommands.Test.Tests
         }
 
         //TODO: test documentation/help command
-        //TODO: test optional phrase
         //TODO: documentation for aliases
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The favorite-food command to get a user's favorite food.")]
+        [Description("The favorite-food command to set a user's favorite food.")]
         public void TestFavoriteFoodSet()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Blake bananas");
@@ -232,6 +232,61 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "window move 100 100");
             Assert.AreEqual("Window position set to (100, 100)." + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The help command shows all available commands.")]
+        public void TestHelp()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help");
+            string[] lines = ConsoleOutput.ToString().Split('\n', Environment.NewLine[0]);
+            Assert.AreEqual("Available commands:", lines[0]);
+            
+            // Verify that the commands are there, regardless of order
+            var actual = new HashSet<string>();
+            for(int i = 1; i < lines.Length; i++)
+            {
+                actual.Add(lines[i]);
+            }
+            var expected = new HashSet<string>()
+            {
+                "add <num1> <num2>",
+                "subtract <num1> <num2>",
+                "divide <num1> <num2>",
+                "add3or4 <num1> <num2> <num3> [num4]",
+                "myname",
+                "favorite-food <querying> [food]",
+                "add-user <name> <favoriteFood>",
+                "window <resize|move>",
+                "help [command] [subcommand]"
+            };
+            Assert.IsTrue(expected.SetEquals(actual));
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a command.")]
+        public void TestHelpWithCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help add");
+            Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a subcommand.")]
+        public void TestHelpWithSubcommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help window move");
+            Assert.AreEqual("Moves the window to a certain position. Syntax: window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a command with subcommands.")]
+        public void TestHelpWithCommandWithSubcommands()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help window");
+            Assert.AreEqual("Manipulates the console window. Subcommands:" + Environment.NewLine
+                + "window resize <width> <height>" + Environment.NewLine
+                + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
         }
     }
 }

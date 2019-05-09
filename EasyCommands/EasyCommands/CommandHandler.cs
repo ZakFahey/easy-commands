@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Collections.ObjectModel;
 
 namespace EasyCommands
 {
@@ -26,14 +27,16 @@ namespace EasyCommands
 
         private TextOptions textOptions;
         private CommandRepository<TSender> commandRepository;
-        private ArgumentParser argumentParser = new ArgumentParser();
+        private ArgumentParser<TSender> argumentParser = new ArgumentParser<TSender>();
 
         protected abstract void SendFailMessage(TSender sender, string message);
         protected abstract void Initialize();
+        protected virtual void BeforeAll() { }
+        protected virtual void AfterAll() { }
 
-        public int NumCommands
+        public ReadOnlyCollection<CommandDelegate<TSender>> CommandList
         {
-            get => commandRepository.NumCommands;
+            get => commandRepository.CommandList;
         }
 
         public CommandHandler()
@@ -55,20 +58,6 @@ namespace EasyCommands
             argumentParser.AddParsingRules(rules);
         }
 
-        public void RegisterCustomAttribute(Type classToRegister)
-        {
-            //TODO
-        }
-
-        public void RegisterCustomAttributes(string namespaceToRegister)
-        {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CustomAttribute) && !t.IsNested);
-            foreach(Type type in types)
-            {
-                RegisterCustomAttribute(type);
-            }
-        }
-
         public void RegisterCommands(Type classToRegister)
         {
             // Register the base class as a command with subcommands if it is one
@@ -80,7 +69,7 @@ namespace EasyCommands
             }
 
             // Enforce type
-            if(classToRegister.BaseType != typeof(CommandCallbacks))
+            if(classToRegister.BaseType != typeof(CommandCallbacks<TSender>))
             {
                 throw new CommandRegistrationException($"{classToRegister.Name} must have the base class CommandCallbacks.");
             }
@@ -112,7 +101,7 @@ namespace EasyCommands
 
         public void RegisterCommands(string namespaceToRegister)
         {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks) && !t.IsNested);
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks<TSender>) && !t.IsNested);
             foreach(Type type in types)
             {
                 RegisterCommands(type);

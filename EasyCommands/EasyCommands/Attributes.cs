@@ -65,6 +65,5 @@ namespace EasyCommands
     /// </summary>
     public abstract class CustomAttribute : Attribute
     {
-        public virtual void Before() { }
     }
 }

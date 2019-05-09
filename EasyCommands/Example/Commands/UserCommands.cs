@@ -3,7 +3,7 @@ using EasyCommands;
 
 namespace Example.Commands
 {
-    class UserCommands : CommandCallbacks
+    class UserCommands : CommandCallbacks<User>
     {
         [Command("myname")]
         [CommandDocumentation("Returns your name.")]
@@ -28,8 +28,8 @@ namespace Example.Commands
                 Console.WriteLine($"{querying.Name}'s favorite food was set to {food}.");
             }
         }
-        
-        [Command("add-user")]
+
+        [Command]
         [CommandDocumentation("Creates a new user.")]
         public void AddUser(
             User sender,

@@ -8,17 +8,16 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command without sub-commands
     /// </summary>
-    class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
+    public class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
     {
         private MethodInfo callback;
         private ParameterInfo[] callbackParams;
         private int phraseIndex;
         private int minLength;
         private int maxLength;
+        private string syntaxDocumentation;
 
-        public string SyntaxDocumentation { get; private set; }
-
-        public BaseCommandDelegate(TextOptions options, ArgumentParser parser, string name, MethodInfo callback) : base(options, parser, name)
+        public BaseCommandDelegate(TextOptions options, ArgumentParser<TSender> parser, string name, MethodInfo callback) : base(options, parser, name)
         {
             //TODO: the fact that method parameters are off by 1 compared to user-inputted command parameters makes this code confusing
             this.callback = callback;
@@ -30,12 +29,12 @@ namespace EasyCommands
                 minLength = maxLength;
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
-            SyntaxDocumentation = Name;
+            syntaxDocumentation = Name;
             for(int i = 1; i < callbackParams.Length; i++)
             {
                 ParamName nameOverride = callbackParams[i].GetCustomAttribute<ParamName>();
                 string paramName = nameOverride == null ? callbackParams[i].Name : nameOverride.Name;
-                SyntaxDocumentation += i > minLength ? $" [{paramName}]" : $" <{paramName}>";
+                syntaxDocumentation += i > minLength ? $" [{paramName}]" : $" <{paramName}>";
             }
 
 
@@ -64,6 +63,11 @@ namespace EasyCommands
                     $"The parameter {undefinedParam.Name} in the command {callback.DeclaringType.Name}.{callback.Name} does " +
                     $"not contain a corresponding parse rule for type {undefinedParam.ParameterType.Name}.");
             }
+        }
+
+        public override string SyntaxDocumentation()
+        {
+            return syntaxDocumentation;
         }
 
         public override void Invoke(TSender sender, string args)
@@ -115,7 +119,7 @@ namespace EasyCommands
         {
             if(args.Count() < minLength || args.Count() > maxLength)
             {
-                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, SyntaxDocumentation));
+                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, SyntaxDocumentation()));
             }
             var invocationParams = new object[callbackParams.Length];
             invocationParams[0] = sender;
@@ -129,7 +133,7 @@ namespace EasyCommands
                 {
                     //TODO: textOptions formatting should be elsewhere
                     invocationParams[i] = parser.ParseArgument(
-                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, string.Format(textOptions.ProperSyntax, SyntaxDocumentation));
+                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, string.Format(textOptions.ProperSyntax, SyntaxDocumentation()));
                 }
             }
             object instance = Activator.CreateInstance(callback.DeclaringType);
