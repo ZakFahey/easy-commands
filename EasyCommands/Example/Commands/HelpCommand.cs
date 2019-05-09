@@ -20,7 +20,22 @@ namespace Example.Commands
             }
             else
             {
-
+                var cmdDelegate = Context.CommandRepository.GetDelegate(command, subcommand);
+                if(cmdDelegate == null)
+                {
+                    string commandName = subcommand == null ? command : $"{command} {subcommand}";
+                    Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
+                }
+                CommandDocumentation documentation = cmdDelegate.GetCustomAttribute<CommandDocumentation>();
+                string helpText = documentation == null ? "This command does not have any documentation." : documentation.Documentation;
+                if(cmdDelegate is CommandGroupDelegate<User> groupDelegate)
+                {
+                    Console.WriteLine($"{helpText} Subcommands:\n{groupDelegate.SubcommandList()}");
+                }
+                else
+                {
+                    Console.WriteLine($"{helpText} Syntax: {cmdDelegate.SyntaxDocumentation()}");
+                }
             }
         }
     }

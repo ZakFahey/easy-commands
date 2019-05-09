@@ -25,7 +25,7 @@ namespace EasyCommands
 
         public void RegisterCommand(string[] names, MethodInfo command)
         {
-            var newCommand = new BaseCommandDelegate<TSender>(Context, names[0], command);
+            var newCommand = new BaseCommandDelegate<TSender>(Context, names[0], names[0], command);
             AddCommand(newCommand, names);
         }
 
@@ -40,28 +40,7 @@ namespace EasyCommands
                 throw new CommandRegistrationException($"Unexpected nested subcommand in {command.Name}.");
             }
 
-            CommandGroupDelegate<TSender> newCommand = new CommandGroupDelegate<TSender>(Context, names[0]);
-            bool anySubcommands = false;
-
-            foreach(MethodInfo subcommand in command.GetMethods())
-            {
-                if(subcommand.GetCommandNames<Command>() != null)
-                {
-                    throw new CommandRegistrationException($"Unexpected Command attribute in {command.Name}.{subcommand.Name}.");
-                }
-                string[] subcommandNames = subcommand.GetCommandNames<SubCommand>();
-                if(subcommandNames != null)
-                {
-                    anySubcommands = true;
-                    newCommand.AddSubcommand(subcommand, subcommandNames);
-                }
-            }
-            
-            if(!anySubcommands)
-            {
-                throw new CommandRegistrationException($"{command.Name} must contain at least one subcommand.");
-            }
-
+            CommandGroupDelegate<TSender> newCommand = new CommandGroupDelegate<TSender>(Context, names[0], command);
             AddCommand(newCommand, names);
         }
 
@@ -93,6 +72,24 @@ namespace EasyCommands
                 throw new CommandParsingException(string.Format(Context.TextOptions.CommandNotFound, name));
             }
             commands[name].Invoke(sender, parameters);
+        }
+
+        public CommandDelegate<TSender> GetDelegate(string command, string subcommand = null)
+        {
+            if(!commands.ContainsKey(command))
+            {
+                return null;
+            }
+            var cmdDelegate = commands[command];
+            if(subcommand == null)
+            {
+                return cmdDelegate;
+            }
+            if(cmdDelegate is CommandGroupDelegate<TSender> groupDelegate)
+            {
+                return groupDelegate.GetSubcommandDelegate(subcommand);
+            }
+            return null;
         }
 
         private void AddCommand(CommandDelegate<TSender> command, string[] names)

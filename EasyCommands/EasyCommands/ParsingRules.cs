@@ -11,9 +11,9 @@ namespace EasyCommands
         public string ParameterName;
         public string ProperSyntax;
         public Context<TSender> Context;
-
+        
         /// <summary>
-        /// Fails the parsing and sends an error message
+        /// Fails the parsing, halts execution, and sends an error message back to the user
         /// </summary>
         /// <param name="message">The error message to show</param>
         /// <param name="showProperSyntax">Whether to prompt the user with the proper syntax for the command</param>

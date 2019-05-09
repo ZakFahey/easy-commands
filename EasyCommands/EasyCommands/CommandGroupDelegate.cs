@@ -13,11 +13,37 @@ namespace EasyCommands
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
         private List<BaseCommandDelegate<TSender>> subcommandList = new List<BaseCommandDelegate<TSender>>();
 
-        public CommandGroupDelegate(Context<TSender> context, string name) : base(context, name) { }
+        public CommandGroupDelegate(Context<TSender> context, string name, Type command) : base(context, name)
+        {
+            foreach(CustomAttribute attribute in command.GetCustomAttributes<CustomAttribute>(true))
+            {
+                customAttributes[attribute.GetType()] = attribute;
+            }
+
+            bool anySubcommands = false;
+            foreach(MethodInfo subcommand in command.GetMethods())
+            {
+                if(subcommand.GetCommandNames<Command>() != null)
+                {
+                    throw new CommandRegistrationException($"Unexpected Command attribute in {command.Name}.{subcommand.Name}.");
+                }
+                string[] subcommandNames = subcommand.GetCommandNames<SubCommand>();
+                if(subcommandNames != null)
+                {
+                    anySubcommands = true;
+                    var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {subcommandNames[0]}", subcommandNames[0], subcommand);
+                    AddSubcommand(newSubcommand, subcommandNames);
+                }
+            }
+            if(!anySubcommands)
+            {
+                throw new CommandRegistrationException($"{command.Name} must contain at least one subcommand.");
+            }
+        }
 
         public override string SyntaxDocumentation()
         {
-            return $"{Name} <{string.Join("|", subcommandList.Select(sub => sub.Name))}>";
+            return $"{Name} <{string.Join("|", subcommandList.Select(sub => sub.ShortName))}>";
         }
 
         public override void Invoke(TSender sender, string args)
@@ -37,7 +63,21 @@ namespace EasyCommands
             subcommands[subcommand].Invoke(sender, subcommandArgs);
         }
 
-        public void AddSubcommand(BaseCommandDelegate<TSender> command, string[] names)
+        public string SubcommandList()
+        {
+            return string.Join("\n", subcommandList.Select(sub => sub.SyntaxDocumentation()));
+        }
+
+        public BaseCommandDelegate<TSender> GetSubcommandDelegate(string subcommand)
+        {
+            if(!subcommands.ContainsKey(subcommand))
+            {
+                return null;
+            }
+            return subcommands[subcommand];
+        }
+
+        private void AddSubcommand(BaseCommandDelegate<TSender> command, string[] names)
         {
             foreach(string name in names)
             {
@@ -48,17 +88,6 @@ namespace EasyCommands
                 subcommands[name] = command;
             }
             subcommandList.Add(command);
-        }
-
-        public void AddSubcommand(MethodInfo command, string[] names)
-        {
-            var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {names[0]}", command);
-            AddSubcommand(newSubcommand, names);
-        }
-
-        public string SubcommandList()
-        {
-            return string.Join("\n", subcommandList.Select(sub => sub.SyntaxDocumentation()));
         }
     }
 }

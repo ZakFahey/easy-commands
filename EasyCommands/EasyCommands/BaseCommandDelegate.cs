@@ -17,9 +17,12 @@ namespace EasyCommands
         private int maxLength;
         private string syntaxDocumentation;
 
-        public BaseCommandDelegate(Context<TSender> context, string name, MethodInfo callback) : base(context, name)
+        public string ShortName { get; private set; }
+
+        public BaseCommandDelegate(Context<TSender> context, string name, string shortName, MethodInfo callback) : base(context, name)
         {
             //TODO: the fact that method parameters are off by 1 compared to user-inputted command parameters makes this code confusing
+            ShortName = shortName;
             this.callback = callback;
             callbackParams = callback.GetParameters();
             maxLength = callbackParams.Length - 1;
@@ -36,8 +39,11 @@ namespace EasyCommands
                 string paramName = nameOverride == null ? callbackParams[i].Name : nameOverride.Name;
                 syntaxDocumentation += i > minLength ? $" [{paramName}]" : $" <{paramName}>";
             }
-
-
+            foreach(CustomAttribute attribute in callback.GetCustomAttributes<CustomAttribute>(true))
+            {
+                customAttributes[attribute.GetType()] = attribute;
+            }
+            
             if(minLength != maxLength && phraseIndex >= 0)
             {
                 throw new CommandRegistrationException(

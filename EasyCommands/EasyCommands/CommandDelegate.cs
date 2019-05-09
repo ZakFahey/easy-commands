@@ -10,6 +10,7 @@ namespace EasyCommands
         public string Name { get; private set; }
 
         protected Context<TSender> Context;
+        protected Dictionary<Type, CustomAttribute> customAttributes = new Dictionary<Type, CustomAttribute>();
 
         public abstract void Invoke(TSender sender, string args);
         public abstract string SyntaxDocumentation();
@@ -18,6 +19,15 @@ namespace EasyCommands
         {
             Context = context;
             Name = name;
+        }
+
+        public T GetCustomAttribute<T>() where T : CustomAttribute
+        {
+            if(!customAttributes.ContainsKey(typeof(T)))
+            {
+                return null;
+            }
+            return (T)customAttributes[typeof(T)];
         }
     }
 }

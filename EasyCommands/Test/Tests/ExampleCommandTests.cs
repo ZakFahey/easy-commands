@@ -38,6 +38,7 @@ namespace EasyCommands.Test.Tests
 
         //TODO: test documentation/help command
         //TODO: documentation for aliases
+        //TODO: permission levels
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
@@ -246,7 +247,7 @@ namespace EasyCommands.Test.Tests
             var actual = new HashSet<string>();
             for(int i = 1; i < lines.Length; i++)
             {
-                actual.Add(lines[i]);
+                if(lines[i].Length > 0) actual.Add(lines[i]);
             }
             var expected = new HashSet<string>()
             {
@@ -260,7 +261,13 @@ namespace EasyCommands.Test.Tests
                 "window <resize|move>",
                 "help [command] [subcommand]"
             };
-            Assert.IsTrue(expected.SetEquals(actual));
+            if(!expected.SetEquals(actual))
+            {
+                Assert.Fail(
+                    "Console output not equal to expected output." +
+                    "\nExpected:\n" + string.Join("\n", expected) +
+                    "\nActual:\n" + string.Join("\n", actual));
+            }
         }
 
         [TestMethod]
@@ -269,6 +276,14 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "help add");
             Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("The help command shows an error if a command doesn't exist.")]
+        public void TestHelpWithNonexistentCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help asdf");
+            Assert.AreEqual("Command \"asdf\" does not exist." + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]
@@ -284,8 +299,8 @@ namespace EasyCommands.Test.Tests
         public void TestHelpWithCommandWithSubcommands()
         {
             CommandHandler.RunCommand(CurrentUser, "help window");
-            Assert.AreEqual("Manipulates the console window. Subcommands:" + Environment.NewLine
-                + "window resize <width> <height>" + Environment.NewLine
+            Assert.AreEqual("Manipulates the console window. Subcommands:\n"
+                + "window resize <width> <height>\n"
                 + "window move <left> <top>" + Environment.NewLine, ConsoleOutput.ToString());
         }
     }
