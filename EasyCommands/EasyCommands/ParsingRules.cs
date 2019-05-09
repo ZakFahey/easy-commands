@@ -10,7 +10,7 @@ namespace EasyCommands
     {
         public string ParameterName;
         public string ProperSyntax;
-        public CommandHandler<TSender> CommandHandler;
+        public Context<TSender> Context;
 
         /// <summary>
         /// Fails the parsing and sends an error message
@@ -22,7 +22,7 @@ namespace EasyCommands
             string msg = string.Format(message, ParameterName);
             if(showProperSyntax)
             {
-                msg += "\n" + ProperSyntax;
+                msg += "\n" + string.Format(Context.TextOptions.ProperSyntax, ProperSyntax);
             }
             throw new CommandParsingException(msg);
         }

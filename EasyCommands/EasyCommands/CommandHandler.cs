@@ -25,37 +25,38 @@ namespace EasyCommands
             }
         }
 
-        private TextOptions textOptions;
-        private CommandRepository<TSender> commandRepository;
-        private ArgumentParser<TSender> argumentParser = new ArgumentParser<TSender>();
-
         protected abstract void SendFailMessage(TSender sender, string message);
         protected abstract void Initialize();
         protected virtual void BeforeAll() { }
         protected virtual void AfterAll() { }
+        protected Context<TSender> Context = new Context<TSender>();
 
         public ReadOnlyCollection<CommandDelegate<TSender>> CommandList
         {
-            get => commandRepository.CommandList;
+            get => Context.CommandRepository.CommandList;
         }
 
         public CommandHandler()
         {
-            textOptions = TextOptions.Default();
-            commandRepository = new CommandRepository<TSender>(textOptions, argumentParser);
+            Context.CommandHandler = this;
+            Context.TextOptions = TextOptions.Default();
+            Context.ArgumentParser = new ArgumentParser<TSender>(Context);
+            Context.CommandRepository = new CommandRepository<TSender>(Context);
             Initialize();
         }
 
         public CommandHandler(TextOptions options)
         {
-            textOptions = options;
-            commandRepository = new CommandRepository<TSender>(textOptions, argumentParser);
+            Context.CommandHandler = this;
+            Context.TextOptions = options;
+            Context.ArgumentParser = new ArgumentParser<TSender>(Context);
+            Context.CommandRepository = new CommandRepository<TSender>(Context);
             Initialize();
         }
 
         public void AddParsingRules(Type rules)
         {
-            argumentParser.AddParsingRules(rules);
+            Context.ArgumentParser.AddParsingRules(rules);
         }
 
         public void RegisterCommands(Type classToRegister)
@@ -64,7 +65,7 @@ namespace EasyCommands
             string[] classCommandNames = classToRegister.GetCommandNames<Command>();
             if(classCommandNames != null)
             {
-                commandRepository.RegisterCommandWithSubcommands(classCommandNames, classToRegister);
+                Context.CommandRepository.RegisterCommandWithSubcommands(classCommandNames, classToRegister);
                 return;
             }
 
@@ -84,7 +85,7 @@ namespace EasyCommands
                 string[] commandNames = command.GetCommandNames<Command>();
                 if(commandNames != null)
                 {
-                    commandRepository.RegisterCommand(commandNames, command);
+                    Context.CommandRepository.RegisterCommand(commandNames, command);
                 }
             }
 
@@ -94,7 +95,7 @@ namespace EasyCommands
                 string[] commandNames = command.GetCommandNames<Command>();
                 if(commandNames != null)
                 {
-                    commandRepository.RegisterCommandWithSubcommands(commandNames, command);
+                    Context.CommandRepository.RegisterCommandWithSubcommands(commandNames, command);
                 }
             }
         }
@@ -113,7 +114,7 @@ namespace EasyCommands
             command = command.Trim(' ');
             try
             {
-                commandRepository.Invoke(sender, command);
+                Context.CommandRepository.Invoke(sender, command);
             }
             catch(CommandParsingException e)
             {

@@ -13,7 +13,7 @@ namespace Example.Commands
             if(command == null)
             {
                 Console.WriteLine("Available commands:");
-                foreach(var cmd in CommandHandler.CommandList)
+                foreach(var cmd in Context.CommandHandler.CommandList)
                 {
                     Console.WriteLine(cmd.SyntaxDocumentation());
                 }

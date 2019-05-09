@@ -8,7 +8,7 @@ namespace EasyCommands
 {
     public abstract class CommandCallbacks<TSender>
     {
-        public CommandHandler<TSender> CommandHandler;
+        public Context<TSender> Context;
 
         protected void Fail(string message)
         {

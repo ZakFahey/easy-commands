@@ -13,7 +13,7 @@ namespace EasyCommands
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
         private List<BaseCommandDelegate<TSender>> subcommandList = new List<BaseCommandDelegate<TSender>>();
 
-        public CommandGroupDelegate(TextOptions options, ArgumentParser<TSender> parser, string name) : base(options, parser, name) { }
+        public CommandGroupDelegate(Context<TSender> context, string name) : base(context, name) { }
 
         public override string SyntaxDocumentation()
         {
@@ -24,14 +24,14 @@ namespace EasyCommands
         {
             if(args.Length == 0)
             {
-                throw new CommandParsingException($"{string.Format(textOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
+                throw new CommandParsingException($"{string.Format(Context.TextOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
             }
             (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
             if(!subcommands.ContainsKey(subcommand))
             {
                 throw new CommandParsingException(
-                    string.Format(textOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
-                    + string.Format(textOptions.ShowSubcommands, Name) + "\n"
+                    string.Format(Context.TextOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
+                    + string.Format(Context.TextOptions.ShowSubcommands, Name) + "\n"
                     + SubcommandList());
             }
             subcommands[subcommand].Invoke(sender, subcommandArgs);
@@ -52,7 +52,8 @@ namespace EasyCommands
 
         public void AddSubcommand(MethodInfo command, string[] names)
         {
-            AddSubcommand(new BaseCommandDelegate<TSender>(textOptions, parser, $"{Name} {names[0]}", command), names);
+            var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {names[0]}", command);
+            AddSubcommand(newSubcommand, names);
         }
 
         public string SubcommandList()

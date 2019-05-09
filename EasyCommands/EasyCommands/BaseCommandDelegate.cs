@@ -17,7 +17,7 @@ namespace EasyCommands
         private int maxLength;
         private string syntaxDocumentation;
 
-        public BaseCommandDelegate(TextOptions options, ArgumentParser<TSender> parser, string name, MethodInfo callback) : base(options, parser, name)
+        public BaseCommandDelegate(Context<TSender> context, string name, MethodInfo callback) : base(context, name)
         {
             //TODO: the fact that method parameters are off by 1 compared to user-inputted command parameters makes this code confusing
             this.callback = callback;
@@ -56,7 +56,7 @@ namespace EasyCommands
                 throw new CommandRegistrationException(
                     $"{callback.DeclaringType.Name}.{callback.Name} cannot contain more than one parameter with the AllowSpaces attribute.");
             }
-            ParameterInfo undefinedParam = callbackParams.FirstOrDefault(p => !parser.ParseRuleExists(p.ParameterType));
+            ParameterInfo undefinedParam = callbackParams.FirstOrDefault(p => !Context.ArgumentParser.ParseRuleExists(p.ParameterType));
             if(undefinedParam != null)
             {
                 throw new CommandRegistrationException(
@@ -119,7 +119,7 @@ namespace EasyCommands
         {
             if(args.Count() < minLength || args.Count() > maxLength)
             {
-                throw new CommandParsingException(string.Format(textOptions.WrongNumberOfArguments, SyntaxDocumentation()));
+                throw new CommandParsingException(string.Format(Context.TextOptions.WrongNumberOfArguments, SyntaxDocumentation()));
             }
             var invocationParams = new object[callbackParams.Length];
             invocationParams[0] = sender;
@@ -132,11 +132,12 @@ namespace EasyCommands
                 else
                 {
                     //TODO: textOptions formatting should be elsewhere
-                    invocationParams[i] = parser.ParseArgument(
-                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, string.Format(textOptions.ProperSyntax, SyntaxDocumentation()));
+                    invocationParams[i] = Context.ArgumentParser.ParseArgument(
+                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, SyntaxDocumentation());
                 }
             }
-            object instance = Activator.CreateInstance(callback.DeclaringType);
+            CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);
+            instance.Context = Context;
             try
             {
                 callback.Invoke(instance, invocationParams);

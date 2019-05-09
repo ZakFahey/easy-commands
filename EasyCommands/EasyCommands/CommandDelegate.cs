@@ -7,18 +7,16 @@ namespace EasyCommands
 {
     public abstract class CommandDelegate<TSender>
     {
-        protected TextOptions textOptions;
-        protected ArgumentParser<TSender> parser;
-
         public string Name { get; private set; }
+
+        protected Context<TSender> Context;
 
         public abstract void Invoke(TSender sender, string args);
         public abstract string SyntaxDocumentation();
 
-        public CommandDelegate(TextOptions options, ArgumentParser<TSender> parser, string name)
+        public CommandDelegate(Context<TSender> context, string name)
         {
-            textOptions = options;
-            this.parser = parser;
+            Context = context;
             Name = name;
         }
     }

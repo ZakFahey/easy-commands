@@ -7,28 +7,26 @@ using System.Text.RegularExpressions;
 
 namespace EasyCommands
 {
-    class CommandRepository<TSender>
+    public class CommandRepository<TSender>
     {
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();
-        private TextOptions textOptions;
         private List<CommandDelegate<TSender>> commandList = new List<CommandDelegate<TSender>>();
-
-        protected ArgumentParser<TSender> parser;
+        private Context<TSender> Context;
 
         public ReadOnlyCollection<CommandDelegate<TSender>> CommandList
         {
             get => commandList.AsReadOnly();
         }
 
-        public CommandRepository(TextOptions options, ArgumentParser<TSender> parser)
+        public CommandRepository(Context<TSender> context)
         {
-            textOptions = options;
-            this.parser = parser;
+            Context = context;
         }
 
         public void RegisterCommand(string[] names, MethodInfo command)
         {
-            AddCommand(new BaseCommandDelegate<TSender>(textOptions, parser, names[0], command), names);
+            var newCommand = new BaseCommandDelegate<TSender>(Context, names[0], command);
+            AddCommand(newCommand, names);
         }
 
         public void RegisterCommandWithSubcommands(string[] names, Type command)
@@ -42,7 +40,7 @@ namespace EasyCommands
                 throw new CommandRegistrationException($"Unexpected nested subcommand in {command.Name}.");
             }
 
-            var newCommand = new CommandGroupDelegate<TSender>(textOptions, parser, names[0]);
+            CommandGroupDelegate<TSender> newCommand = new CommandGroupDelegate<TSender>(Context, names[0]);
             bool anySubcommands = false;
 
             foreach(MethodInfo subcommand in command.GetMethods())
@@ -88,11 +86,11 @@ namespace EasyCommands
             }
             if(string.IsNullOrEmpty(name))
             {
-                throw new CommandParsingException(string.Format(textOptions.EmptyCommand, name));
+                throw new CommandParsingException(string.Format(Context.TextOptions.EmptyCommand, name));
             }
             if(!commands.ContainsKey(name))
             {
-                throw new CommandParsingException(string.Format(textOptions.CommandNotFound, name));
+                throw new CommandParsingException(string.Format(Context.TextOptions.CommandNotFound, name));
             }
             commands[name].Invoke(sender, parameters);
         }

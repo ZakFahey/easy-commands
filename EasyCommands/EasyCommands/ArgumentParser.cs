@@ -10,6 +10,12 @@ namespace EasyCommands
     public class ArgumentParser<TSender>
     {
         private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();
+        private Context<TSender> Context;
+
+        public ArgumentParser(Context<TSender> context)
+        {
+            Context = context;
+        }
 
         public void AddParsingRules(Type rules)
         {
@@ -41,6 +47,7 @@ namespace EasyCommands
             ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
             instance.ParameterName = parameterName;
             instance.ProperSyntax = properSyntax;
+            instance.Context = Context;
             try
             {
                 return rule.Invoke(instance, new object[] { arg });
