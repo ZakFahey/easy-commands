@@ -29,7 +29,7 @@ namespace EasyCommands
 
         public void RegisterCommand(string[] names, MethodInfo command)
         {
-            var newCommand = new BaseCommandDelegate<TSender>(Context, names[0], names[0], command);
+            var newCommand = new BaseCommandDelegate<TSender>(Context, names[0], names, names[0], command);
             AddCommand(newCommand, names);
         }
 
@@ -44,7 +44,7 @@ namespace EasyCommands
                 throw new CommandRegistrationException($"Unexpected nested subcommand in {command.Name}.");
             }
 
-            CommandGroupDelegate<TSender> newCommand = new CommandGroupDelegate<TSender>(Context, names[0], command);
+            CommandGroupDelegate<TSender> newCommand = new CommandGroupDelegate<TSender>(Context, names[0], names, command);
             AddCommand(newCommand, names);
         }
 

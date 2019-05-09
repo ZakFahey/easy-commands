@@ -21,7 +21,8 @@ namespace EasyCommands
 
         public string ShortName { get; private set; }
 
-        public BaseCommandDelegate(Context<TSender> context, string name, string shortName, MethodInfo callback) : base(context, name)
+        public BaseCommandDelegate(Context<TSender> context, string mainName, string[] allNames, string shortName, MethodInfo callback)
+            : base(context, mainName, allNames)
         {
             ShortName = shortName;
             this.callback = callback;
@@ -132,7 +133,6 @@ namespace EasyCommands
                 }
                 else
                 {
-                    //TODO: textOptions formatting should be elsewhere
                     invocationParams[i] = Context.ArgumentParser.ParseArgument(
                         callbackParams[i].ParameterType, args.ElementAt(i), paramNames[i], SyntaxDocumentation());
                 }

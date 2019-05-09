@@ -10,7 +10,7 @@ namespace EasyCommands
     public class Command : Attribute
     {
         public string[] Names { get; private set; }
-        
+
         /// <param name="names">The aliases used to run the command</param>
         public Command(params string[] names)
         {
@@ -63,6 +63,7 @@ namespace EasyCommands
     /// <summary>
     /// Custom behavior you can add to a command or parameter.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public abstract class CustomAttribute : Attribute
     {
     }

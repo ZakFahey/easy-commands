@@ -30,9 +30,7 @@ namespace EasyCommands.Test.Tests
         {
             ConsoleReader.Close();
         }
-
-        //TODO: test documentation/help command
-        //TODO: documentation for aliases
+        
         //TODO: permission levels
         //TODO: optimize code for tests with longer runtimes
 
@@ -266,6 +264,14 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "help add");
             Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the aliases for a command.")]
+        public void TestHelpWithCommandWithAliases()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help divide");
+            Assert.AreEqual("Divides num1 by num2. Syntax: divide <num1> <num2>. Aliases: div", ConsoleReader.ReadLine());
         }
 
         [TestMethod]

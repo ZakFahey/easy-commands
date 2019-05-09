@@ -28,13 +28,22 @@ namespace Example.Commands
                 }
                 CommandDocumentation documentation = cmdDelegate.GetCustomAttribute<CommandDocumentation>();
                 string helpText = documentation == null ? "This command does not have any documentation." : documentation.Documentation;
+                string aliases = string.Join(", ", cmdDelegate.Aliases);
                 if(cmdDelegate is CommandGroupDelegate<User> groupDelegate)
                 {
-                    Console.WriteLine($"{helpText} Subcommands:\n{groupDelegate.SubcommandList()}");
+                    if(aliases.Length > 0)
+                    {
+                        aliases = " Aliases: " + aliases + ".";
+                    }
+                    Console.WriteLine($"{helpText}{aliases} Subcommands:\n{groupDelegate.SubcommandList()}");
                 }
                 else
                 {
-                    Console.WriteLine($"{helpText} Syntax: {cmdDelegate.SyntaxDocumentation()}");
+                    if(aliases.Length > 0)
+                    {
+                        aliases = ". Aliases: " + aliases;
+                    }
+                    Console.WriteLine($"{helpText} Syntax: {cmdDelegate.SyntaxDocumentation()}{aliases}");
                 }
             }
         }

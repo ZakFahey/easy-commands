@@ -12,6 +12,7 @@ namespace EasyCommands
     public abstract class CommandDelegate<TSender>
     {
         public string Name { get; private set; }
+        public string[] Aliases { get; private set; }
 
         protected Context<TSender> Context;
         protected Dictionary<Type, CustomAttribute> customAttributes = new Dictionary<Type, CustomAttribute>();
@@ -19,10 +20,11 @@ namespace EasyCommands
         public abstract void Invoke(TSender sender, string args);
         public abstract string SyntaxDocumentation();
 
-        public CommandDelegate(Context<TSender> context, string name)
+        public CommandDelegate(Context<TSender> context, string mainName, string[] allNames)
         {
             Context = context;
-            Name = name;
+            Name = mainName;
+            Aliases = allNames.ToList().GetRange(1, allNames.Length - 1).ToArray();
         }
 
         public T GetCustomAttribute<T>() where T : CustomAttribute

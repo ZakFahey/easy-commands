@@ -7,7 +7,6 @@ namespace EasyCommands.Test.Tests
     [TestClass]
     public class CommandRegistrationTests
     {
-        //TODO: tests for nonexistent custom attribute format
         //TODO: what happens when nulls are passed into things?
 
         [TestMethod]

@@ -14,7 +14,7 @@ namespace EasyCommands
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
         private List<BaseCommandDelegate<TSender>> subcommandList = new List<BaseCommandDelegate<TSender>>();
 
-        public CommandGroupDelegate(Context<TSender> context, string name, Type command) : base(context, name)
+        public CommandGroupDelegate(Context<TSender> context, string mainName, string[] allNames, Type command) : base(context, mainName, allNames)
         {
             foreach(CustomAttribute attribute in command.GetCustomAttributes<CustomAttribute>(true))
             {
@@ -32,7 +32,7 @@ namespace EasyCommands
                 if(subcommandNames != null)
                 {
                     anySubcommands = true;
-                    var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {subcommandNames[0]}", subcommandNames[0], subcommand);
+                    var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {subcommandNames[0]}", subcommandNames, subcommandNames[0], subcommand);
                     AddSubcommand(newSubcommand, subcommandNames);
                 }
             }
