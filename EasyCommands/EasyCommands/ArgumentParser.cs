@@ -7,6 +7,10 @@ using System.Reflection;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// Service to convert a string argument from a user's input into its respective parameter type
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class ArgumentParser<TSender>
     {
         private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();

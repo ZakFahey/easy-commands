@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// Contains methods to convert a string argument from a user's input into its respective parameter type
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public abstract class ParsingRules<TSender>
     {
         public string ParameterName;

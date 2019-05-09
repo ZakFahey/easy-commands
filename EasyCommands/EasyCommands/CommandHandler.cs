@@ -6,6 +6,10 @@ using System.Collections.ObjectModel;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// The base class to build off of to create a command parser for your application
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public abstract class CommandHandler<TSender>
     {
         private IEnumerable<Type> _allTypes = null;

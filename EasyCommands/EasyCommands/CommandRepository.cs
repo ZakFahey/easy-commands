@@ -7,6 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// Stores and indexes all commands
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class CommandRepository<TSender>
     {
         private Dictionary<string, CommandDelegate<TSender>> commands = new Dictionary<string, CommandDelegate<TSender>>();

@@ -9,6 +9,7 @@ namespace EasyCommands
     /// <summary>
     /// Maintains the various classes you'd want to reference for a given CommandHandler
     /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class Context<TSender>
     {
         public CommandHandler<TSender> CommandHandler;

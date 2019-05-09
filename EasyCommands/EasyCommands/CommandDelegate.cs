@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// Wrapper for a command callback method
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public abstract class CommandDelegate<TSender>
     {
         public string Name { get; private set; }

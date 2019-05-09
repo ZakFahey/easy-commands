@@ -8,6 +8,7 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command without sub-commands
     /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class BaseCommandDelegate<TSender> : CommandDelegate<TSender>
     {
         private MethodInfo callback;

@@ -8,6 +8,7 @@ namespace EasyCommands
     /// <summary>
     /// Command delegate for command with sub-commands
     /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class CommandGroupDelegate<TSender> : CommandDelegate<TSender>
     {
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();

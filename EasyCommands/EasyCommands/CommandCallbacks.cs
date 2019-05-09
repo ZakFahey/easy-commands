@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace EasyCommands
 {
+    /// <summary>
+    /// Holds all command callback methods
+    /// </summary>
+    /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public abstract class CommandCallbacks<TSender>
     {
+        /// <summary> Maintains the various classes you'd want to reference for a given CommandHandler </summary>
         public Context<TSender> Context;
+        /// <summary> Object containing the context of the user sending the command </summary>
         public TSender Sender;
 
         /// <summary>
