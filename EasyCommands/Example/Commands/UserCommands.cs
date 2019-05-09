@@ -7,14 +7,14 @@ namespace Example.Commands
     {
         [Command("myname")]
         [CommandDocumentation("Returns your name.")]
-        public void MyName(User sender)
+        public void MyName()
         {
-            Console.WriteLine($"Your name is {sender.Name}.");
+            Console.WriteLine($"Your name is {Sender.Name}.");
         }
         
         [Command("favorite-food")]
         [CommandDocumentation("Gets or sets the favorite food of a user.")]
-        public void FavoriteFood(User sender, User querying, string food = null)
+        public void FavoriteFood(User querying, string food = null)
         {
             if(food == null)
             {
@@ -32,7 +32,6 @@ namespace Example.Commands
         [Command]
         [CommandDocumentation("Creates a new user.")]
         public void AddUser(
-            User sender,
             string name,
             [AllowSpaces]
             string favoriteFood)

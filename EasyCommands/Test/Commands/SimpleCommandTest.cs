@@ -8,13 +8,13 @@ namespace EasyCommands.Test.Commands
     class SimpleCommandTest : CommandCallbacks<User>
     {
         [Command("test")]
-        public void Test(User sender)
+        public void Test()
         {
             Console.WriteLine("Something");
         }
 
         [Command("something")]
-        public void Something(User sender)
+        public void Something()
         {
             Console.WriteLine("Hello!");
         }

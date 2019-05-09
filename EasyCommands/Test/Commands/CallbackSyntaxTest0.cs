@@ -9,7 +9,7 @@ namespace EasyCommands.Test.Commands
     {
         // Registration should fail because it uses a nonexistent parse rule
         [Command("test")]
-        public void Test(User sender, DirectoryInfo directoryInfo)
+        public void Test(DirectoryInfo directoryInfo)
         {
             Console.WriteLine("Hello!");
         }

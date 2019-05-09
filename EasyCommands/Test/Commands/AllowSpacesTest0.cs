@@ -9,7 +9,6 @@ namespace EasyCommands.Test.Commands
         // Registration should fail because there are multiple parameters with the AllowSpaces attribute
         [Command("test")]
         public void Test(
-            User sender,
             [AllowSpaces]
             string val1,
             [AllowSpaces]

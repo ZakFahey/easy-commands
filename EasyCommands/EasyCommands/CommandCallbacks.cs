@@ -9,6 +9,7 @@ namespace EasyCommands
     public abstract class CommandCallbacks<TSender>
     {
         public Context<TSender> Context;
+        public TSender Sender;
 
         /// <summary>
         /// Sends an error message to the user and halts execution of the callback.

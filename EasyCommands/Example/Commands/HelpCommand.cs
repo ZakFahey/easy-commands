@@ -8,7 +8,7 @@ namespace Example.Commands
     {
         [Command("help")]
         [CommandDocumentation("Gives information about commands.")]
-        public void Help(User sender, string command = null, string subcommand = null)
+        public void Help(string command = null, string subcommand = null)
         {
             if(command == null)
             {

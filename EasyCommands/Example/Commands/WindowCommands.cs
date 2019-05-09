@@ -10,7 +10,7 @@ namespace Example.Commands
 
         [SubCommand("resize")]
         [CommandDocumentation("Resizes the window.")]
-        public void Resize(User sender, int width, int height)
+        public void Resize(int width, int height)
         {
             var win = Window.GetConsoleWindow();
             Window.GetWindowRect(win, out Window.RECT rect);
@@ -20,7 +20,7 @@ namespace Example.Commands
 
         [SubCommand] // If we do not include the command name, it can be inferred from the method name.
         [CommandDocumentation("Moves the window to a certain position.")]
-        public void Move(User sender, int left, int top)
+        public void Move(int left, int top)
         {
             var win = Window.GetConsoleWindow();
             Window.GetWindowRect(win, out Window.RECT rect);

@@ -12,6 +12,7 @@ namespace EasyCommands
     {
         private MethodInfo callback;
         private ParameterInfo[] callbackParams;
+        private string[] paramNames;
         private int phraseIndex;
         private int minLength;
         private int maxLength;
@@ -21,24 +22,21 @@ namespace EasyCommands
 
         public BaseCommandDelegate(Context<TSender> context, string name, string shortName, MethodInfo callback) : base(context, name)
         {
-            //TODO: the fact that method parameters are off by 1 compared to user-inputted command parameters makes this code confusing
             ShortName = shortName;
             this.callback = callback;
             callbackParams = callback.GetParameters();
-            maxLength = callbackParams.Length - 1;
-            minLength = Array.FindIndex(callbackParams, p => p.HasDefaultValue) - 1;
-            if(minLength == -2)
+            paramNames = callbackParams.Select(p => {
+                ParamName nameOverride = p.GetCustomAttribute<ParamName>();
+                return nameOverride == null ? p.Name : nameOverride.Name;
+            }).ToArray();
+            maxLength = callbackParams.Length;
+            minLength = Array.FindIndex(callbackParams, p => p.HasDefaultValue);
+            if(minLength == -1)
             {
                 minLength = maxLength;
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
-            syntaxDocumentation = Name;
-            for(int i = 1; i < callbackParams.Length; i++)
-            {
-                ParamName nameOverride = callbackParams[i].GetCustomAttribute<ParamName>();
-                string paramName = nameOverride == null ? callbackParams[i].Name : nameOverride.Name;
-                syntaxDocumentation += i > minLength ? $" [{paramName}]" : $" <{paramName}>";
-            }
+            syntaxDocumentation = Name + " " + string.Join(" ", paramNames.Select((nm, i) => i >= minLength ? $"[{nm}]" : $"<{nm}>"));
             foreach(CustomAttribute attribute in callback.GetCustomAttributes<CustomAttribute>(true))
             {
                 customAttributes[attribute.GetType()] = attribute;
@@ -46,16 +44,13 @@ namespace EasyCommands
             
             if(minLength != maxLength && phraseIndex >= 0)
             {
+                //TODO: allow phrase and optional parameter if they are both the same thing
                 throw new CommandRegistrationException(
                     $"{callback.DeclaringType.Name}.{callback.Name} cannot contain a parameter with the AllowSpaces attribute along with any optional parameters.");
             }
             if(callback.ReturnType != typeof(void))
             {
                 throw new CommandRegistrationException($"{callback.DeclaringType.Name}.{callback.Name} must return void.");
-            }
-            if(callbackParams.Length < 1 || callbackParams[0].ParameterType != typeof(TSender))
-            {
-                throw new CommandRegistrationException($"{callback.DeclaringType.Name}.{callback.Name} must start with a sender parameter.");
             }
             if(callbackParams.Count(p => p.GetCustomAttribute<AllowSpaces>() != null) > 1)
             {
@@ -112,10 +107,10 @@ namespace EasyCommands
             if(argList.Count > maxLength && phraseIndex >= 0)
             {
                 int phraseLength = argList.Count - maxLength + 1;
-                argList[phraseIndex - 1] = string.Join(" ", argList.GetRange(phraseIndex - 1, phraseLength));
-                if(phraseIndex < argList.Count)
+                argList[phraseIndex] = string.Join(" ", argList.GetRange(phraseIndex, phraseLength));
+                if(phraseIndex + 1 < argList.Count)
                 {
-                    argList.RemoveRange(phraseIndex, phraseLength - 1);
+                    argList.RemoveRange(phraseIndex + 1, phraseLength - 1);
                 }
             }
             Invoke(sender, argList);
@@ -128,10 +123,9 @@ namespace EasyCommands
                 throw new CommandParsingException(string.Format(Context.TextOptions.WrongNumberOfArguments, SyntaxDocumentation()));
             }
             var invocationParams = new object[callbackParams.Length];
-            invocationParams[0] = sender;
-            for(int i = 1; i < invocationParams.Length; i++)
+            for(int i = 0; i < invocationParams.Length; i++)
             {
-                if(i > args.Count())
+                if(i >= args.Count())
                 {
                     invocationParams[i] = callbackParams[i].DefaultValue;
                 }
@@ -139,11 +133,12 @@ namespace EasyCommands
                 {
                     //TODO: textOptions formatting should be elsewhere
                     invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                        callbackParams[i].ParameterType, args.ElementAt(i - 1), callbackParams[i].Name, SyntaxDocumentation());
+                        callbackParams[i].ParameterType, args.ElementAt(i), paramNames[i], SyntaxDocumentation());
                 }
             }
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);
             instance.Context = Context;
+            instance.Sender = sender;
             try
             {
                 callback.Invoke(instance, invocationParams);

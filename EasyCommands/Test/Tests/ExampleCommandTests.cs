@@ -39,6 +39,7 @@ namespace EasyCommands.Test.Tests
         //TODO: test documentation/help command
         //TODO: documentation for aliases
         //TODO: permission levels
+        //TODO: optimize code for tests with longer runtimes
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
@@ -114,6 +115,15 @@ namespace EasyCommands.Test.Tests
             CommandHandler.RunCommand(CurrentUser, "add 1 bleh");
             Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
                 + "Proper syntax: add <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
+        }
+
+        [TestMethod]
+        [Description("Commands throw an error when you input an invalid argument type and uses the overridden name.")]
+        public void TestInvalidArgument2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "subtract 1 bleh");
+            Assert.AreEqual("Invalid syntax! num2 must be a whole number!" + Environment.NewLine
+                + "Proper syntax: subtract <num1> <num2>" + Environment.NewLine, ConsoleOutput.ToString());
         }
 
         [TestMethod]

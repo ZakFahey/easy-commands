@@ -8,20 +8,20 @@ namespace EasyCommands.Test.Commands
     class SubcommandTest0 : CommandCallbacks<User>
     {
         [SubCommand("test")]
-        public void Test(User sender)
+        public void Test()
         {
             Console.WriteLine("Something");
         }
 
         [SubCommand("something")]
-        public void Something(User sender)
+        public void Something()
         {
             Console.WriteLine("Hello!");
         }
 
         // Registration should fail here because of the duplicate command
         [SubCommand("test")]
-        public void Test2(User sender)
+        public void Test2()
         {
             Console.WriteLine("Something else");
         }

@@ -9,13 +9,13 @@ namespace EasyCommands.Test.Commands
     class SubcommandTest1 : CommandCallbacks<User>
     {
         [SubCommand("test")]
-        public void Test(User sender)
+        public void Test()
         {
             Console.WriteLine("Something");
         }
 
         [SubCommand("something")]
-        public void Something(User sender)
+        public void Something()
         {
             Console.WriteLine("Hello!");
         }

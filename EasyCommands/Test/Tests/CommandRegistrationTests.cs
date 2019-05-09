@@ -137,22 +137,12 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("Command registration throws an error if there is no sender parameter.")]
-        public void TestErrorIfNoSenderParameter()
-        {
-            Assert.ThrowsException<CommandRegistrationException>(() => {
-                var handler = new ExampleCommandHandler();
-                handler.RegisterCommands(typeof(CallbackSyntaxTest1));
-            });
-        }
-
-        [TestMethod]
         [Description("Command registration throws an error if the return type on a command callback isn't void.")]
         public void TestErrorIfInvalidReturnType()
         {
             Assert.ThrowsException<CommandRegistrationException>(() => {
                 var handler = new ExampleCommandHandler();
-                handler.RegisterCommands(typeof(CallbackSyntaxTest2));
+                handler.RegisterCommands(typeof(CallbackSyntaxTest1));
             });
         }
 

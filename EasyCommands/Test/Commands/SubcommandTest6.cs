@@ -14,7 +14,7 @@ namespace EasyCommands.Test.Commands
             public class TestSubcommand : CommandCallbacks<User>
             {
                 [SubCommand("test")]
-                public void Test(User sender)
+                public void Test()
                 {
                     Console.WriteLine("Something");
                 }

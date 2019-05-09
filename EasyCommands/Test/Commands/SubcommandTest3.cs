@@ -11,20 +11,20 @@ namespace EasyCommands.Test.Commands
         public class DoCommand : CommandCallbacks<User>
         {
             [SubCommand("test")]
-            public void Test(User sender)
+            public void Test()
             {
                 Console.WriteLine("Something");
             }
 
             [SubCommand("something")]
-            public void Something(User sender)
+            public void Something()
             {
                 Console.WriteLine("Hello!");
             }
         }
 
         [Command("test")]
-        public void Test(User sender)
+        public void Test()
         {
             Console.WriteLine("Something else");
         }

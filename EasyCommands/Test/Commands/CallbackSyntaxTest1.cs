@@ -7,12 +7,13 @@ namespace EasyCommands.Test.Commands
 {
     class CallbackSyntaxTest1 : CommandCallbacks<User>
     {
-        // Registration should fail because it doesn't include the sender parameter
+        // Registration should fail because the command has the wrong return value
         [Command("test")]
-        public void Test(int num1)
+        public int Test(int num1)
         {
             Console.WriteLine("Hello!");
             Console.WriteLine(num1);
+            return num1;
         }
     }
 }
