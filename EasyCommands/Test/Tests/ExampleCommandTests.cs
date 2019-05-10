@@ -31,10 +31,6 @@ namespace EasyCommands.Test.Tests
         {
             ConsoleReader.Close();
         }
-        
-        //TODO: permission levels
-        //TODO: optimize code for tests with longer runtimes
-        //TODO: different permission levels on subcommands, commands with subcommands
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
