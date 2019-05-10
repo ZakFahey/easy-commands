@@ -52,6 +52,7 @@
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandRepository.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="Defaults\DefaultParsingRules.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ParsingRules.cs" />

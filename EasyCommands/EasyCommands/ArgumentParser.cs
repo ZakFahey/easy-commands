@@ -13,7 +13,10 @@ namespace EasyCommands
     /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class ArgumentParser<TSender>
     {
+        //TODO: give classes the same parser as their parent class if there is none. For things like enums
         private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();
+        //TODO: does this class really need everything in Context?
+        /// <summary> Maintains the various classes you'd want to reference for a given CommandHandler </summary>
         private Context<TSender> Context;
 
         public ArgumentParser(Context<TSender> context)

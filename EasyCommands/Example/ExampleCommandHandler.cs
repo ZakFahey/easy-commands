@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EasyCommands;
+using EasyCommands.Defaults;
 
 namespace Example
 {
@@ -24,6 +21,7 @@ namespace Example
 
         protected override void Initialize()
         {
+            AddParsingRules(typeof(DefaultParsingRules<User>));
             AddParsingRules(typeof(ExampleParsingRules<User>));
         }
 
