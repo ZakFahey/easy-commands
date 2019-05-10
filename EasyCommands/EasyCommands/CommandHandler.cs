@@ -31,9 +31,12 @@ namespace EasyCommands
 
         protected abstract void SendFailMessage(TSender sender, string message);
         protected abstract void Initialize();
-        protected virtual void BeforeAll() { }
-        protected virtual void AfterAll() { }
         protected Context<TSender> Context = new Context<TSender>();
+
+        protected void Fail(string message)
+        {
+            throw new CommandExecutionException(message);
+        }
 
         public ReadOnlyCollection<CommandDelegate<TSender>> CommandList
         {
@@ -48,6 +51,9 @@ namespace EasyCommands
             Context.CommandRepository = new CommandRepository<TSender>(Context);
             Initialize();
         }
+
+        /// <summary> Runs before all commands. Can be used to run additional checks on the command. </summary>
+        public virtual void PreCheck(TSender sender, CommandDelegate<TSender> command) { }
 
         public CommandHandler(TextOptions options)
         {

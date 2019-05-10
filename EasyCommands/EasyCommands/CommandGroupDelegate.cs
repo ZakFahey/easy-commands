@@ -61,6 +61,7 @@ namespace EasyCommands
                     + string.Format(Context.TextOptions.ShowSubcommands, Name) + "\n"
                     + SubcommandList());
             }
+            Context.CommandHandler.PreCheck(sender, this);
             subcommands[subcommand].Invoke(sender, subcommandArgs);
         }
 

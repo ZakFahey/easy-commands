@@ -17,7 +17,6 @@ namespace EasyCommands
         protected Context<TSender> Context;
         protected Dictionary<Type, CustomAttribute> customAttributes = new Dictionary<Type, CustomAttribute>();
 
-        public abstract void Invoke(TSender sender, string args);
         public abstract string SyntaxDocumentation();
 
         public CommandDelegate(Context<TSender> context, string mainName, string[] allNames)
@@ -35,5 +34,7 @@ namespace EasyCommands
             }
             return (T)customAttributes[typeof(T)];
         }
+
+        public abstract void Invoke(TSender sender, string args);
     }
 }

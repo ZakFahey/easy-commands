@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SuperadminCommands.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\MathCommands.cs" />
     <Compile Include="Commands\WindowCommands.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="ExampleParsingRules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PermissionLevel.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserDatabase.cs" />
     <Compile Include="Window.cs" />

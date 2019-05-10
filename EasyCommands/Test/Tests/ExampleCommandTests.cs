@@ -14,25 +14,27 @@ namespace EasyCommands.Test.Tests
         
         public ExampleCommandTests()
         {
-            CurrentUser = UserDatabase.GetUserByName("Admin");
             CommandHandler = new ExampleCommandHandler();
             CommandHandler.RegisterCommands("Example.Commands");
         }
 
         [TestInitialize]
-        public void SetConsoleOutput()
+        public void TestInitialize()
         {
+            UserDatabase.Reset();
+            CurrentUser = UserDatabase.GetUserByName("Admin");
             ConsoleReader = new ConsoleReader();
         }
 
         [TestCleanup]
-        public void ResetConsoleOutput()
+        public void TestCleanup()
         {
             ConsoleReader.Close();
         }
         
         //TODO: permission levels
         //TODO: optimize code for tests with longer runtimes
+        //TODO: different permission levels on subcommands, commands with subcommands
 
         [TestMethod]
         [Description("Empty commands throw an error.")]
@@ -207,10 +209,19 @@ namespace EasyCommands.Test.Tests
         [Description("Commands with the AllowSpaces attribute can include spaces without quotation marks.")]
         public void TestMultiWordArgument()
         {
-            CommandHandler.RunCommand(CurrentUser, "add-user Jimmy baked potatoes");
+            CommandHandler.RunCommand(CurrentUser, "add-user Jimmy DefaultUser baked potatoes");
             User Jimmy = UserDatabase.GetUserByName("Jimmy");
             Assert.IsNotNull(Jimmy);
             Assert.AreEqual("baked potatoes", Jimmy.FavoriteFood);
+        }
+
+        [TestMethod]
+        [Description("The fail condition works on commands with a PermissionLevel parameter.")]
+        public void TestPermissionLevel()
+        {
+            CommandHandler.RunCommand(CurrentUser, "add-user Jimmy BadBoy baked potatoes");
+            Assert.AreEqual("BadBoy is not a permission level. Valid values: Guest, DefaultUser, Admin, Superadmin", ConsoleReader.ReadLine());
+            
         }
 
         [TestMethod]
@@ -253,9 +264,35 @@ namespace EasyCommands.Test.Tests
                 "add3or4 <num1> <num2> <num3> [num4]",
                 "myname ",
                 "favorite-food <querying> [food]",
-                "add-user <name> <favoriteFood>",
+                "add-user <name> <permissionLevel> <favoriteFood>",
                 "window <resize|move>",
-                "help [command] [subcommand]");
+                "help [command] [subcommand]",
+                "permission-level <user>",
+                "superadmin-me <superSecretPassword>");
+        }
+
+        [TestMethod]
+        [Description("The help command shows more commands after getting access to those commands.")]
+        public void TestHelp2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "help");
+            ConsoleReader.ReadLine();
+            ConsoleReader.ReadLine();
+            ConsoleReader.AssertOutputContains(
+                "add <num1> <num2>",
+                "subtract <num1> <num2>",
+                "divide <num1> <num2>",
+                "add3or4 <num1> <num2> <num3> [num4]",
+                "myname ",
+                "favorite-food <querying> [food]",
+                "add-user <name> <permissionLevel> <favoriteFood>",
+                "window <resize|move>",
+                "help [command] [subcommand]",
+                "permission-level <user>",
+                "superadmin-me <superSecretPassword>",
+                "delete-production ",
+                "supersecret <a|b>");
         }
 
         [TestMethod]
@@ -264,6 +301,63 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "help add");
             Assert.AreEqual("Adds two integers together. Syntax: add <num1> <num2>", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help does not show help for a command if the user doesn't have permission to use a it.")]
+        public void TestHelpWithInaccessibleCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help delete-production");
+            Assert.AreEqual("Command \"delete-production\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a command if you have access to it.")]
+        public void TestHelpWithInaccessibleCommand2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "help delete-production");
+            ConsoleReader.ReadLine();
+            Assert.AreEqual("Why would you want to do this!? Syntax: delete-production ", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help does not show help for a command with subcommands if the user doesn't have permission to use a it.")]
+        public void TestHelpWithInaccessibleCommand3()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help supersecret");
+            Assert.AreEqual("Command \"supersecret\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a command with subcommands if you have access to it.")]
+        public void TestHelpWithInaccessibleCommand4()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "help supersecret");
+            ConsoleReader.ReadLine();
+            Assert.AreEqual("A or B. Subcommands:", ConsoleReader.ReadLine());
+            ConsoleReader.AssertOutputContains(
+                "supersecret a ",
+                "supersecret b ");
+        }
+
+        [TestMethod]
+        [Description("The help does not show help for a subcommand if the user doesn't have permission to use a it.")]
+        public void TestHelpWithInaccessibleCommand5()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help supersecret a");
+            Assert.AreEqual("Command \"supersecret a\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("The help command shows the description for a subcommand if you have access to it.")]
+        public void TestHelpWithInaccessibleCommand6()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "help supersecret a");
+            ConsoleReader.ReadLine();
+            Assert.AreEqual("A. Syntax: supersecret a ", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -299,6 +393,42 @@ namespace EasyCommands.Test.Tests
             ConsoleReader.AssertOutputContains(
                 "window resize <width> <height>",
                 "window move <left> <top>");
+        }
+
+        [TestMethod]
+        [Description("Commands cannot be run if the user doesn't have permission to use them.")]
+        public void TestInaccessibleCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "delete-production");
+            Assert.AreEqual("Command \"delete-production\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Commands can be run if the user has access to use them.")]
+        public void TestInaccessibleCommand2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "delete-production");
+            ConsoleReader.ReadLine();
+            Assert.AreEqual("Congratulations! You deleted production!", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Commands with subcommands cannot be run if the user doesn't have permission to use them.")]
+        public void TestInaccessibleCommandWithSubcommands()
+        {
+            CommandHandler.RunCommand(CurrentUser, "supersecret a");
+            Assert.AreEqual("Command \"supersecret\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Commands with subcommands can be run if the user has access to use them.")]
+        public void TestInaccessibleCommandWithSubcommands2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
+            CommandHandler.RunCommand(CurrentUser, "supersecret a");
+            ConsoleReader.ReadLine();
+            Assert.AreEqual("A", ConsoleReader.ReadLine());
         }
     }
 }

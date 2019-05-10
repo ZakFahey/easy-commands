@@ -33,6 +33,7 @@ namespace Example.Commands
         [CommandDocumentation("Creates a new user.")]
         public void AddUser(
             string name,
+            PermissionLevel permissionLevel,
             [AllowSpaces]
             string favoriteFood)
         {
@@ -40,8 +41,15 @@ namespace Example.Commands
             {
                 Fail($"User {name} already exists!");
             }
-            UserDatabase.AddUser(name, favoriteFood);
+            UserDatabase.AddUser(name, favoriteFood, permissionLevel);
             Console.WriteLine($"Added user {name} with favorite food {favoriteFood}.");
+        }
+
+        [Command("permission-level")]
+        [CommandDocumentation("Gets the permission level of a user.")]
+        public void GetPermissionLevel(User user)
+        {
+            Console.WriteLine($"{user.Name} has the permission level of {user.PermissionLevel}.");
         }
     }
 }

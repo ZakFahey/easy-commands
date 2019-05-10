@@ -124,6 +124,9 @@ namespace EasyCommands
             {
                 throw new CommandParsingException(string.Format(Context.TextOptions.WrongNumberOfArguments, SyntaxDocumentation()));
             }
+
+            Context.CommandHandler.PreCheck(sender, this);
+
             var invocationParams = new object[callbackParams.Length];
             for(int i = 0; i < invocationParams.Length; i++)
             {

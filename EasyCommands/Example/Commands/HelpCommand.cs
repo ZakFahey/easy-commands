@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using EasyCommands;
 
 namespace Example.Commands
@@ -15,15 +14,26 @@ namespace Example.Commands
                 Console.WriteLine("Available commands:");
                 foreach(var cmd in Context.CommandHandler.CommandList)
                 {
-                    Console.WriteLine(cmd.SyntaxDocumentation());
+                    var permLevel = cmd.GetCustomAttribute<AccessLevel>();
+                    if(permLevel == null || Sender.PermissionLevel >= permLevel.MinimumLevel)
+                    {
+                        Console.WriteLine(cmd.SyntaxDocumentation());
+                    }
                 }
             }
             else
             {
+                string commandName = subcommand == null ? command : $"{command} {subcommand}";
                 var cmdDelegate = Context.CommandRepository.GetDelegate(command, subcommand);
                 if(cmdDelegate == null)
                 {
-                    string commandName = subcommand == null ? command : $"{command} {subcommand}";
+                    Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
+                }
+                // If the user doesn't have permission to run this command, don't show it
+                var baseCmdDelegate = Context.CommandRepository.GetDelegate(command);
+                AccessLevel permLevel = baseCmdDelegate.GetCustomAttribute<AccessLevel>();
+                if(permLevel != null && permLevel.MinimumLevel > Sender.PermissionLevel)
+                {
                     Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
                 }
                 CommandDocumentation documentation = cmdDelegate.GetCustomAttribute<CommandDocumentation>();

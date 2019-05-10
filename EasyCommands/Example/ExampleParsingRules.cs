@@ -58,5 +58,16 @@ namespace Example
             }
             return user;
         }
+
+        [ParseRule]
+        public PermissionLevel ParsePermissionLevel(string arg)
+        {
+            PermissionLevel level;
+            if(!Enum.TryParse(arg, out level))
+            {
+                Fail($"{arg} is not a permission level. Valid values: {string.Join(", ", Enum.GetNames(typeof(PermissionLevel)))}", false);
+            }
+            return level;
+        }
     }
 }

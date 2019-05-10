@@ -26,5 +26,14 @@ namespace Example
         {
             AddParsingRules(typeof(ExampleParsingRules<User>));
         }
+
+        public override void PreCheck(User sender, CommandDelegate<User> command)
+        {
+            AccessLevel permLevel = command.GetCustomAttribute<AccessLevel>();
+            if(permLevel != null && sender.PermissionLevel < permLevel.MinimumLevel)
+            {
+                Fail($"Command \"{command.Name}\" does not exist.");
+            }
+        }
     }
 }

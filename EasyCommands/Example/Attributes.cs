@@ -3,10 +3,11 @@ using EasyCommands;
 
 namespace Example
 {
+    // These attributes extend from the CustomAttribute class, which lets the command handler keep track of them and lets you define custom behavior
+
     /// <summary>
     /// Specifies the description for a command.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class CommandDocumentation : CustomAttribute
     {
         public string Documentation { get; private set; }
@@ -14,6 +15,19 @@ namespace Example
         public CommandDocumentation(string documentation)
         {
             Documentation = documentation;
+        }
+    }
+
+    /// <summary>
+    /// Specifies the minimum permission level a user needs to run the command.
+    /// </summary>
+    public class AccessLevel : CustomAttribute
+    {
+        public PermissionLevel MinimumLevel { get; private set; }
+
+        public AccessLevel(PermissionLevel minimumLevel)
+        {
+            MinimumLevel = minimumLevel;
         }
     }
 }
