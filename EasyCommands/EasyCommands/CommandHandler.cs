@@ -49,7 +49,7 @@ namespace EasyCommands
             Context.CommandHandler = this;
             Context.TextOptions = TextOptions.Default();
             Context.ArgumentParser = new ArgumentParser<TSender>(Context);
-            Context.CommandRepository = new DefaultCommandRepository<TSender>(Context);
+            Context.CommandRepository = GetRepository();
             Initialize();
         }
 
