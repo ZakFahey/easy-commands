@@ -1,5 +1,6 @@
 ﻿using System;
 using EasyCommands;
+using EasyCommands.Defaults;
 
 namespace Example.Commands
 {
@@ -23,14 +24,15 @@ namespace Example.Commands
             }
             else
             {
+                var repository = (DefaultCommandRepository<User>)Context.CommandRepository;
                 string commandName = subcommand == null ? command : $"{command} {subcommand}";
-                var cmdDelegate = Context.CommandRepository.GetDelegate(command, subcommand);
+                var cmdDelegate = repository.GetDelegate(command, subcommand);
                 if(cmdDelegate == null)
                 {
                     Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
                 }
                 // If the user doesn't have permission to run this command, don't show it
-                var baseCmdDelegate = Context.CommandRepository.GetDelegate(command);
+                var baseCmdDelegate = repository.GetDelegate(command);
                 AccessLevel permLevel = baseCmdDelegate.GetCustomAttribute<AccessLevel>();
                 if(permLevel != null && permLevel.MinimumLevel > Sender.PermissionLevel)
                 {

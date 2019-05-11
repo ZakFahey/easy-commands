@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Collections.ObjectModel;
+using EasyCommands.Defaults;
 
 namespace EasyCommands
 {
@@ -48,19 +49,31 @@ namespace EasyCommands
             Context.CommandHandler = this;
             Context.TextOptions = TextOptions.Default();
             Context.ArgumentParser = new ArgumentParser<TSender>(Context);
-            Context.CommandRepository = new CommandRepository<TSender>(Context);
+            Context.CommandRepository = new DefaultCommandRepository<TSender>(Context);
             Initialize();
         }
 
         /// <summary> Runs before all commands. Can be used to run additional checks on the command. </summary>
         public virtual void PreCheck(TSender sender, CommandDelegate<TSender> command) { }
+        /// <summary> The command repository to use. </summary>
+        protected virtual Type CommandRepositoryToUse() => typeof(DefaultCommandRepository<TSender>);
+
+        private CommandRepository<TSender> GetRepository()
+        {
+            Type repositoryType = CommandRepositoryToUse();
+            if(repositoryType.BaseType != typeof(CommandRepository<TSender>))
+            {
+                throw new ArgumentException($"The input in CommandRepositoryToUse must have the parent class CommandRepository<{typeof(TSender).Name}>.");
+            }
+            return (CommandRepository<TSender>)Activator.CreateInstance(repositoryType, Context);
+        }
 
         public CommandHandler(TextOptions options)
         {
             Context.CommandHandler = this;
             Context.TextOptions = options;
             Context.ArgumentParser = new ArgumentParser<TSender>(Context);
-            Context.CommandRepository = new CommandRepository<TSender>(Context);
+            Context.CommandRepository = new DefaultCommandRepository<TSender>(Context);
             Initialize();
         }
 
