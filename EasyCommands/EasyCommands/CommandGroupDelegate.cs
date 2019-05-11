@@ -44,7 +44,7 @@ namespace EasyCommands
 
         public override string SyntaxDocumentation()
         {
-            return $"{Name} <{string.Join("|", subcommandList.Select(sub => sub.ShortName))}>";
+            return $"{Context.TextOptions.CommandPrefix}{Name} <{string.Join("|", subcommandList.Select(sub => sub.ShortName))}>";
         }
 
         public override void Invoke(TSender sender, string args)

@@ -38,7 +38,7 @@ namespace EasyCommands
                 minLength = maxLength;
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
-            syntaxDocumentation = Name + " " + string.Join(" ", paramNames.Select((nm, i) => i >= minLength ? $"[{nm}]" : $"<{nm}>"));
+            syntaxDocumentation = Context.TextOptions.CommandPrefix + Name + " " + string.Join(" ", paramNames.Select((nm, i) => i >= minLength ? $"[{nm}]" : $"<{nm}>"));
             foreach(CustomAttribute attribute in callback.GetCustomAttributes<CustomAttribute>(true))
             {
                 customAttributes[attribute.GetType()] = attribute;
