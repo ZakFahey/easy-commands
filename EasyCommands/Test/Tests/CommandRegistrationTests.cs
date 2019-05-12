@@ -1,13 +1,22 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Example;
 using EasyCommands.Test.Commands;
+using System;
 
 namespace EasyCommands.Test.Tests
 {
     [TestClass]
     public class CommandRegistrationTests
     {
-        //TODO: what happens when nulls are passed into things?
+        [TestMethod]
+        [Description("Command registration throws an error when passed null.")]
+        public void TestErrorIfNullArgument()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands((Type)null);
+            });
+        }
 
         [TestMethod]
         [Description("Command registration succeeds for a simple command callback class.")]

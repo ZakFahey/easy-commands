@@ -41,6 +41,14 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
+        [Description("Null command throws an error.")]
+        public void TestErrorIfNullArgument2()
+        {
+            CommandHandler.RunCommand(CurrentUser, null);
+            Assert.AreEqual("Please enter a command.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
         [Description("Nonexistent commands throw an error.")]
         public void TestInvalidCommand()
         {

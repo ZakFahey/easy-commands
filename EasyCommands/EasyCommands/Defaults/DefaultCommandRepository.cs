@@ -16,9 +16,9 @@ namespace EasyCommands.Defaults
         
         public override void Invoke(TSender sender, string command)
         {
-            if(command == null)
+            if(string.IsNullOrEmpty(command))
             {
-                throw new ArgumentNullException();
+                throw new CommandParsingException(Context.TextOptions.EmptyCommand);
             }
             command = command.Trim(' ');
             int firstSpace = command.IndexOf(' ');
@@ -32,10 +32,6 @@ namespace EasyCommands.Defaults
             {
                 name = command.Substring(0, firstSpace);
                 parameters = command.Substring(firstSpace + 1);
-            }
-            if(string.IsNullOrEmpty(name))
-            {
-                throw new CommandParsingException(string.Format(Context.TextOptions.EmptyCommand, name));
             }
             if(!commands.ContainsKey(name))
             {

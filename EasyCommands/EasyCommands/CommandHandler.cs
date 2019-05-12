@@ -79,6 +79,10 @@ namespace EasyCommands
 
         public void AddParsingRules(Type rules)
         {
+            if(rules == null)
+            {
+                throw new ArgumentNullException();
+            }
             Context.ArgumentParser.AddParsingRules(rules);
         }
 
@@ -134,7 +138,6 @@ namespace EasyCommands
 
         public void RunCommand(TSender sender, string command)
         {
-            command = command.Trim(' ');
             try
             {
                 Context.CommandRepository.Invoke(sender, command);
