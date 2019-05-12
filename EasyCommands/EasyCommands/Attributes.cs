@@ -35,9 +35,7 @@ namespace EasyCommands
     public class ParseRule : Attribute
     {
     }
-
-    //TODO: validation property attributes. Greater than 0, etc.
-
+    
     /// <summary>
     /// Overrides the default name of a parameter.
     /// </summary>

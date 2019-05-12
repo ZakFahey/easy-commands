@@ -44,9 +44,8 @@ namespace EasyCommands
                 customAttributes[attribute.GetType()] = attribute;
             }
             
-            if(minLength != maxLength && phraseIndex >= 0)
+            if(minLength != maxLength && phraseIndex >= 0 && phraseIndex < maxLength - 1)
             {
-                //TODO: allow phrase and optional parameter if they are both the same thing
                 throw new CommandRegistrationException(
                     $"{callback.DeclaringType.Name}.{callback.Name} cannot contain a parameter with the AllowSpaces attribute along with any optional parameters.");
             }
@@ -115,10 +114,10 @@ namespace EasyCommands
                     argList.RemoveRange(phraseIndex + 1, phraseLength - 1);
                 }
             }
-            Invoke(sender, argList);
+            Invoke(sender, args, argList);
         }
 
-        void Invoke(TSender sender, IEnumerable<string> args)
+        void Invoke(TSender sender, string argText, IEnumerable<string> args)
         {
             if(args.Count() < minLength || args.Count() > maxLength)
             {
@@ -143,6 +142,7 @@ namespace EasyCommands
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);
             instance.Context = Context;
             instance.Sender = sender;
+            instance.RawCommandText = argText;
             try
             {
                 callback.Invoke(instance, invocationParams);
