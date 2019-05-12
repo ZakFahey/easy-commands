@@ -77,6 +77,15 @@ namespace EasyCommands
             Initialize();
         }
 
+        public void AddParsingRules(string namespaceToRegister)
+        {
+            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(ParsingRules<TSender>) && !t.IsNested);
+            foreach(Type type in types)
+            {
+                AddParsingRules(type);
+            }
+        }
+
         public void AddParsingRules(Type rules)
         {
             if(rules == null)
