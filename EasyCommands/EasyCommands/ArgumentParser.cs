@@ -13,8 +13,12 @@ namespace EasyCommands
     /// <typeparam name="TSender">Object containing the context of the user sending the command</typeparam>
     public class ArgumentParser<TSender>
     {
-        //TODO: give classes the same parser as their parent class if there is none. For things like enums
-        private Dictionary<Type, MethodInfo> parsingRules = new Dictionary<Type, MethodInfo>();
+        /// <summary> Class used to handle a handler with no attribute override </summary>
+        private class NullAttribute
+        {
+        }
+
+        private Dictionary<Type, Dictionary<Type, MethodInfo>> parsingRules = new Dictionary<Type, Dictionary<Type, MethodInfo>>();
         //TODO: does this class really need everything in Context?
         /// <summary> Maintains the various classes you'd want to reference for a given CommandHandler </summary>
         private Context<TSender> Context;
@@ -35,29 +39,48 @@ namespace EasyCommands
                 if(rule.GetCustomAttribute(typeof(ParseRule)) != null)
                 {
                     var parameters = rule.GetParameters();
-                    if(parameters.Length != 1 || parameters[0].ParameterType != typeof(string))
+                    if(parameters.Length < 1 || parameters.Length > 2 || parameters[0].ParameterType != typeof(string))
                     {
-                        throw new ParserInitializationException($"Parse rule {rules.Name}.{rule.Name} has invalid arguments. It should have a single string parameter.");
+                        throw new ParserInitializationException(
+                            $"Parse rule {rules.Name}.{rule.Name} has invalid arguments. It should have a single string parameter plus an optional attribute override parameter.");
                     }
+                    Type attributeOverride = parameters.Length == 2 ? parameters[1].ParameterType : typeof(NullAttribute);
+                    if(attributeOverride != typeof(NullAttribute) && attributeOverride.BaseType != typeof(Attribute))
+                    {
+                        throw new ParserInitializationException($"Attribute override parameter in {rules.Name}.{rule.Name} must inherit from Attribute.");
+                    }
+                    Dictionary<Type, MethodInfo> rulesForThisType;
                     if(parsingRules.ContainsKey(rule.ReturnType))
+                    {
+                        rulesForThisType = parsingRules[rule.ReturnType];
+                    }
+                    else
+                    {
+                        rulesForThisType = new Dictionary<Type, MethodInfo>();
+                        parsingRules[rule.ReturnType] = rulesForThisType;
+                    }
+                    if(rulesForThisType.ContainsKey(attributeOverride))
                     {
                         Console.WriteLine($"WARNING: parse rule {rules.Name}.{rule.Name} is overriding an existing parse rule for type {rule.ReturnType.Name}.");
                     }
-                    parsingRules[rule.ReturnType] = rule;
+                    rulesForThisType[attributeOverride] = rule;
                 }
             }
         }
 
-        public object ParseArgument(Type t, string arg, string parameterName, string properSyntax)
+        public object ParseArgument(Type t, IEnumerable<object> parameterAttributes, string arg, string parameterName, string properSyntax)
         {
-            var rule = parsingRules[t];
+            var rulesForType = parsingRules[t];
+            object attributeOverride = parameterAttributes.FirstOrDefault(a => rulesForType.ContainsKey(a.GetType()));
+            MethodInfo rule = rulesForType[attributeOverride == null ? typeof(NullAttribute) : attributeOverride.GetType()];
             ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
             instance.ParameterName = parameterName;
             instance.ProperSyntax = properSyntax;
             instance.Context = Context;
             try
             {
-                return rule.Invoke(instance, new object[] { arg });
+                var args = attributeOverride == null ? new object[] { arg } : new object[] { arg, attributeOverride };
+                return rule.Invoke(instance, args);
             }
             catch(TargetInvocationException e)
             {

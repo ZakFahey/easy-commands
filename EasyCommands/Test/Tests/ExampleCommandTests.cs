@@ -264,7 +264,8 @@ namespace EasyCommands.Test.Tests
                 "window <resize|move>",
                 "help [command] [subcommand]",
                 "permission-level <user>",
-                "superadmin-me <superSecretPassword>");
+                "superadmin-me <superSecretPassword>",
+                "hextodec <num>");
         }
 
         [TestMethod]
@@ -288,7 +289,8 @@ namespace EasyCommands.Test.Tests
                 "permission-level <user>",
                 "superadmin-me <superSecretPassword>",
                 "delete-production ",
-                "supersecret <a|b>");
+                "supersecret <a|b>",
+                "hextodec <num>");
         }
 
         [TestMethod]
@@ -425,6 +427,14 @@ namespace EasyCommands.Test.Tests
             CommandHandler.RunCommand(CurrentUser, "supersecret a");
             ConsoleReader.ReadLine();
             Assert.AreEqual("A", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("hextodec command works.")]
+        public void TestHexToDec()
+        {
+            CommandHandler.RunCommand(CurrentUser, "hextodec FEF20");
+            Assert.AreEqual("Decimal: 1044256", ConsoleReader.ReadLine());
         }
     }
 }

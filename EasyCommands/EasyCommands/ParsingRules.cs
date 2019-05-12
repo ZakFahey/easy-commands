@@ -15,7 +15,9 @@ namespace EasyCommands
         public string ParameterName;
         public string ProperSyntax;
         public Context<TSender> Context;
-        
+
+        //TODO: base method for overrides
+
         /// <summary>
         /// Fails the parsing, halts execution, and sends an error message back to the user
         /// </summary>

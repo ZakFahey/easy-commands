@@ -137,7 +137,7 @@ namespace EasyCommands
                 else
                 {
                     invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                        callbackParams[i].ParameterType, args.ElementAt(i), paramNames[i], SyntaxDocumentation());
+                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(), args.ElementAt(i), paramNames[i], SyntaxDocumentation());
                 }
             }
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);

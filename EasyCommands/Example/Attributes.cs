@@ -30,4 +30,12 @@ namespace Example
             MinimumLevel = minimumLevel;
         }
     }
+
+    /// <summary>
+    /// Specifies that an integer is read as a hexadecimal value.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class ReadAsHex : Attribute
+    {
+    }
 }

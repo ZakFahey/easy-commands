@@ -36,5 +36,16 @@ namespace EasyCommands.Test.Tests
                 handler.AddParsingRules(typeof(InvalidParsingRules1<User>));
             });
         }
+
+        [TestMethod]
+        [Description("Command handler fails if it registers a parsing rule with a non-attribute type in ParseRule's argument.")]
+        public void TestErrorIfInvalidParsingRule2()
+        {
+            Assert.ThrowsException<ParserInitializationException>(() =>
+            {
+                var handler = new ExampleCommandHandler();
+                handler.AddParsingRules(typeof(InvalidParsingRules2<User>));
+            });
+        }
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="Commands\DuplicateTest1.cs" />
     <Compile Include="Commands\DuplicateTest0.cs" />
     <Compile Include="ConsoleReader.cs" />
+    <Compile Include="ParsingRules\InvalidParsingRules2.cs" />
     <Compile Include="ParsingRules\InvalidParsingRules1.cs" />
     <Compile Include="ParsingRules\InvalidParsingRules0.cs" />
     <Compile Include="Tests\ExampleCommandTests.cs" />
