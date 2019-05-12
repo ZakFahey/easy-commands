@@ -184,5 +184,14 @@ namespace EasyCommands.Test.Tests
                 handler.RegisterCommands(typeof(AllowSpacesTest1));
             });
         }
+
+        [TestMethod]
+        [Description("Command registration succeeds if an optional parameter uses the AllowSpaces attribute.")]
+        public void TestOptionalAllowSpaces()
+        {
+            var handler = new ExampleCommandHandler();
+            handler.RegisterCommands(typeof(AllowSpacesTest2));
+            Assert.AreEqual(1, handler.CommandList.Count);
+        }
     }
 }

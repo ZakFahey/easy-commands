@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AllowSpacesTest2.cs" />
     <Compile Include="Commands\AllowSpacesTest1.cs" />
     <Compile Include="Commands\CallbackSyntaxTest1.cs" />
     <Compile Include="Commands\InvalidClassTest1.cs" />
