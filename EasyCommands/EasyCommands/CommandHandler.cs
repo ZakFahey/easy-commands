@@ -87,6 +87,7 @@ namespace EasyCommands
                     try
                     {
                         // The parsing rules come in as generic ParsingRules<TSender>s, so we need to specify the generic type
+                        // I have absolutely no idea why you have to do this on the parsing rules but not the command callbacks, but you do
                         return t.MakeGenericType(typeof(TSender));
                     }
                     catch
