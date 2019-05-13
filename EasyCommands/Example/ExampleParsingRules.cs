@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Example
 {
-    public class ExampleParsingRules<TSender> : ParsingRules<TSender>
+    class ExampleParsingRules<TSender> : ParsingRules<TSender>
     {
         [ParseRule]
         public User ParseUser(string arg)

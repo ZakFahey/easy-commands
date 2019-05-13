@@ -24,7 +24,8 @@ namespace EasyCommands
                     _allTypes = AppDomain
                         .CurrentDomain
                         .GetAssemblies()
-                        .SelectMany(t => t.GetTypes());
+                        .SelectMany(t => t.GetTypes())
+                        .Where(t => t.IsClass);
                 }
                 return _allTypes;
             }
@@ -44,15 +45,6 @@ namespace EasyCommands
             get => Context.CommandRepository.CommandList;
         }
 
-        public CommandHandler()
-        {
-            Context.CommandHandler = this;
-            Context.TextOptions = TextOptions.Default();
-            Context.ArgumentParser = new ArgumentParser<TSender>(Context);
-            Context.CommandRepository = GetRepository();
-            Initialize();
-        }
-
         /// <summary> Runs before all commands. Can be used to run additional checks on the command. </summary>
         public virtual void PreCheck(TSender sender, CommandDelegate<TSender> command) { }
         /// <summary> The command repository to use. </summary>
@@ -68,6 +60,15 @@ namespace EasyCommands
             return (CommandRepository<TSender>)Activator.CreateInstance(repositoryType, Context);
         }
 
+        public CommandHandler()
+        {
+            Context.CommandHandler = this;
+            Context.TextOptions = TextOptions.Default();
+            Context.ArgumentParser = new ArgumentParser<TSender>(Context);
+            Context.CommandRepository = GetRepository();
+            Initialize();
+        }
+
         public CommandHandler(TextOptions options)
         {
             Context.CommandHandler = this;
@@ -79,7 +80,21 @@ namespace EasyCommands
 
         public void AddParsingRules(string namespaceToRegister)
         {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(ParsingRules<TSender>) && !t.IsNested);
+            IEnumerable<Type> types = allTypes
+                .Where(t => t.Namespace == namespaceToRegister && !t.IsNested)
+                .Select(t =>
+                {
+                    try
+                    {
+                        // The parsing rules come in as generic ParsingRules<TSender>s, so we need to specify the generic type
+                        return t.MakeGenericType(typeof(TSender));
+                    }
+                    catch
+                    {
+                        return t;
+                    }
+                })
+                .Where(t => t.BaseType == typeof(ParsingRules<TSender>));
             foreach(Type type in types)
             {
                 AddParsingRules(type);
@@ -95,20 +110,34 @@ namespace EasyCommands
             Context.ArgumentParser.AddParsingRules(rules);
         }
 
+        public void RegisterCommands(string namespaceToRegister)
+        {
+            IEnumerable<Type> types = allTypes.Where(t => t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks<TSender>) && !t.IsNested);
+            foreach(Type type in types)
+            {
+                RegisterCommands(type);
+            }
+        }
+
         public void RegisterCommands(Type classToRegister)
         {
-            // Register the base class as a command with subcommands if it is one
-            string[] classCommandNames = classToRegister.GetCommandNames<Command>();
-            if(classCommandNames != null)
+            if(classToRegister == null)
             {
-                Context.CommandRepository.RegisterCommandWithSubcommands(classCommandNames, classToRegister);
-                return;
+                throw new ArgumentNullException();
             }
 
             // Enforce type
             if(classToRegister.BaseType != typeof(CommandCallbacks<TSender>))
             {
                 throw new CommandRegistrationException($"{classToRegister.Name} must have the base class CommandCallbacks.");
+            }
+
+            // Register the base class as a command with subcommands if it is one
+            string[] classCommandNames = classToRegister.GetCommandNames<Command>();
+            if(classCommandNames != null)
+            {
+                Context.CommandRepository.RegisterCommandWithSubcommands(classCommandNames, classToRegister);
+                return;
             }
 
             // Register all commands in this class
@@ -133,15 +162,6 @@ namespace EasyCommands
                 {
                     Context.CommandRepository.RegisterCommandWithSubcommands(commandNames, command);
                 }
-            }
-        }
-
-        public void RegisterCommands(string namespaceToRegister)
-        {
-            IEnumerable<Type> types = allTypes.Where(t => t.IsClass && t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks<TSender>) && !t.IsNested);
-            foreach(Type type in types)
-            {
-                RegisterCommands(type);
             }
         }
 
