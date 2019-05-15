@@ -13,7 +13,9 @@ namespace EasyCommands
     public class Context<TSender>
     {
         public CommandHandler<TSender> CommandHandler;
+        /// <summary> Service to convert a string argument from a user's input into its respective parameter type </summary>
         public ArgumentParser<TSender> ArgumentParser;
+        /// <summary> Stores and indexes all commands </summary>
         public CommandRepository<TSender> CommandRepository;
         public TextOptions TextOptions;
     }

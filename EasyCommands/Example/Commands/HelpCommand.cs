@@ -13,7 +13,7 @@ namespace Example.Commands
             if(command == null)
             {
                 Console.WriteLine("Available commands:");
-                foreach(var cmd in Context.CommandHandler.CommandList)
+                foreach(var cmd in CommandRepository.CommandList)
                 {
                     var permLevel = cmd.GetCustomAttribute<AccessLevel>();
                     if(permLevel == null || Sender.PermissionLevel >= permLevel.MinimumLevel)
@@ -24,19 +24,19 @@ namespace Example.Commands
             }
             else
             {
-                var repository = (DefaultCommandRepository<User>)Context.CommandRepository;
+                var repository = (DefaultCommandRepository<User>)CommandRepository;
                 string commandName = subcommand == null ? command : $"{command} {subcommand}";
                 var cmdDelegate = repository.GetDelegate(command, subcommand);
                 if(cmdDelegate == null)
                 {
-                    Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
+                    Fail(string.Format(TextOptions.CommandNotFound, commandName));
                 }
                 // If the user doesn't have permission to run this command, don't show it
                 var baseCmdDelegate = repository.GetDelegate(command);
                 AccessLevel permLevel = baseCmdDelegate.GetCustomAttribute<AccessLevel>();
                 if(permLevel != null && permLevel.MinimumLevel > Sender.PermissionLevel)
                 {
-                    Fail(string.Format(Context.TextOptions.CommandNotFound, commandName));
+                    Fail(string.Format(TextOptions.CommandNotFound, commandName));
                 }
                 CommandDocumentation documentation = cmdDelegate.GetCustomAttribute<CommandDocumentation>();
                 string helpText = documentation == null ? "This command does not have any documentation." : documentation.Documentation;

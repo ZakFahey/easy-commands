@@ -19,7 +19,6 @@ namespace EasyCommands
         }
 
         private Dictionary<Type, Dictionary<Type, MethodInfo>> parsingRules = new Dictionary<Type, Dictionary<Type, MethodInfo>>();
-        //TODO: does this class really need everything in Context?
         /// <summary> Maintains the various classes you'd want to reference for a given CommandHandler </summary>
         private Context<TSender> Context;
 
@@ -76,7 +75,8 @@ namespace EasyCommands
             ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
             instance.ParameterName = parameterName;
             instance.ProperSyntax = properSyntax;
-            instance.Context = Context;
+            instance.CommandRepository = Context.CommandRepository;
+            instance.TextOptions = Context.TextOptions;
             try
             {
                 var args = attributeOverride == null ? new object[] { arg } : new object[] { arg, attributeOverride };

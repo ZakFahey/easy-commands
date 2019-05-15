@@ -14,7 +14,9 @@ namespace EasyCommands
     {
         public string ParameterName;
         public string ProperSyntax;
-        public Context<TSender> Context;
+        /// <summary> Stores and indexes all commands </summary>
+        public CommandRepository<TSender> CommandRepository;
+        public TextOptions TextOptions;
 
         /// <summary>
         /// Fails the parsing, halts execution, and sends an error message back to the user
@@ -26,7 +28,7 @@ namespace EasyCommands
             string msg = string.Format(message, ParameterName);
             if(showProperSyntax)
             {
-                msg += "\n" + string.Format(Context.TextOptions.ProperSyntax, ProperSyntax);
+                msg += "\n" + string.Format(TextOptions.ProperSyntax, ProperSyntax);
             }
             throw new CommandParsingException(msg);
         }

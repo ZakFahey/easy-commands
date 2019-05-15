@@ -140,9 +140,10 @@ namespace EasyCommands
                 }
             }
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);
-            instance.Context = Context;
             instance.Sender = sender;
             instance.RawCommandText = argText;
+            instance.CommandRepository = Context.CommandRepository;
+            instance.TextOptions = Context.TextOptions;
             try
             {
                 callback.Invoke(instance, invocationParams);
