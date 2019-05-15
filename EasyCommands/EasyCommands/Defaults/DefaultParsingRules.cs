@@ -57,12 +57,5 @@ namespace EasyCommands.Defaults
             }
             return ret;
         }
-
-        [ParseRule]
-        public TimeSpan ParseTimeSpan(string arg)
-        {
-            //TODO
-            throw new NotImplementedException();
-        }
     }
 }
