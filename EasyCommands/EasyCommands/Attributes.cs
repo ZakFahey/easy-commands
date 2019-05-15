@@ -11,6 +11,7 @@ namespace EasyCommands
     {
         public string[] Names { get; private set; }
 
+        /// <summary> Attribute for a command delegate. </summary>
         /// <param name="names">The aliases used to run the command</param>
         public Command(params string[] names)
         {
@@ -19,11 +20,12 @@ namespace EasyCommands
     }
 
     /// <summary>
-    /// Attribute a subcommand.
+    /// Attribute for a subcommand.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class SubCommand : Command
     {
+        /// <summary> Attribute for a subcommand. </summary>
         /// <param name="names">The aliases used to run the command</param>
         public SubCommand(params string[] names) : base(names) { }
     }
@@ -34,6 +36,8 @@ namespace EasyCommands
     [AttributeUsage(AttributeTargets.Method)]
     public class ParseRule : Attribute
     {
+        /// <summary> Attribute for methods that parse an argument. </summary>
+        public ParseRule() { }
     }
     
     /// <summary>
@@ -44,6 +48,7 @@ namespace EasyCommands
     {
         public string Name { get; private set; }
 
+        /// <summary> Overrides the default name of a parameter. </summary>
         public ParamName(string name)
         {
             Name = name;
@@ -56,6 +61,8 @@ namespace EasyCommands
     [AttributeUsage(AttributeTargets.Parameter)]
     public class AllowSpaces : Attribute
     {
+        /// <summary> Specifies that a parameter can be multiple words without the use of quotes. Can only be used once in a command. </summary>
+        public AllowSpaces() { }
     }
 
     /// <summary>

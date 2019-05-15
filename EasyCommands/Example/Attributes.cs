@@ -12,6 +12,7 @@ namespace Example
     {
         public string Documentation { get; private set; }
 
+        /// <summary> Specifies the description for a command. </summary>
         public CommandDocumentation(string documentation)
         {
             Documentation = documentation;
@@ -25,6 +26,7 @@ namespace Example
     {
         public PermissionLevel MinimumLevel { get; private set; }
 
+        /// <summary> Specifies the minimum permission level a user needs to run the command. </summary>
         public AccessLevel(PermissionLevel minimumLevel)
         {
             MinimumLevel = minimumLevel;
@@ -37,5 +39,7 @@ namespace Example
     [AttributeUsage(AttributeTargets.Parameter)]
     public class ReadAsHex : Attribute
     {
+        /// <summary> Specifies that an integer is read as a hexadecimal value. </summary>
+        public ReadAsHex() { }
     }
 }
