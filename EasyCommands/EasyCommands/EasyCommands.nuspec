@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0</version>
+    <title>EasyCommands</title>
+    <authors>Zak Fahey</authors>
+    <owners>Zak Fahey</owners>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/ZakFahey/easy-commands</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Reflection-based command line parsing for C#</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>easy commands chat zak fahey</tags>
+  </metadata>
+</package>
