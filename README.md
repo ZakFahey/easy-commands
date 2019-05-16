@@ -2,7 +2,7 @@
 
 Easy Commands is a C# library that lets you easily write a command-line UI. This is particularly useful for use cases such as modded game servers; chat bots on Discord, Twitch, etc.; and any other place where you'd want to convert a text command to an action. This project is also extendable enough to allow custom permission systems, custom command arguments, and anything else you'd want to use.
 
-To install, simply go to Visual Studio's Package Manager Console and type `Install-Package easy-commands`.
+To install, simply go to Visual Studio's Package Manager Console and type `Install-Package EasyCommands`.
 
 To specify a command, all you have to do is implement the abstract `CommandHandler` class and write out your command callbacks with this syntax:
 ```
