@@ -15,6 +15,7 @@ public void Add(int num1, int num2)
 
 // You can parse any object type you want, as long as you define the behavior for it.
 // You can call this with `permission-level John`
+// Or with quotes, `permission-level "Betty Sue"`
 [Command("permission-level")]
 public void GetPermissionLevel(User user)
 {
