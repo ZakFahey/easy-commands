@@ -41,7 +41,7 @@ class ExampleParsingRules<TSender> : ParsingRules<TSender>
 
 `ParseUser` allows a command to have a parameter of type `User`, and the handler finds that user and ensures the user exists.
 
-`ParseIntAsHex` is a special case. Notice the `ReadAsHex attributeOverride` argument. You can optionally include an attribute type as a second argument. Include this attribute on your parameter, and the parser will use this handler instead of the default one. This is useful if you have multiple behaviors for a single type.
+`ParseIntAsHex` is a special case. Notice the `ReadAsHex attributeOverride` argument. You can optionally include an attribute type as a second argument. Include this attribute on your parameter, and the parser will use this handler instead of the default one. This is useful if you have multiple behaviors for a single type and can also be used for input validation.
 
 In the `Fail` method, you can use `{0}` to substitute for the parameter name. The second argument specifies whether to show the proper syntax for the command.
 
