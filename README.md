@@ -21,4 +21,4 @@ public void GetPermissionLevel(User user)
     Console.WriteLine($"{user.Name} has the permission level of {user.PermissionLevel}.");
 }
 ```
-Essentially, the arguments of your method specify the arguments of the command. It also supports optional parameters, subcommands, and much more. To read more about usage, visit the [documentation](/Documentation). The Example project also demonstrates all of this library's functionality.
+Essentially, the arguments of your method specify the arguments of the command. It also supports optional parameters, subcommands, and much more. To read more about usage, visit the [documentation](https://github.com/ZakFahey/easy-commands/tree/master/Documentation). The Example project also demonstrates all of this library's functionality.
