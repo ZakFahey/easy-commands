@@ -43,10 +43,11 @@ namespace EasyCommands.Arguments
         private void AddParsingRule(MethodInfo rule, string name)
         {
             var parameters = rule.GetParameters();
-            if(parameters.Length < 1 || parameters.Length > 2 || parameters[0].ParameterType != typeof(string))
+            var validTypes = new[] { typeof(string), typeof(string[]) };
+            if(parameters.Length < 1 || parameters.Length > 2 || !validTypes.Contains(parameters[0].ParameterType))
             {
                 throw new ParserInitializationException(
-                    $"Parse rule {name} has invalid arguments. It should have a single string parameter plus an optional attribute override parameter.");
+                    $"Parse rule {name} has invalid arguments. It should have a single string or string array parameter plus an optional attribute override parameter.");
             }
             Type attributeOverride = parameters.Length == 2 ? parameters[1].ParameterType : typeof(NullAttribute);
             if(attributeOverride != typeof(NullAttribute) && attributeOverride.BaseType != typeof(Attribute))

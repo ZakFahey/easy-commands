@@ -79,6 +79,10 @@ namespace EasyCommands.Commands
                 minLength--;
                 maxLength = int.MaxValue;
             }
+            if(phraseIndex >= 0)
+            {
+                maxLength = int.MaxValue;
+            }
         }
 
         public override string SyntaxDocumentation()
@@ -118,16 +122,6 @@ namespace EasyCommands.Commands
                     argList[argList.Count - 1] += c;
                 }
             }
-            // Combine arguments if there is a phrase
-            if(argList.Count > maxLength && phraseIndex >= 0)
-            {
-                int phraseLength = argList.Count - maxLength + 1;
-                argList[phraseIndex] = string.Join(" ", argList.GetRange(phraseIndex, phraseLength));
-                if(phraseIndex + 1 < argList.Count)
-                {
-                    argList.RemoveRange(phraseIndex + 1, phraseLength - 1);
-                }
-            }
             Invoke(sender, args, argList);
         }
 
@@ -144,13 +138,13 @@ namespace EasyCommands.Commands
             int j = 0;
             for(int i = 0; i < callbackParams.Length; i++)
             {
-                if(i == flagsIndex) // Handle multi-word flag arguments
+                if(i == flagsIndex || i == phraseIndex) // Handle multi-word arguments
                 {
-                    int flagsLength = args.Count() - minLength;
+                    int multiWordLength = args.Count() - callbackParams.Length + 1;
                     invocationParams[i] = Context.ArgumentParser.ParseArgument(
                         callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
-                        paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, flagsLength).ToArray());
-                    j += flagsLength;
+                        paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, multiWordLength).ToArray());
+                    j += multiWordLength;
                 }
                 else
                 {

@@ -30,6 +30,16 @@ namespace Example.Commands
             }
         }
 
+        [Command("favorite-foods")]
+        [CommandDocumentation("Gets the favorite foods of multiple users at once.")]
+        public void FavoriteFood([AllowSpaces]User[] users)
+        {
+            foreach(User user in users)
+            {
+                Console.WriteLine($"{user.Name}'s favorite food is {user.FavoriteFood}.");
+            }
+        }
+
         [Command]
         [CommandDocumentation("Creates a new user.")]
         public void AddUser(

@@ -2,6 +2,7 @@
 using EasyCommands;
 using System.Globalization;
 using EasyCommands.Arguments;
+using System.Linq;
 
 namespace Example
 {
@@ -16,6 +17,12 @@ namespace Example
                 Fail($"User {arg} not found.", false);
             }
             return user;
+        }
+
+        [ParseRule]
+        public User[] ParseUsers(string[] args)
+        {
+            return args.Select(ParseUser).ToArray();
         }
 
         [ParseRule]

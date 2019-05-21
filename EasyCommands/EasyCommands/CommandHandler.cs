@@ -104,7 +104,6 @@ namespace EasyCommands
             }
             IEnumerable<Type> flagTypes =
                 allTypes.Where(t => t.Namespace == namespaceToRegister && t.GetCustomAttribute<FlagsArgument>() != null && !t.IsNested);
-            //TODO: test this
             foreach(Type type in flagTypes)
             {
                 AddFlagRule(type);

@@ -167,7 +167,7 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The favorite-food command to get a user's favorite food.")]
+        [Description("The favorite-food command gets a user's favorite food.")]
         public void TestFavoriteFoodGet()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Jeff");
@@ -175,12 +175,21 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("The favorite-food command to set a user's favorite food.")]
+        [Description("The favorite-food command sets a user's favorite food.")]
         public void TestFavoriteFoodSet()
         {
             CommandHandler.RunCommand(CurrentUser, "favorite-food Blake bananas");
             User Blake = UserDatabase.GetUserByName("Blake");
             Assert.AreEqual("bananas", Blake.FavoriteFood);
+        }
+
+        [TestMethod]
+        [Description("The favorite-foods command gets multiple users' favorite foods.")]
+        public void TestFavoriteFoods()
+        {
+            CommandHandler.RunCommand(CurrentUser, "favorite-foods Jeff \"Jessica\"");
+            Assert.AreEqual("Jeff's favorite food is steak.", ConsoleReader.ReadLine());
+            Assert.AreEqual("Jessica's favorite food is tacos.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -268,6 +277,7 @@ namespace EasyCommands.Test.Tests
                 "add3or4 <num1> <num2> <num3> [num4]",
                 "myname ",
                 "favorite-food <querying> [food]",
+                "favorite-foods <users>",
                 "add-user <name> <permissionLevel> <favoriteFood>",
                 "window <resize|move>",
                 "help [command] [subcommand]",
@@ -292,6 +302,7 @@ namespace EasyCommands.Test.Tests
                 "add3or4 <num1> <num2> <num3> [num4]",
                 "myname ",
                 "favorite-food <querying> [food]",
+                "favorite-foods <users>",
                 "add-user <name> <permissionLevel> <favoriteFood>",
                 "window <resize|move>",
                 "help [command] [subcommand]",
@@ -446,8 +457,6 @@ namespace EasyCommands.Test.Tests
             CommandHandler.RunCommand(CurrentUser, "hextodec FEF20");
             Assert.AreEqual("Decimal: 1044256", ConsoleReader.ReadLine());
         }
-
-        //TODO: list parsing
 
         [TestMethod]
         [Description("Flag arguments work with no arguments.")]

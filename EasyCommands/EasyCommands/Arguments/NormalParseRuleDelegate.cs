@@ -18,12 +18,6 @@ namespace EasyCommands.Arguments
 
         public override object Invoke(string[] args, string parameterName, string properSyntax, object attributeOverride)
         {
-            if(args.Length != 1)
-            {
-                throw new ArgumentException("NormalParseRule must have only 1 argument");
-            }
-            string arg = args[0];
-            
             ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
             instance.ParameterName = parameterName;
             instance.ProperSyntax = properSyntax;
@@ -31,7 +25,16 @@ namespace EasyCommands.Arguments
             instance.TextOptions = Context.TextOptions;
             try
             {
-                var invocationArgs = attributeOverride == null ? new object[] { arg } : new object[] { arg, attributeOverride };
+                object firstArg;
+                if(rule.GetParameters()[0].ParameterType == typeof(string))
+                {
+                    firstArg = string.Join(" ", args);
+                }
+                else
+                {
+                    firstArg = args;
+                }
+                var invocationArgs = attributeOverride == null ? new object[] { firstArg } : new object[] { firstArg, attributeOverride };
                 return rule.Invoke(instance, invocationArgs);
             }
             catch(TargetInvocationException e)
