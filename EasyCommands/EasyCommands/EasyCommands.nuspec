@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <title>EasyCommands</title>
     <authors>Zak Fahey</authors>
     <owners>Zak Fahey</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ZakFahey/easy-commands</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reflection-based command line parsing for C#</description>
-    <releaseNotes>Added flags parameters and string arrays for parsing rules.</releaseNotes>
+    <releaseNotes>Fixed build.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>easy commands chat zak fahey</tags>
   </metadata>
