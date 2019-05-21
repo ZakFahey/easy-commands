@@ -8,10 +8,14 @@ namespace Example
     {
         [FlagParams("-a")]
         public string A = "DEFAULT";
+
         [FlagParams("-b")]
+        [ReadAsHex]
         public int B = 0;
+
         [FlagParams("-c", "-C")]
         public User C = null;
+
         [FlagParams("--d")]
         public bool D = false;
     }

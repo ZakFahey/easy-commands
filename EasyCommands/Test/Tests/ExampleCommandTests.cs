@@ -447,7 +447,7 @@ namespace EasyCommands.Test.Tests
             Assert.AreEqual("Decimal: 1044256", ConsoleReader.ReadLine());
         }
 
-        //TODO: list parsing, test attribute overrides inside flags
+        //TODO: list parsing
 
         [TestMethod]
         [Description("Flag arguments work with no arguments.")]
@@ -474,13 +474,13 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
-        [Description("Flag arguments work with one int argument.")]
+        [Description("Flag arguments work with one argument with an attribute override.")]
         public void TestFlagArgument2()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test test -b 4");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b F");
             Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
-            Assert.AreEqual("B: 4", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 15", ConsoleReader.ReadLine());
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
             Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }

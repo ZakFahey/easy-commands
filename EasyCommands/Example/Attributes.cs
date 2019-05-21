@@ -34,7 +34,7 @@ namespace Example
     /// <summary>
     /// Specifies that an integer is read as a hexadecimal value.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field)]
     public class ReadAsHex : Attribute
     {
     }
