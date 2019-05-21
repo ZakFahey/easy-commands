@@ -15,6 +15,8 @@ namespace EasyCommands
         public string SubcommandsShort;
         public string CommandNotFound;
         public string EmptyCommand;
+        public string FlagArgWithNoValue;
+        public string FlagNotFound;
 
         public static TextOptions Default()
         {
@@ -25,7 +27,9 @@ namespace EasyCommands
                 CommandPrefix = "",
                 ShowSubcommands = "{0} contains these subcommands:",
                 CommandNotFound = "Command \"{0}\" does not exist.",
-                EmptyCommand = "Please enter a command."
+                EmptyCommand = "Please enter a command.",
+                FlagArgWithNoValue = "Invalid syntax! {0} must have a corresponding value.",
+                FlagNotFound = "Invalid syntax! {0} is not a valid flag. Valid flags: {1}"
             };
         }
     }

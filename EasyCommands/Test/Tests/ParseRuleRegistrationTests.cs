@@ -103,5 +103,16 @@ namespace EasyCommands.Test.Tests
                 handler.AddFlagRule(typeof(InvalidFlags3));
             });
         }
+
+        [TestMethod]
+        [Description("Command handler fails if it registers a flag with duplicate argument names.")]
+        public void TestErrorIfInvalidFlagRule5()
+        {
+            Assert.ThrowsException<ParserInitializationException>(() =>
+            {
+                var handler = new ExampleCommandHandler();
+                handler.AddFlagRule(typeof(InvalidFlags4));
+            });
+        }
     }
 }

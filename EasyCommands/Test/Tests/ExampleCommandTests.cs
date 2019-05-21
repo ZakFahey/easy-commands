@@ -274,7 +274,7 @@ namespace EasyCommands.Test.Tests
                 "permission-level <user>",
                 "superadmin-me <superSecretPassword>",
                 "hextodec <num>",
-                "example-flags <flags>");
+                "flag-test <test> [flags]");
         }
 
         [TestMethod]
@@ -300,7 +300,7 @@ namespace EasyCommands.Test.Tests
                 "delete-production ",
                 "supersecret <a|b>",
                 "hextodec <num>",
-                "example-flags <flags>");
+                "flag-test <test> [flags]");
         }
 
         [TestMethod]
@@ -447,63 +447,73 @@ namespace EasyCommands.Test.Tests
             Assert.AreEqual("Decimal: 1044256", ConsoleReader.ReadLine());
         }
 
-        //TODO: flag parsing, list parsing
+        //TODO: list parsing, test attribute overrides inside flags
 
         [TestMethod]
         [Description("Flag arguments work with no arguments.")]
         public void TestFlagArgument0()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("Flag arguments work with one string argument.")]
         public void TestFlagArgument1()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -a test");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -a test");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: test", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("Flag arguments work with one int argument.")]
         public void TestFlagArgument2()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -b 4");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b 4");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 4", ConsoleReader.ReadLine());
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("Flag arguments work with one User argument.")]
         public void TestFlagArgument3()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -c Jeff");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -c Jeff");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
             Assert.AreEqual("C: Jeff", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("Flag arguments work with alternative flag names.")]
         public void TestFlagArgument4()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -C Jeff");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -C Jeff");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
             Assert.AreEqual("C: Jeff", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("Flag arguments fail when one of the flags has an invalid argument.")]
         public void TestFlagArgument5()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -c qwerty");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -c qwerty");
             Assert.AreEqual("User qwerty not found.", ConsoleReader.ReadLine());
         }
 
@@ -511,18 +521,40 @@ namespace EasyCommands.Test.Tests
         [Description("Flag arguments work with multiple arguments.")]
         public void TestFlagArgument6()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -b 5 -a test");
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b 5 -a test");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
             Assert.AreEqual("A: test", ConsoleReader.ReadLine());
             Assert.AreEqual("B: 5", ConsoleReader.ReadLine());
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: False", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
-        [Description("Flag arguments throw an error when an invalid flag name is inputted.")]
+        [Description("Flag arguments fail when an invalid flag name is inputted.")]
         public void TestFlagArgument7()
         {
-            CommandHandler.RunCommand(CurrentUser, "flag-test -b 5 -d Hello");
-            Assert.AreEqual("Invalid syntax! -d is not a valid flag. Valid flags: -a, -b, -c", ConsoleReader.ReadLine());
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b 5 -e Hello");
+            Assert.AreEqual("Invalid syntax! -e is not a valid flag. Valid flags: -a, -b, -c, --d", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments fail when a flag doesn't have a corresponding value.")]
+        public void TestFlagArgument8()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b");
+            Assert.AreEqual("Invalid syntax! -b must have a corresponding value.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments set boolean values to true when there is no value with the argument.")]
+        public void TestFlagArgument9()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test test --d");
+            Assert.AreEqual("test: test", ConsoleReader.ReadLine());
+            Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+            Assert.AreEqual("D: True", ConsoleReader.ReadLine());
         }
     }
 }

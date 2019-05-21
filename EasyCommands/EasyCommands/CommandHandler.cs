@@ -102,6 +102,13 @@ namespace EasyCommands
             {
                 AddParsingRules(type);
             }
+            IEnumerable<Type> flagTypes =
+                allTypes.Where(t => t.Namespace == namespaceToRegister && t.GetCustomAttribute<FlagsArgument>() != null && !t.IsNested);
+            //TODO: test this
+            foreach(Type type in flagTypes)
+            {
+                AddFlagRule(type);
+            }
         }
 
         public void AddParsingRules(Type rules)

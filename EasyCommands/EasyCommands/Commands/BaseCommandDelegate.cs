@@ -15,6 +15,7 @@ namespace EasyCommands.Commands
         private ParameterInfo[] callbackParams;
         private string[] paramNames;
         private int phraseIndex;
+        private int flagsIndex;
         private int minLength;
         private int maxLength;
         private string syntaxDocumentation;
@@ -38,7 +39,9 @@ namespace EasyCommands.Commands
                 minLength = maxLength;
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
-            syntaxDocumentation = Context.TextOptions.CommandPrefix + Name + " " + string.Join(" ", paramNames.Select((nm, i) => i >= minLength ? $"[{nm}]" : $"<{nm}>"));
+            flagsIndex = Array.FindIndex(callbackParams, p => Context.ArgumentParser.ParseRuleIsFlags(p.ParameterType));
+            syntaxDocumentation = Context.TextOptions.CommandPrefix + Name + " " + string.Join(" ", paramNames.Select(
+                    (nm, i) => i >= minLength || Context.ArgumentParser.ParseRuleIsFlags(callbackParams[i].ParameterType) ? $"[{nm}]" : $"<{nm}>"));
             foreach(CustomAttribute attribute in callback.GetCustomAttributes<CustomAttribute>(true))
             {
                 customAttributes[attribute.GetType()] = attribute;
@@ -49,14 +52,19 @@ namespace EasyCommands.Commands
                 throw new CommandRegistrationException(
                     $"{callback.DeclaringType.Name}.{callback.Name} cannot contain a parameter with the AllowSpaces attribute along with any optional parameters.");
             }
+            if(minLength != maxLength && flagsIndex >= 0)
+            {
+                throw new CommandRegistrationException(
+                    $"{callback.DeclaringType.Name}.{callback.Name} cannot contain a flags parameter along with any optional parameters.");
+            }
             if(callback.ReturnType != typeof(void))
             {
                 throw new CommandRegistrationException($"{callback.DeclaringType.Name}.{callback.Name} must return void.");
             }
-            if(callbackParams.Count(p => p.GetCustomAttribute<AllowSpaces>() != null) > 1)
+            if(callbackParams.Count(p => p.GetCustomAttribute<AllowSpaces>() != null || Context.ArgumentParser.ParseRuleIsFlags(p.ParameterType)) > 1)
             {
                 throw new CommandRegistrationException(
-                    $"{callback.DeclaringType.Name}.{callback.Name} cannot contain more than one parameter with the AllowSpaces attribute.");
+                    $"{callback.DeclaringType.Name}.{callback.Name} cannot contain more than one flags parameter or parameter with the AllowSpaces attribute.");
             }
             ParameterInfo undefinedParam = callbackParams.FirstOrDefault(p => !Context.ArgumentParser.ParseRuleExists(p.ParameterType));
             if(undefinedParam != null)
@@ -64,6 +72,12 @@ namespace EasyCommands.Commands
                 throw new CommandRegistrationException(
                     $"The parameter {undefinedParam.Name} in the command {callback.DeclaringType.Name}.{callback.Name} does " +
                     $"not contain a corresponding parse rule for type {undefinedParam.ParameterType.Name}.");
+            }
+            // Flag parameters can have length zero, so don't count it towards the min length
+            if(flagsIndex >= 0)
+            {
+                minLength--;
+                maxLength = int.MaxValue;
             }
         }
 
@@ -127,16 +141,30 @@ namespace EasyCommands.Commands
             Context.CommandHandler.PreCheck(sender, this);
 
             var invocationParams = new object[callbackParams.Length];
-            for(int i = 0; i < invocationParams.Length; i++)
+            int j = 0;
+            for(int i = 0; i < callbackParams.Length; i++)
             {
-                if(i >= args.Count())
+                if(i == flagsIndex) // Handle multi-word flag arguments
                 {
-                    invocationParams[i] = callbackParams[i].DefaultValue;
+                    int flagsLength = args.Count() - minLength;
+                    invocationParams[i] = Context.ArgumentParser.ParseArgument(
+                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
+                        paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, flagsLength).ToArray());
+                    j += flagsLength;
                 }
                 else
                 {
-                    invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(), paramNames[i], SyntaxDocumentation(), args.ElementAt(i));
+                    if(i >= args.Count())
+                    {
+                        invocationParams[i] = callbackParams[i].DefaultValue;
+                    }
+                    else
+                    {
+                        invocationParams[i] = Context.ArgumentParser.ParseArgument(
+                            callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
+                            paramNames[i], SyntaxDocumentation(), args.ElementAt(j));
+                    }
+                    j++;
                 }
             }
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);

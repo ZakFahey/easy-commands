@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments\ArgumentParser.cs" />
+    <Compile Include="Arguments\FlagParseRuleDelegate.cs" />
     <Compile Include="Attributes.cs" />
     <Compile Include="Commands\CommandGroupDelegate.cs" />
     <Compile Include="Commands\CommandCallbacks.cs" />

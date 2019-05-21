@@ -55,6 +55,10 @@ namespace EasyCommands
         /// <param name="names">The names you can use to specify this parameter</param>
         public FlagParams(params string[] names)
         {
+            if(names.Length < 1)
+            {
+                throw new ArgumentException("FlagParams must have at least 1 name.");
+            }
             Names = names;
         }
     }
@@ -84,7 +88,7 @@ namespace EasyCommands
     /// <summary>
     /// Custom behavior you can add to a command or parameter.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Field)]
     public abstract class CustomAttribute : Attribute
     {
     }
