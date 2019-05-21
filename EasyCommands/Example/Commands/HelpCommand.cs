@@ -1,5 +1,6 @@
 ﻿using System;
 using EasyCommands;
+using EasyCommands.Commands;
 using EasyCommands.Defaults;
 
 namespace Example.Commands

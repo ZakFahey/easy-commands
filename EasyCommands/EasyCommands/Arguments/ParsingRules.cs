@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EasyCommands.Commands;
 
-namespace EasyCommands
+namespace EasyCommands.Arguments
 {
     /// <summary>
     /// Contains methods to convert a string argument from a user's input into its respective parameter type

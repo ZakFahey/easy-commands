@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EasyCommands
+namespace EasyCommands.Commands
 {
     /// <summary>
     /// Command delegate for command without sub-commands
@@ -136,7 +136,7 @@ namespace EasyCommands
                 else
                 {
                     invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(), args.ElementAt(i), paramNames[i], SyntaxDocumentation());
+                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(), paramNames[i], SyntaxDocumentation(), args.ElementAt(i));
                 }
             }
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 
-namespace EasyCommands
+namespace EasyCommands.Arguments
 {
     /// <summary>
     /// Service to convert a string argument from a user's input into its respective parameter type
@@ -18,7 +16,7 @@ namespace EasyCommands
         {
         }
 
-        private Dictionary<Type, Dictionary<Type, MethodInfo>> parsingRules = new Dictionary<Type, Dictionary<Type, MethodInfo>>();
+        private Dictionary<Type, Dictionary<Type, ParseRuleDelegate<TSender>>> parsingRules = new Dictionary<Type, Dictionary<Type, ParseRuleDelegate<TSender>>>();
         /// <summary> Maintains the various classes you'd want to reference for a given CommandHandler </summary>
         private Context<TSender> Context;
 
@@ -48,44 +46,36 @@ namespace EasyCommands
                     {
                         throw new ParserInitializationException($"Attribute override parameter in {rules.Name}.{rule.Name} must inherit from Attribute.");
                     }
-                    Dictionary<Type, MethodInfo> rulesForThisType;
+                    Dictionary<Type, ParseRuleDelegate<TSender>> rulesForThisType;
                     if(parsingRules.ContainsKey(rule.ReturnType))
                     {
                         rulesForThisType = parsingRules[rule.ReturnType];
                     }
                     else
                     {
-                        rulesForThisType = new Dictionary<Type, MethodInfo>();
+                        rulesForThisType = new Dictionary<Type, ParseRuleDelegate<TSender>>();
                         parsingRules[rule.ReturnType] = rulesForThisType;
                     }
                     if(rulesForThisType.ContainsKey(attributeOverride))
                     {
                         Console.WriteLine($"WARNING: parse rule {rules.Name}.{rule.Name} is overriding an existing parse rule for type {rule.ReturnType.Name}.");
                     }
-                    rulesForThisType[attributeOverride] = rule;
+                    rulesForThisType[attributeOverride] = new NormalParseRuleDelegate<TSender>(Context, rule);
                 }
             }
         }
 
-        public object ParseArgument(Type t, IEnumerable<object> parameterAttributes, string arg, string parameterName, string properSyntax)
+        public void AddFlagRule(Type flags)
+        {
+
+        }
+
+        public object ParseArgument(Type t, IEnumerable<object> parameterAttributes, string parameterName, string properSyntax, params string[] args)
         {
             var rulesForType = parsingRules[t];
             object attributeOverride = parameterAttributes.FirstOrDefault(a => rulesForType.ContainsKey(a.GetType()));
-            MethodInfo rule = rulesForType[attributeOverride == null ? typeof(NullAttribute) : attributeOverride.GetType()];
-            ParsingRules<TSender> instance = (ParsingRules<TSender>)Activator.CreateInstance(rule.DeclaringType);
-            instance.ParameterName = parameterName;
-            instance.ProperSyntax = properSyntax;
-            instance.CommandRepository = Context.CommandRepository;
-            instance.TextOptions = Context.TextOptions;
-            try
-            {
-                var args = attributeOverride == null ? new object[] { arg } : new object[] { arg, attributeOverride };
-                return rule.Invoke(instance, args);
-            }
-            catch(TargetInvocationException e)
-            {
-                throw e.InnerException;
-            }
+            ParseRuleDelegate<TSender> rule = rulesForType[attributeOverride == null ? typeof(NullAttribute) : attributeOverride.GetType()];
+            return rule.Invoke(args, parameterName, properSyntax, attributeOverride);
         }
 
         public bool ParseRuleExists(Type t)

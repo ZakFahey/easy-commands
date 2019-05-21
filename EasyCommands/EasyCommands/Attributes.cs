@@ -35,7 +35,30 @@ namespace EasyCommands
     public class ParseRule : Attribute
     {
     }
-    
+
+    /// <summary>
+    /// Specifies that a class is parsed as a series of flags.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class)]
+    public class FlagsArgument : Attribute
+    {
+    }
+
+    /// <summary>
+    /// A parameter in a flag object.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
+    public class FlagParams : Attribute
+    {
+        public string[] Names { get; private set; }
+
+        /// <param name="names">The names you can use to specify this parameter</param>
+        public FlagParams(params string[] names)
+        {
+            Names = names;
+        }
+    }
+
     /// <summary>
     /// Overrides the default name of a parameter.
     /// </summary>

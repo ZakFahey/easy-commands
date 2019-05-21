@@ -1,5 +1,6 @@
 ﻿using System;
 using EasyCommands;
+using EasyCommands.Commands;
 
 namespace Example.Commands
 {

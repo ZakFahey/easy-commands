@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EasyCommands
+namespace EasyCommands.Commands
 {
     /// <summary>
     /// Holds all command callback methods

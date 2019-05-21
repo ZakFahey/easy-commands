@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EasyCommands
+namespace EasyCommands.Commands
 {
     /// <summary>
     /// Command delegate for command with sub-commands

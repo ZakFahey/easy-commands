@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.ObjectModel;
 using EasyCommands.Defaults;
+using EasyCommands.Arguments;
+using EasyCommands.Commands;
 
 namespace EasyCommands
 {
@@ -109,6 +111,15 @@ namespace EasyCommands
                 throw new ArgumentNullException();
             }
             Context.ArgumentParser.AddParsingRules(rules);
+        }
+
+        public void AddFlagRule(Type flag)
+        {
+            if(flag == null)
+            {
+                throw new ArgumentNullException();
+            }
+            Context.ArgumentParser.AddFlagRule(flag);
         }
 
         public void RegisterCommands(string namespaceToRegister)

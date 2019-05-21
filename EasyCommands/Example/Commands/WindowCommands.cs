@@ -1,5 +1,6 @@
 ﻿using System;
 using EasyCommands;
+using EasyCommands.Commands;
 
 namespace Example.Commands
 {
@@ -7,7 +8,6 @@ namespace Example.Commands
     [CommandDocumentation("Manipulates the console window.")]
     public class WindowCommands : CommandCallbacks<User>
     {
-
         [SubCommand("resize")]
         [CommandDocumentation("Resizes the window.")]
         public void Resize(int width, int height)

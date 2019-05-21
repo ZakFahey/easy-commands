@@ -202,5 +202,35 @@ namespace EasyCommands.Test.Tests
             handler.RegisterCommands(typeof(AllowSpacesTest2));
             Assert.AreEqual(1, handler.CommandList.Count);
         }
+
+        [TestMethod]
+        [Description("Command registration throws an error if a command uses multiple flags parameters.")]
+        public void TestErrorIfMultipleFlags()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(FlagsTest0));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if a command uses a flag parameter along with an AllowSpaces attribute.")]
+        public void TestErrorIfFlagsWithAllowSpaces()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(FlagsTest1));
+            });
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error if a command uses a flag parameter along with an optional parameter.")]
+        public void TestErrorIfFlagsWithOptionalParameter()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(FlagsTest2));
+            });
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace EasyCommands
+namespace EasyCommands.Commands
 {
     /// <summary>
     /// Stores and indexes all commands

@@ -1,6 +1,7 @@
 ﻿using System;
 using EasyCommands;
 using EasyCommands.Defaults;
+using EasyCommands.Commands;
 
 namespace Example
 {
@@ -23,6 +24,7 @@ namespace Example
         {
             AddParsingRules(typeof(DefaultParsingRules<User>));
             AddParsingRules(typeof(ExampleParsingRules<User>));
+            AddFlagRule(typeof(ExampleFlags));
         }
 
         public override void PreCheck(User sender, CommandDelegate<User> command)

@@ -48,6 +48,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\FlagsTest2.cs" />
+    <Compile Include="Commands\FlagsTest1.cs" />
+    <Compile Include="Commands\FlagsTest0.cs" />
     <Compile Include="Commands\AllowSpacesTest2.cs" />
     <Compile Include="Commands\AllowSpacesTest1.cs" />
     <Compile Include="Commands\CallbackSyntaxTest1.cs" />
@@ -68,6 +71,10 @@
     <Compile Include="Commands\DuplicateTest1.cs" />
     <Compile Include="Commands\DuplicateTest0.cs" />
     <Compile Include="ConsoleReader.cs" />
+    <Compile Include="ParsingRules\InvalidFlags3.cs" />
+    <Compile Include="ParsingRules\InvalidFlags2.cs" />
+    <Compile Include="ParsingRules\InvalidFlags1.cs" />
+    <Compile Include="ParsingRules\InvalidFlags0.cs" />
     <Compile Include="ParsingRules\InvalidParsingRules2.cs" />
     <Compile Include="ParsingRules\InvalidParsingRules1.cs" />
     <Compile Include="ParsingRules\InvalidParsingRules0.cs" />

@@ -273,7 +273,8 @@ namespace EasyCommands.Test.Tests
                 "help [command] [subcommand]",
                 "permission-level <user>",
                 "superadmin-me <superSecretPassword>",
-                "hextodec <num>");
+                "hextodec <num>",
+                "example-flags <flags>");
         }
 
         [TestMethod]
@@ -298,7 +299,8 @@ namespace EasyCommands.Test.Tests
                 "superadmin-me <superSecretPassword>",
                 "delete-production ",
                 "supersecret <a|b>",
-                "hextodec <num>");
+                "hextodec <num>",
+                "example-flags <flags>");
         }
 
         [TestMethod]
@@ -443,6 +445,84 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "hextodec FEF20");
             Assert.AreEqual("Decimal: 1044256", ConsoleReader.ReadLine());
+        }
+
+        //TODO: flag parsing, list parsing
+
+        [TestMethod]
+        [Description("Flag arguments work with no arguments.")]
+        public void TestFlagArgument0()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test");
+            Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments work with one string argument.")]
+        public void TestFlagArgument1()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -a test");
+            Assert.AreEqual("A: test", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments work with one int argument.")]
+        public void TestFlagArgument2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -b 4");
+            Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 4", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments work with one User argument.")]
+        public void TestFlagArgument3()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -c Jeff");
+            Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: Jeff", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments work with alternative flag names.")]
+        public void TestFlagArgument4()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -C Jeff");
+            Assert.AreEqual("A: DEFAULT", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 0", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: Jeff", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments fail when one of the flags has an invalid argument.")]
+        public void TestFlagArgument5()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -c qwerty");
+            Assert.AreEqual("User qwerty not found.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments work with multiple arguments.")]
+        public void TestFlagArgument6()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -b 5 -a test");
+            Assert.AreEqual("A: test", ConsoleReader.ReadLine());
+            Assert.AreEqual("B: 5", ConsoleReader.ReadLine());
+            Assert.AreEqual("C: null", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Flag arguments throw an error when an invalid flag name is inputted.")]
+        public void TestFlagArgument7()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test -b 5 -d Hello");
+            Assert.AreEqual("Invalid syntax! -d is not a valid flag. Valid flags: -a, -b, -c", ConsoleReader.ReadLine());
         }
     }
 }

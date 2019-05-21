@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\FlagCommand.cs" />
     <Compile Include="Commands\SuperadminCommands.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\MathCommands.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Commands\UserCommands.cs" />
     <Compile Include="Attributes.cs" />
     <Compile Include="ExampleCommandHandler.cs" />
+    <Compile Include="ExampleFlags.cs" />
     <Compile Include="ExampleParsingRules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
