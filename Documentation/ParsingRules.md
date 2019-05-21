@@ -1,6 +1,6 @@
 # Parsing rules
 
-Parsing rules are classes that specify the behavior for a command argument. They include functions for different argument types. You take a string (the user's input) as input, and the function outputs the specified type. Take [ExampleParsingRules.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/ExampleParsingRules.cs) as an example:
+Parsing rules are classes that specify the behavior for a command argument. They include functions for different argument types. You take a string or string array (the user's input) as input, and the function outputs the specified type. Take [ExampleParsingRules.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/ExampleParsingRules.cs) as an example:
 
 ```
 class ExampleParsingRules<TSender> : ParsingRules<TSender>
@@ -14,6 +14,12 @@ class ExampleParsingRules<TSender> : ParsingRules<TSender>
             Fail($"User {arg} not found.", false);
         }
         return user;
+    }
+
+    [ParseRule]
+    public User[] ParseUsers(string[] args)
+    {
+        return args.Select(ParseUser).ToArray();
     }
 
     [ParseRule]
