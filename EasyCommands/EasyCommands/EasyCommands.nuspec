@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/ZakFahey/easy-commands</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reflection-based command line parsing for C#</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>Added flags parameters and string arrays for parsing rules.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>easy commands chat zak fahey</tags>
   </metadata>
