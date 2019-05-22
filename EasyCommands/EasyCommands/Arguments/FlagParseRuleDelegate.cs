@@ -82,7 +82,7 @@ namespace EasyCommands.Arguments
                         throw new CommandParsingException(string.Format(Context.TextOptions.FlagArgWithNoValue, args[i]));
                     }
                     object fieldValue = Context.ArgumentParser.ParseArgument
-                        (field.FieldType, field.GetCustomAttributes(), parameterName, properSyntax, args[i + 1]);
+                        (field.FieldType, field.GetCustomAttributes(), args[i], properSyntax, args[i + 1]);
                     field.SetValue(instance, fieldValue);
                     i += 2;
                 }

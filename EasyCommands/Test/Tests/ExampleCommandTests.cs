@@ -565,5 +565,13 @@ namespace EasyCommands.Test.Tests
             Assert.AreEqual("C: null", ConsoleReader.ReadLine());
             Assert.AreEqual("D: True", ConsoleReader.ReadLine());
         }
+
+        [TestMethod]
+        [Description("Flag arguments show an error message when the parsing for a flag argument fails.")]
+        public void TestFlagArgument10()
+        {
+            CommandHandler.RunCommand(CurrentUser, "flag-test test -b hello");
+            Assert.AreEqual("Invalid syntax! -b must be a whole number!", ConsoleReader.ReadLine());
+        }
     }
 }
