@@ -141,9 +141,16 @@ namespace EasyCommands.Commands
                 if(i == flagsIndex || i == phraseIndex) // Handle multi-word arguments
                 {
                     int multiWordLength = args.Count() - callbackParams.Length + 1;
-                    invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                        callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
-                        paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, multiWordLength).ToArray());
+                    if(i >= args.Count() && i == phraseIndex)
+                    {
+                        invocationParams[i] = callbackParams[i].DefaultValue;
+                    }
+                    else
+                    {
+                        invocationParams[i] = Context.ArgumentParser.ParseArgument(
+                            callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
+                            paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, multiWordLength).ToArray());
+                    }
                     j += multiWordLength;
                 }
                 else
