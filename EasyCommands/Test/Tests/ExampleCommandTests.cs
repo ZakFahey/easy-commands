@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Example;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace EasyCommands.Test.Tests
 {
@@ -11,7 +12,7 @@ namespace EasyCommands.Test.Tests
         User CurrentUser;
         ExampleCommandHandler CommandHandler;
         ConsoleReader ConsoleReader;
-        
+
         public ExampleCommandTests()
         {
             CommandHandler = new ExampleCommandHandler();
@@ -89,7 +90,7 @@ namespace EasyCommands.Test.Tests
         public void TestDivide()
         {
             CommandHandler.RunCommand(CurrentUser, "divide 1 2");
-            Assert.AreEqual("1 / 2 = 0.5", ConsoleReader.ReadLine());
+            Assert.AreEqual($"1 / 2 = 0{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}5", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -97,7 +98,7 @@ namespace EasyCommands.Test.Tests
         public void TestDiv()
         {
             CommandHandler.RunCommand(CurrentUser, "div 1 2");
-            Assert.AreEqual("1 / 2 = 0.5", ConsoleReader.ReadLine());
+            Assert.AreEqual($"1 / 2 = 0{CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator}5", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -234,7 +235,7 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "add-user Jimmy BadBoy baked potatoes");
             Assert.AreEqual("BadBoy is not a permission level. Valid values: Guest, DefaultUser, Admin, Superadmin", ConsoleReader.ReadLine());
-            
+
         }
 
         [TestMethod]
