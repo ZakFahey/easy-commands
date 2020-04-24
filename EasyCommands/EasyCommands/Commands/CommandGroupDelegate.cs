@@ -13,6 +13,7 @@ namespace EasyCommands.Commands
     {
         private Dictionary<string, BaseCommandDelegate<TSender>> subcommands = new Dictionary<string, BaseCommandDelegate<TSender>>();
         private List<BaseCommandDelegate<TSender>> subcommandList = new List<BaseCommandDelegate<TSender>>();
+        private BaseCommandDelegate<TSender> defaultCommand = null;
 
         public CommandGroupDelegate(Context<TSender> context, string mainName, string[] allNames, Type command) : base(context, mainName, allNames)
         {
@@ -34,6 +35,16 @@ namespace EasyCommands.Commands
                     anySubcommands = true;
                     var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {subcommandNames[0]}", subcommandNames, subcommandNames[0], subcommand);
                     AddSubcommand(newSubcommand, subcommandNames);
+
+                    // Check if it's the default command
+                    if (subcommand.GetSubCommandIsDefault())
+                    {
+                        if (defaultCommand != null)
+                        {
+                            throw new CommandRegistrationException($"There is two or more default sub commands in {command.Name}.");
+                        }
+                        defaultCommand = newSubcommand;
+                    }
                 }
             }
             if(!anySubcommands)
@@ -51,18 +62,42 @@ namespace EasyCommands.Commands
         {
             if(args.Length == 0)
             {
-                throw new CommandParsingException($"{string.Format(Context.TextOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
+                // Check for default command
+                if (defaultCommand != null)
+                {
+                    Context.CommandHandler.PreCheck(sender, this);
+                    defaultCommand.Invoke(sender, "");
+                }
+                else
+                {
+                    throw new CommandParsingException($"{string.Format(Context.TextOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
+                }
             }
-            (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
-            if(!subcommands.ContainsKey(subcommand))
+            else
             {
-                throw new CommandParsingException(
-                    string.Format(Context.TextOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
-                    + string.Format(Context.TextOptions.ShowSubcommands, Name) + "\n"
-                    + SubcommandList());
+                (string subcommand, string subcommandArgs) = args.SplitAfterFirstSpace();
+                if(!subcommands.ContainsKey(subcommand))
+                {
+                    // Check for default command
+                    if (defaultCommand != null)
+                    {
+                        Context.CommandHandler.PreCheck(sender, this);
+                        defaultCommand.Invoke(sender, args);
+                    }
+                    else
+                    {
+                        throw new CommandParsingException(
+                            string.Format(Context.TextOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
+                            + string.Format(Context.TextOptions.ShowSubcommands, Name) + "\n"
+                            + SubcommandList());
+                    }
+                }
+                else
+                {
+                    Context.CommandHandler.PreCheck(sender, this);
+                    subcommands[subcommand].Invoke(sender, subcommandArgs);
+                }
             }
-            Context.CommandHandler.PreCheck(sender, this);
-            subcommands[subcommand].Invoke(sender, subcommandArgs);
         }
 
         public string SubcommandList()

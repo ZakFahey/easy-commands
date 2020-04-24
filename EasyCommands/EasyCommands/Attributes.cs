@@ -24,8 +24,19 @@ namespace EasyCommands
     [AttributeUsage(AttributeTargets.Method)]
     public class SubCommand : Command
     {
+        public bool IsDefault { get; private set; }
+
         /// <param name="names">The aliases used to run the command</param>
-        public SubCommand(params string[] names) : base(names) { }
+        public SubCommand(params string[] names) : base(names)
+        {
+            IsDefault = false;
+        }
+        /// <param name="isDefault">Set if this <see cref="SubCommand"/> is the default one (only one default <see cref="SubCommand"/> max is allowed)</param>
+        /// <param name="names">The aliases used to run the command</param>
+        public SubCommand(bool isDefault, params string[] names) : base(names)
+        {
+            IsDefault = isDefault;
+        }
     }
 
     /// <summary>
