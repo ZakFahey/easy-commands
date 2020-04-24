@@ -285,7 +285,8 @@ namespace EasyCommands.Test.Tests
                 "permission-level <user>",
                 "superadmin-me <superSecretPassword>",
                 "hextodec <num>",
-                "flag-test <test> [flags]");
+                "flag-test <test> [flags]",
+                "default <hello|bye>");
         }
 
         [TestMethod]
@@ -312,7 +313,8 @@ namespace EasyCommands.Test.Tests
                 "delete-production ",
                 "supersecret <a|b>",
                 "hextodec <num>",
-                "flag-test <test> [flags]");
+                "flag-test <test> [flags]",
+                "default <hello|bye>");
         }
 
         [TestMethod]
@@ -573,6 +575,19 @@ namespace EasyCommands.Test.Tests
         {
             CommandHandler.RunCommand(CurrentUser, "flag-test test -b hello");
             Assert.AreEqual("Invalid syntax! -b must be a whole number!", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Test the default subcommand feature")]
+        public void TestDefaultSubCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "default hello Eveldee");
+            CommandHandler.RunCommand(CurrentUser, "default bye Eveldee");
+            CommandHandler.RunCommand(CurrentUser, "default Eveldee");
+
+            Assert.AreEqual("Hello Eveldee!", ConsoleReader.ReadLine());
+            Assert.AreEqual("Bye Eveldee!", ConsoleReader.ReadLine());
+            Assert.AreEqual("Hello Eveldee!", ConsoleReader.ReadLine());
         }
     }
 }
