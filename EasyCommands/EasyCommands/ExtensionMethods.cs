@@ -37,6 +37,21 @@ namespace EasyCommands
             return attribute.Names;
         }
 
+        /// <summary>
+        /// Return the <see cref="SubCommand.IsDefault"/> attribute of a <see cref="SubCommand"/>
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static bool GetSubCommandIsDefault(this MemberInfo member)
+        {
+            var attribute = (SubCommand)member.GetCustomAttribute(typeof(SubCommand));
+            if (attribute == null || attribute.GetType() != typeof(SubCommand))
+            {
+                return false;
+            }
+            return attribute.IsDefault;
+        }
+
         public static (string first, string last) SplitAfterFirstSpace(this string str)
         {
             int firstSpace = str.IndexOf(' ');
