@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\DefaultExampleCommands.cs" />
     <Compile Include="Commands\FlagCommand.cs" />
     <Compile Include="Commands\SuperadminCommands.cs" />
     <Compile Include="Commands\HelpCommand.cs" />

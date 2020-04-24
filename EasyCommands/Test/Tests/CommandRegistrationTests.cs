@@ -135,6 +135,34 @@ namespace EasyCommands.Test.Tests
         }
 
         [TestMethod]
+        [Description("Command registration should suceed using only 1 isDefault subcommand.")]
+        public void TestDefaultSubCommand()
+        {
+            var handler = new ExampleCommandHandler();
+            handler.RegisterCommands(typeof(SubcommandTest8));
+            Assert.AreEqual(1, handler.CommandList.Count);
+        }
+
+        [TestMethod]
+        [Description("Command registration should suceed using only 1 isDefault subcommand.")]
+        public void TestDefaultSubCommand2()
+        {
+            var handler = new ExampleCommandHandler();
+            handler.RegisterCommands(typeof(SubcommandTest9));
+            Assert.AreEqual(1, handler.CommandList.Count);
+        }
+
+        [TestMethod]
+        [Description("Command registration throws an error when a command class doesn't contain any subcommands.")]
+        public void TestErrorIfTwoOrMoreSubCommands()
+        {
+            Assert.ThrowsException<CommandRegistrationException>(() => {
+                var handler = new ExampleCommandHandler();
+                handler.RegisterCommands(typeof(SubcommandTest10));
+            });
+        }
+
+        [TestMethod]
         [Description("Command registration throws an error if command has parameter with no corresponding parse rule.")]
         public void TestErrorForNonexistentParseRule()
         {
