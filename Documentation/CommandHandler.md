@@ -2,7 +2,7 @@
 
 In order to parse commands, you need to implement the abstract `CommandHandler` class. This class specifies the behavior of the command parser. Looking at [ExampleCommandHandler.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/ExampleCommandHandler.cs):
 
-```
+```cs
 public class ExampleCommandHandler : CommandHandler<User>
 {
     public ExampleCommandHandler() : base() { }
@@ -49,7 +49,7 @@ There is the overrideable `CommandRepositoryToUse`, which specifies how commands
 
 To use this handler, look at [Program.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/Program.cs):
 
-```
+```cs
 var commandHandler = new ExampleCommandHandler();
 commandHandler.RegisterCommands("Example.Commands");
 Console.WriteLine("Input a command. Type `help` to see a list of commands.");
