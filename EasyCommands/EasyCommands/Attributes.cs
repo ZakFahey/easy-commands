@@ -31,11 +31,10 @@ namespace EasyCommands
         {
             IsDefault = false;
         }
-        /// <param name="isDefault">Set if this <see cref="SubCommand"/> is the default one (only one default <see cref="SubCommand"/> max is allowed)</param>
-        /// <param name="names">The aliases used to run the command</param>
-        public SubCommand(bool isDefault, params string[] names) : base(names)
+        /// <param name="subCommandType">Determine whether this subcommand is a default subcommand or not</param>
+        public SubCommand(SubCommandType subCommandType) : base(subCommandType == SubCommandType.Default ? new string[] { "" } : Array.Empty<string>())
         {
-            IsDefault = isDefault;
+            IsDefault = subCommandType == SubCommandType.Default;
         }
     }
 
