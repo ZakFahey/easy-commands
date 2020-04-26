@@ -12,20 +12,26 @@ namespace Example.Commands
     [CommandDocumentation("Show how to use a default sub command.")]
     class DefaultExampleCommands : CommandCallbacks<User>
     {
-        // This command will be executed whenever a non-existant command is called,
-        // you can name it "" (empty string) if you want to create an "invisible" sub command
-        [SubCommand(isDefault: true, "hello")]
+        [SubCommand("hello")]
         [CommandDocumentation("Say hello.")]
         public void Hello([AllowSpaces] string name)
         {
             Console.WriteLine($"Hello {name}!");
         }
 
-        [SubCommand("bye")] // If nothing is passed to isDefault, it's false
+        [SubCommand("bye")]
         [CommandDocumentation("Say bye.")]
         public void Bye([AllowSpaces] string name)
         {
             Console.WriteLine($"Bye {name}!");
+        }
+
+        // It is executed whenever an invalid request is sent, for example: "default Eveldee" will execute the default subcommand with args "Eveldee"
+        [SubCommand(SubCommandType.Default)]
+        [CommandDocumentation("This is the default subcommand.")]
+        public void IAmDefault(string name)
+        {
+            Console.WriteLine($"Have a nice day {name}!");
         }
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="Arguments\ParseRuleDelegate.cs" />
     <Compile Include="Arguments\ParsingRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubCommandType.cs" />
     <Compile Include="TextOptions.cs" />
   </ItemGroup>
   <ItemGroup>
