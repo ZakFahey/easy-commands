@@ -33,18 +33,21 @@ namespace EasyCommands.Commands
                 if(subcommandNames != null)
                 {
                     anySubcommands = true;
-                    var newSubcommand = new BaseCommandDelegate<TSender>(Context, $"{Name} {subcommandNames[0]}", subcommandNames, subcommandNames[0], subcommand);
-                    AddSubcommand(newSubcommand, subcommandNames);
+                    bool isDefault = subcommand.GetSubCommandIsDefault();
+
+                    var newSubcommand = new BaseCommandDelegate<TSender>(Context, isDefault ? Name : $"{Name} {subcommandNames[0]}", subcommandNames, subcommandNames[0], subcommand);
 
                     // Check if it's the default command
-                    if (subcommand.GetSubCommandIsDefault())
+                    if (isDefault)
                     {
                         if (defaultCommand != null)
                         {
-                            throw new CommandRegistrationException($"There is two or more default sub commands in {command.Name}.");
+                            throw new CommandRegistrationException($"There are two or more default subcommands in {command.Name}.");
                         }
                         defaultCommand = newSubcommand;
                     }
+
+                    AddSubcommand(newSubcommand, subcommandNames);
                 }
             }
             if(!anySubcommands)
@@ -55,7 +58,7 @@ namespace EasyCommands.Commands
 
         public override string SyntaxDocumentation()
         {
-            return $"{Context.TextOptions.CommandPrefix}{Name} <{string.Join("|", subcommandList.Select(sub => sub.ShortName))}>";
+            return $"{Context.TextOptions.CommandPrefix}{Name} <{string.Join("|", subcommandList.Where(sub => sub != defaultCommand).Select(sub => sub.ShortName))}>";
         }
 
         public override void Invoke(TSender sender, string args)
