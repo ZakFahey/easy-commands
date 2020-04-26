@@ -46,7 +46,7 @@ namespace EasyCommands.Commands
             {
                 customAttributes[attribute.GetType()] = attribute;
             }
-            
+
             if(minLength != maxLength && phraseIndex >= 0 && phraseIndex < maxLength - 1)
             {
                 throw new CommandRegistrationException(
