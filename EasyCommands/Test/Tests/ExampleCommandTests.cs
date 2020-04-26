@@ -587,7 +587,7 @@ namespace EasyCommands.Test.Tests
 
             Assert.AreEqual("Hello Eveldee!", ConsoleReader.ReadLine());
             Assert.AreEqual("Bye Eveldee!", ConsoleReader.ReadLine());
-            Assert.AreEqual("Hello Eveldee!", ConsoleReader.ReadLine());
+            Assert.AreEqual("Have a nice day Eveldee!", ConsoleReader.ReadLine());
         }
     }
 }

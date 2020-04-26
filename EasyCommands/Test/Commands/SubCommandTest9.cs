@@ -5,17 +5,17 @@ using Example;
 
 namespace EasyCommands.Test.Commands
 {
-    // Registration should succeed with these commands using isDefault for 1 SubCommand
+    // Registration should fail with two default subcommands
     [Command("do")]
     class SubcommandTest9 : CommandCallbacks<User>
     {
-        [SubCommand(isDefault: true, "test")]
+        [SubCommand(SubCommandType.Default)]
         public void Test()
         {
             Console.WriteLine("Something");
         }
 
-        [SubCommand(isDefault: false, "something")]
+        [SubCommand(SubCommandType.Default)]
         public void Something()
         {
             Console.WriteLine("Hello!");

@@ -60,7 +60,7 @@
     <Compile Include="Commands\CallbackSyntaxTest0.cs" />
     <Compile Include="Commands\InvalidClassTest0.cs" />
     <Compile Include="Commands\AllowSpacesTest0.cs" />
-    <Compile Include="Commands\SubCommandTest10.cs" />
+    <Compile Include="Commands\SubcommandTest9.cs" />
     <Compile Include="Commands\SubcommandTest7.cs" />
     <Compile Include="Commands\SubcommandTest6.cs" />
     <Compile Include="Commands\SubcommandTest5.cs" />
@@ -72,7 +72,6 @@
     <Compile Include="Commands\DuplicateTest1.cs" />
     <Compile Include="Commands\DuplicateTest0.cs" />
     <Compile Include="Commands\SubCommandTest8.cs" />
-    <Compile Include="Commands\SubCommandTest9.cs" />
     <Compile Include="ConsoleReader.cs" />
     <Compile Include="ParsingRules\InvalidFlags4.cs" />
     <Compile Include="ParsingRules\InvalidFlags3.cs" />
