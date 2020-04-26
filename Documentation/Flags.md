@@ -2,7 +2,7 @@
 
 In addition to basic arguments, you can create arguments that take many unordered, optional parameters in the form of flags. All you need to do is make a flags class and register it with `CommandHandler.AddFlagRule(flags)` or `CommandHandler.AddParsingRules(namespace)`. Keep in mind that registration order matters, and you must register flags after you register the parsing rules for the fields the flags class contains. Looking at [ExampleFlags.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/ExampleFlags.cs), we have our sample flags class:
 
-```
+```cs
 [FlagsArgument]
 public class ExampleFlags
 {

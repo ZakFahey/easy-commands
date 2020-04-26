@@ -2,7 +2,7 @@
 
 Parsing rules are classes that specify the behavior for a command argument. They include functions for different argument types. You take a string or string array (the user's input) as input, and the function outputs the specified type. Take [ExampleParsingRules.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/ExampleParsingRules.cs) as an example:
 
-```
+```cs
 class ExampleParsingRules<TSender> : ParsingRules<TSender>
 {
     [ParseRule]
