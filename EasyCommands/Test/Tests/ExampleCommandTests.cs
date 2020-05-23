@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Example;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EasyCommands.Test.Tests
 {
@@ -286,7 +288,9 @@ namespace EasyCommands.Test.Tests
                 "superadmin-me <superSecretPassword>",
                 "hextodec <num>",
                 "flag-test <test> [flags]",
-                "default <hello|bye>");
+                "default <hello|bye>",
+                "delay <delay>",
+                "delay-error <delay>");
         }
 
         [TestMethod]
@@ -314,7 +318,9 @@ namespace EasyCommands.Test.Tests
                 "supersecret <a|b>",
                 "hextodec <num>",
                 "flag-test <test> [flags]",
-                "default <hello|bye>");
+                "default <hello|bye>",
+                "delay <delay>",
+                "delay-error <delay>");
         }
 
         [TestMethod]
@@ -588,6 +594,36 @@ namespace EasyCommands.Test.Tests
             Assert.AreEqual("Hello Eveldee!", ConsoleReader.ReadLine());
             Assert.AreEqual("Bye Eveldee!", ConsoleReader.ReadLine());
             Assert.AreEqual("Have a nice day Eveldee!", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Test the asynchronous delay command")]
+        public async Task TestAsyncCommand()
+        {
+            var sw = Stopwatch.StartNew();
+            await CommandHandler.RunCommandAsync(CurrentUser, "delay 2");
+            long elapsedMillis = sw.ElapsedMilliseconds;
+
+            Assert.IsTrue(
+                elapsedMillis > 1500 && elapsedMillis < 2500,
+                $"delay took {elapsedMillis} milliseconds to execute, which is outside the expected " +
+                $"bounds of 1.5 - 2.5 seconds.");
+            Assert.AreEqual("A message appeared after 2 second(s)!", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("Test that Fail exceptions are caught in asynchronous commands")]
+        public async Task TestFailOnAsyncCommand()
+        {
+            var sw = Stopwatch.StartNew();
+            await CommandHandler.RunCommandAsync(CurrentUser, "delay-error 2");
+            long elapsedMillis = sw.ElapsedMilliseconds;
+
+            Assert.IsTrue(
+                elapsedMillis > 1500 && elapsedMillis < 2500,
+                $"delay-error took {elapsedMillis} milliseconds to execute, which is outside the expected " +
+                $"bounds of 1.5 - 2.5 seconds.");
+            Assert.AreEqual("The command has failed after 2 second(s).", ConsoleReader.ReadLine());
         }
     }
 }

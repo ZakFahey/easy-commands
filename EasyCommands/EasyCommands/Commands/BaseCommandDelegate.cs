@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EasyCommands.Commands
 {
@@ -57,9 +58,9 @@ namespace EasyCommands.Commands
                 throw new CommandRegistrationException(
                     $"{callback.DeclaringType.Name}.{callback.Name} cannot contain a flags parameter along with any optional parameters.");
             }
-            if(callback.ReturnType != typeof(void))
+            if(callback.ReturnType != typeof(void) && callback.ReturnType != typeof(Task))
             {
-                throw new CommandRegistrationException($"{callback.DeclaringType.Name}.{callback.Name} must return void.");
+                throw new CommandRegistrationException($"{callback.DeclaringType.Name}.{callback.Name} must return void or Task.");
             }
             if(callbackParams.Count(p => p.GetCustomAttribute<AllowSpaces>() != null || Context.ArgumentParser.ParseRuleIsFlags(p.ParameterType)) > 1)
             {
@@ -90,7 +91,7 @@ namespace EasyCommands.Commands
             return syntaxDocumentation;
         }
 
-        public override void Invoke(TSender sender, string args)
+        public override async Task Invoke(TSender sender, string args)
         {
             var argList = new List<string>();
             bool inQuotes = false;
@@ -122,10 +123,10 @@ namespace EasyCommands.Commands
                     argList[argList.Count - 1] += c;
                 }
             }
-            Invoke(sender, args, argList);
+            await Invoke(sender, args, argList);
         }
 
-        void Invoke(TSender sender, string argText, IEnumerable<string> args)
+        private async Task Invoke(TSender sender, string argText, IEnumerable<string> args)
         {
             if(args.Count() < minLength || args.Count() > maxLength)
             {
@@ -175,7 +176,11 @@ namespace EasyCommands.Commands
             instance.TextOptions = Context.TextOptions;
             try
             {
-                callback.Invoke(instance, invocationParams);
+                object task = callback.Invoke(instance, invocationParams);
+                if (task is Task t)
+                {
+                    await t;
+                }
             }
             catch(TargetInvocationException e)
             {

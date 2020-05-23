@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using EasyCommands.Defaults;
 using EasyCommands.Arguments;
 using EasyCommands.Commands;
+using System.Threading.Tasks;
 
 namespace EasyCommands
 {
@@ -185,19 +186,24 @@ namespace EasyCommands
 
         public void RunCommand(TSender sender, string command)
         {
+            RunCommandAsync(sender, command).Wait();
+        }
+
+        public async Task RunCommandAsync(TSender sender, string command)
+        {
             try
             {
-                Context.CommandRepository.Invoke(sender, command);
+                await Context.CommandRepository.Invoke(sender, command);
             }
-            catch(CommandParsingException e)
+            catch (CommandParsingException e)
             {
                 SendFailMessage(sender, e.Message);
             }
-            catch(CommandExecutionException e)
+            catch (CommandExecutionException e)
             {
                 SendFailMessage(sender, e.Message);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 SendFailMessage(sender, $"The command threw an error:\n{e}");
             }

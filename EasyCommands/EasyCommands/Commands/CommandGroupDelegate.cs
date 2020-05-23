@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EasyCommands.Commands
 {
@@ -61,7 +62,7 @@ namespace EasyCommands.Commands
             return $"{Context.TextOptions.CommandPrefix}{Name} <{string.Join("|", subcommandList.Where(sub => sub != defaultCommand).Select(sub => sub.ShortName))}>";
         }
 
-        public override void Invoke(TSender sender, string args)
+        public override async Task Invoke(TSender sender, string args)
         {
             if(args.Length == 0)
             {
@@ -69,7 +70,7 @@ namespace EasyCommands.Commands
                 if (defaultCommand != null)
                 {
                     Context.CommandHandler.PreCheck(sender, this);
-                    defaultCommand.Invoke(sender, "");
+                    await defaultCommand.Invoke(sender, "");
                 }
                 else
                 {
@@ -85,7 +86,7 @@ namespace EasyCommands.Commands
                     if (defaultCommand != null)
                     {
                         Context.CommandHandler.PreCheck(sender, this);
-                        defaultCommand.Invoke(sender, args);
+                        await defaultCommand.Invoke(sender, args);
                     }
                     else
                     {
@@ -98,7 +99,7 @@ namespace EasyCommands.Commands
                 else
                 {
                     Context.CommandHandler.PreCheck(sender, this);
-                    subcommands[subcommand].Invoke(sender, subcommandArgs);
+                    await subcommands[subcommand].Invoke(sender, subcommandArgs);
                 }
             }
         }

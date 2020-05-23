@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EasyCommands.Commands
 {
@@ -35,6 +36,6 @@ namespace EasyCommands.Commands
             return (T)customAttributes[typeof(T)];
         }
 
-        public abstract void Invoke(TSender sender, string args);
+        public abstract Task Invoke(TSender sender, string args);
     }
 }

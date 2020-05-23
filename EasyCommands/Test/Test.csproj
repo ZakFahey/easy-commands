@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AsyncTest.cs" />
     <Compile Include="Commands\FlagsTest2.cs" />
     <Compile Include="Commands\FlagsTest1.cs" />
     <Compile Include="Commands\FlagsTest0.cs" />

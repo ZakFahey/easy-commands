@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using EasyCommands.Commands;
 
 namespace EasyCommands.Defaults
@@ -15,7 +16,7 @@ namespace EasyCommands.Defaults
 
         public DefaultCommandRepository(Context<TSender> context) : base(context) { }
         
-        public override void Invoke(TSender sender, string command)
+        public override async Task Invoke(TSender sender, string command)
         {
             if(string.IsNullOrEmpty(command))
             {
@@ -38,7 +39,7 @@ namespace EasyCommands.Defaults
             {
                 throw new CommandParsingException(string.Format(Context.TextOptions.CommandNotFound, name));
             }
-            commands[name].Invoke(sender, parameters);
+            await commands[name].Invoke(sender, parameters);
         }
 
         protected override void AddCommand(CommandDelegate<TSender> command, string[] names)

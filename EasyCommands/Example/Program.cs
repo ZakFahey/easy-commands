@@ -15,7 +15,7 @@ namespace Example
             Console.WriteLine("Input a command. Type `help` to see a list of commands.");
             while(true)
             {
-                commandHandler.RunCommand(CurrentUser, Console.ReadLine());
+                 _ = commandHandler.RunCommandAsync(CurrentUser, Console.ReadLine());
             }
         }
     }

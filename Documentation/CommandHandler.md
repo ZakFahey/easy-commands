@@ -55,8 +55,8 @@ commandHandler.RegisterCommands("Example.Commands");
 Console.WriteLine("Input a command. Type `help` to see a list of commands.");
 while(true)
 {
-    commandHandler.RunCommand(CurrentUser, Console.ReadLine());
+    _ = commandHandler.RunCommandAsync(CurrentUser, Console.ReadLine());
 }
 ```
 
-You just instantiate the class, register the class or namespace with your commands, and run your commands with `commandHandler.RunCommand`.
+You just instantiate the class, register the class or namespace with your commands, and run your commands with either `commandHandler.RunCommand` or `commandHandler.RunCommandAsync`.

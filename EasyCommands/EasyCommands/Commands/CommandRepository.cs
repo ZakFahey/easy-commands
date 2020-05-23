@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EasyCommands.Commands
 {
@@ -46,7 +47,7 @@ namespace EasyCommands.Commands
             AddCommand(newCommand, names);
         }
 
-        public abstract void Invoke(TSender sender, string command);
+        public abstract Task Invoke(TSender sender, string command);
 
         protected abstract void AddCommand(CommandDelegate<TSender> command, string[] names);
     }

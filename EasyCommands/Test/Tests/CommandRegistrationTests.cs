@@ -251,5 +251,14 @@ namespace EasyCommands.Test.Tests
                 handler.RegisterCommands(typeof(FlagsTest2));
             });
         }
+
+        [TestMethod]
+        [Description("Command registration succeeds for an asynchronous command method.")]
+        public void TestAsyncCommands()
+        {
+            var handler = new ExampleCommandHandler();
+            handler.RegisterCommands(typeof(AsyncTest));
+            Assert.AreEqual(1, handler.CommandList.Count);
+        }
     }
 }
