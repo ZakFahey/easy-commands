@@ -53,6 +53,9 @@ namespace EasyCommands
         /// <summary> The command repository to use. </summary>
         protected virtual Type CommandRepositoryToUse() => typeof(DefaultCommandRepository<TSender>);
 
+        /// <summary> Handles when a command throws an unexpected exception. </summary>
+        protected virtual void HandleCommandException(Exception e) => Console.WriteLine(e);
+
         private CommandRepository<TSender> GetRepository()
         {
             Type repositoryType = CommandRepositoryToUse();
@@ -205,7 +208,8 @@ namespace EasyCommands
             }
             catch (Exception e)
             {
-                SendFailMessage(sender, $"The command threw an error:\n{e}");
+                HandleCommandException(e);
+                SendFailMessage(sender, Context.TextOptions.CommandThrewException);
             }
         }
     }

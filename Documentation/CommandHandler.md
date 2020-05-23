@@ -45,7 +45,7 @@ The `PreCheck` method is run before any command or subcommand is executed. Here 
 
 There is also the `CommandList` property in this class, which lists all commands that have been registered.
 
-There is the overrideable `CommandRepositoryToUse`, which specifies how commands are stored. There is a default command storage engine, but if you wanted to, say, write a wrapper on top of an existing command system, you could use this override and make a new `CommandRepository` class.
+There is the overrideable `CommandRepositoryToUse`, which specifies how commands are stored. There is a default command storage engine, but if you wanted to, say, write a wrapper on top of an existing command system, you could use this override and make a new `CommandRepository` class. In addition to this, you have the `HandleCommandException` override, which can be used to handle what happens when an unhandled exception is thrown in a command handler. By default, it logs the exception to the console.
 
 To use this handler, look at [Program.cs](https://github.com/ZakFahey/easy-commands/blob/master/EasyCommands/Example/Program.cs):
 

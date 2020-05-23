@@ -17,6 +17,7 @@ namespace EasyCommands
         public string EmptyCommand;
         public string FlagArgWithNoValue;
         public string FlagNotFound;
+        public string CommandThrewException;
 
         public static TextOptions Default()
         {
@@ -29,7 +30,8 @@ namespace EasyCommands
                 CommandNotFound = "Command \"{0}\" does not exist.",
                 EmptyCommand = "Please enter a command.",
                 FlagArgWithNoValue = "Invalid syntax! {0} must have a corresponding value.",
-                FlagNotFound = "Invalid syntax! {0} is not a valid flag. Valid flags: {1}"
+                FlagNotFound = "Invalid syntax! {0} is not a valid flag. Valid flags: {1}",
+                CommandThrewException = "The command threw an error."
             };
         }
     }
