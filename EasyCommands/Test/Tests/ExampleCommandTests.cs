@@ -63,7 +63,9 @@ namespace EasyCommands.Test.Tests
         [Description("Nonexistent subcommands throw an error.")]
         public void TestInvalidSubcommand()
         {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
             CommandHandler.RunCommand(CurrentUser, "window asdf 1 2 3");
+            ConsoleReader.ReadLine();
             Assert.AreEqual("Command \"window asdf\" does not exist.", ConsoleReader.ReadLine());
             Assert.AreEqual("window contains these subcommands:", ConsoleReader.ReadLine());
             ConsoleReader.AssertOutputContains(
