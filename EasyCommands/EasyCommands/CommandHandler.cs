@@ -140,6 +140,18 @@ namespace EasyCommands
             Context.ArgumentParser.AddFlagRule(flag);
         }
 
+        public void AddFlagRules(string namespaceToRegister)
+        {
+            IEnumerable<Type> flags = allTypes
+                .Where(flag => flag.Namespace == namespaceToRegister
+                    && Attribute.IsDefined(flag, typeof(FlagsArgument)));
+
+            foreach (Type type in flags)
+            {
+                AddFlagRule(type);
+            }
+        }
+
         public void RegisterCommands(string namespaceToRegister)
         {
             IEnumerable<Type> types = allTypes.Where(t => t.Namespace == namespaceToRegister && t.BaseType == typeof(CommandCallbacks<TSender>) && !t.IsNested);
