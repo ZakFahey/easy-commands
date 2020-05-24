@@ -26,9 +26,10 @@ namespace Example.Commands
 
         [Command("divide", "div")]
         [CommandDocumentation("Divides num1 by num2.")]
-        public void Divide(float num1, float num2)
+        [SyntaxOverride("<num1> <num2>")] // Syntax override overrides the parameter names
+        public void Divide(float num_1, float num_2)
         {
-            Console.WriteLine($"{num1} / {num2} = {num1 / num2}");
+            Console.WriteLine($"{num_1} / {num_2} = {num_1 / num_2}");
         }
 
         [Command("add3or4")]

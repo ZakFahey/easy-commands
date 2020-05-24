@@ -38,6 +38,18 @@ namespace EasyCommands
         }
     }
 
+    /// <summary> Overrides the syntax documentation for a command. </summary>
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SyntaxOverride : Attribute
+    {
+        public string Syntax { get; private set; }
+
+        public SyntaxOverride(string syntax)
+        {
+            Syntax = syntax;
+        }
+    }
+
     /// <summary>
     /// Attribute for methods that parse an argument.
     /// </summary>

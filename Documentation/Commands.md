@@ -6,6 +6,8 @@ Simply create a class that inherits from `CommandCallbacks<your sender type>`. I
 
 You can also add any other attribute to a command that inherits from the `CustomAttribute` class, and then you can use `command.GetCustomAttribute<AttributeType>()` in your [command handler's `PreCheck` method](CommandHandler.md) to specify custom behavior such as documentation or access management. The example project utilizes this feature for those purposes.
 
+You can override the syntax documentation of your command (what shows up when you use a help command or when you input the syntax wrong) using the `[SyntaxOverride]` attribute on the command. However, this syntax documentation is auto-generated, so typically you won't have to use this.
+
 The arguments of your method specify the arguments of your command. You can use the `[ParamName]` attribute to specify that the name of the parameter in any error messages is overridden. You can also use C#'s default parameters in your callbacks, and the command handler will make those arguments optional.
 
 You can also use the `[AllowSpaces]` attribute to let an argument have spaces without the need for a user to use quotes. To prevent ambiguity, however, you can only use one per command.

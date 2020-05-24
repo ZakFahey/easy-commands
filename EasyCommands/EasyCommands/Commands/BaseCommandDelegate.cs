@@ -41,8 +41,20 @@ namespace EasyCommands.Commands
             }
             phraseIndex = Array.FindIndex(callbackParams, p => p.GetCustomAttribute<AllowSpaces>() != null);
             flagsIndex = Array.FindIndex(callbackParams, p => Context.ArgumentParser.ParseRuleIsFlags(p.ParameterType));
-            syntaxDocumentation = Context.TextOptions.CommandPrefix + Name + " " + string.Join(" ", paramNames.Select(
-                    (nm, i) => i >= minLength || Context.ArgumentParser.ParseRuleIsFlags(callbackParams[i].ParameterType) ? $"[{nm}]" : $"<{nm}>"));
+            SyntaxOverride syntaxOverride = callback.GetCustomAttribute<SyntaxOverride>();
+            if (syntaxOverride == null)
+            {
+                syntaxDocumentation =
+                    Context.TextOptions.CommandPrefix + Name + " "
+                    + string.Join(" ", paramNames.Select(
+                        (nm, i) =>
+                            i >= minLength || Context.ArgumentParser.ParseRuleIsFlags(callbackParams[i].ParameterType)
+                            ? $"[{nm}]" : $"<{nm}>"));
+            }
+            else
+            {
+                syntaxDocumentation = $"{Context.TextOptions.CommandPrefix}{Name} {syntaxOverride.Syntax}";
+            }
             foreach(CustomAttribute attribute in callback.GetCustomAttributes<CustomAttribute>(true))
             {
                 customAttributes[attribute.GetType()] = attribute;
