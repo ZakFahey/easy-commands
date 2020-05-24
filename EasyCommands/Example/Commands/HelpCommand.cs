@@ -19,7 +19,7 @@ namespace Example.Commands
                     var permLevel = cmd.GetCustomAttribute<AccessLevel>();
                     if(permLevel == null || Sender.PermissionLevel >= permLevel.MinimumLevel)
                     {
-                        Console.WriteLine(cmd.SyntaxDocumentation());
+                        Console.WriteLine(cmd.SyntaxDocumentation(Sender));
                     }
                 }
             }
@@ -35,7 +35,9 @@ namespace Example.Commands
                 // If the user doesn't have permission to run this command, don't show it
                 var baseCmdDelegate = repository.GetDelegate(command);
                 AccessLevel permLevel = baseCmdDelegate.GetCustomAttribute<AccessLevel>();
-                if(permLevel != null && permLevel.MinimumLevel > Sender.PermissionLevel)
+                AccessLevel subPermLevel = cmdDelegate.GetCustomAttribute<AccessLevel>();
+                if ((permLevel != null && permLevel.MinimumLevel > Sender.PermissionLevel)
+                    || (subPermLevel != null && subPermLevel.MinimumLevel > Sender.PermissionLevel))
                 {
                     Fail(string.Format(TextOptions.CommandNotFound, commandName));
                 }
@@ -48,7 +50,7 @@ namespace Example.Commands
                     {
                         aliases = " Aliases: " + aliases + ".";
                     }
-                    Console.WriteLine($"{helpText}{aliases} Subcommands:\n{groupDelegate.SubcommandList()}");
+                    Console.WriteLine($"{helpText}{aliases} Subcommands:\n{groupDelegate.SubcommandList(Sender)}");
                 }
                 else
                 {
@@ -56,7 +58,7 @@ namespace Example.Commands
                     {
                         aliases = ". Aliases: " + aliases;
                     }
-                    Console.WriteLine($"{helpText} Syntax: {cmdDelegate.SyntaxDocumentation()}{aliases}");
+                    Console.WriteLine($"{helpText} Syntax: {cmdDelegate.SyntaxDocumentation(Sender)}{aliases}");
                 }
             }
         }

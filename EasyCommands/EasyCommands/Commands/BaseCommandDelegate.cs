@@ -86,7 +86,7 @@ namespace EasyCommands.Commands
             }
         }
 
-        public override string SyntaxDocumentation()
+        public override string SyntaxDocumentation(TSender sender)
         {
             return syntaxDocumentation;
         }
@@ -128,12 +128,13 @@ namespace EasyCommands.Commands
 
         private async Task Invoke(TSender sender, string argText, IEnumerable<string> args)
         {
-            if(args.Count() < minLength || args.Count() > maxLength)
-            {
-                throw new CommandParsingException(string.Format(Context.TextOptions.WrongNumberOfArguments, SyntaxDocumentation()));
-            }
-
             Context.CommandHandler.PreCheck(sender, this);
+
+            if (args.Count() < minLength || args.Count() > maxLength)
+            {
+                throw new CommandParsingException(
+                    string.Format(Context.TextOptions.WrongNumberOfArguments, SyntaxDocumentation(sender)));
+            }
 
             var invocationParams = new object[callbackParams.Length];
             int j = 0;
@@ -149,8 +150,11 @@ namespace EasyCommands.Commands
                     else
                     {
                         invocationParams[i] = Context.ArgumentParser.ParseArgument(
-                            callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
-                            paramNames[i], SyntaxDocumentation(), args.ToList().GetRange(j, multiWordLength).ToArray());
+                            callbackParams[i].ParameterType,
+                            callbackParams[i].GetCustomAttributes(),
+                            paramNames[i],
+                            SyntaxDocumentation(sender),
+                            args.ToList().GetRange(j, multiWordLength).ToArray());
                     }
                     j += multiWordLength;
                 }
@@ -164,7 +168,7 @@ namespace EasyCommands.Commands
                     {
                         invocationParams[i] = Context.ArgumentParser.ParseArgument(
                             callbackParams[i].ParameterType, callbackParams[i].GetCustomAttributes(),
-                            paramNames[i], SyntaxDocumentation(), args.ElementAt(j));
+                            paramNames[i], SyntaxDocumentation(sender), args.ElementAt(j));
                     }
                     j++;
                 }

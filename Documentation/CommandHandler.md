@@ -32,6 +32,12 @@ public class ExampleCommandHandler : CommandHandler<User>
             Fail($"Command \"{command.Name}\" does not exist.");
         }
     }
+
+    public override bool CanSeeCommand(User sender, CommandDelegate<User> command)
+    {
+        AccessLevel permLevel = command.GetCustomAttribute<AccessLevel>();
+        return permLevel == null || sender.PermissionLevel >= permLevel.MinimumLevel;
+    }
 }
 ```
 
@@ -42,6 +48,8 @@ The `SendFailMessage` method specifies the behavior when a command fails. In thi
 The `Initialize` method runs when the handler is created. Here we use it to specify behavior for how arguments are parsed (see [parsing rules](ParsingRules.md)) with the `AddParsingRules` method.
 
 The `PreCheck` method is run before any command or subcommand is executed. Here it is used to check for the `PermissionLevel` attribute on a command and stop execution with `Fail` if the user does not have permission to run the command. This permissions system is not implemented natively in the library - it is specified in the example project, meaning that if your permissions system is slightly different, you can handle it however you want. For instance, you could have separate command permissions for moderators and users at a certain donation tier, and those could both be separate attributes. You could specify that a command is runnable only at a certain time, or whatever else you want.
+
+The `CanSeeCommand` method returns whether the user has permission to see/use the command. This ensures that users can't see commands they can't use in help documentation.
 
 There is also the `CommandList` property in this class, which lists all commands that have been registered.
 

@@ -20,6 +20,7 @@ namespace Example.Commands
 
         [SubCommand] // If we do not include the command name, it can be inferred from the method name.
         [CommandDocumentation("Moves the window to a certain position.")]
+        [AccessLevel(PermissionLevel.Superadmin)]
         public void Move(int left, int top)
         {
             var win = Window.GetConsoleWindow();

@@ -35,5 +35,11 @@ namespace Example
                 Fail($"Command \"{command.Name}\" does not exist.");
             }
         }
+
+        public override bool CanSeeCommand(User sender, CommandDelegate<User> command)
+        {
+            AccessLevel permLevel = command.GetCustomAttribute<AccessLevel>();
+            return permLevel == null || sender.PermissionLevel >= permLevel.MinimumLevel;
+        }
     }
 }

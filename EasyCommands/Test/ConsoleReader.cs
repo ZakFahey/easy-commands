@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EasyCommands.Test
 {
@@ -64,6 +65,20 @@ namespace EasyCommands.Test
                     "Console output not equal to expected output." +
                     "\nExpected:\n" + string.Join("\n", expected) +
                     "\nActual:\n" + string.Join("\n", actual));
+            }
+        }
+
+        public void AssertEndOfOutput()
+        {
+            if (lineIndex < lines.Length - 1)
+            {
+                string failureMessage =
+                    "Expected end of console output, but found the following extra lines:";
+                while (lineIndex < lines.Length - 1)
+                {
+                    failureMessage += "\n" + ReadLine();
+                }
+                Assert.Fail(failureMessage);
             }
         }
 

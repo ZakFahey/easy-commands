@@ -57,9 +57,14 @@ namespace EasyCommands.Commands
             }
         }
 
-        public override string SyntaxDocumentation()
+        public override string SyntaxDocumentation(TSender sender)
         {
-            return $"{Context.TextOptions.CommandPrefix}{Name} <{string.Join("|", subcommandList.Where(sub => sub != defaultCommand).Select(sub => sub.ShortName))}>";
+            string subcommands = string.Join(
+                "|",
+                subcommandList
+                    .Where(sub => sub != defaultCommand && Context.CommandHandler.CanSeeCommand(sender, sub))
+                    .Select(sub => sub.ShortName));
+            return $"{Context.TextOptions.CommandPrefix}{Name} <{subcommands}>";
         }
 
         public override async Task Invoke(TSender sender, string args)
@@ -74,7 +79,8 @@ namespace EasyCommands.Commands
                 }
                 else
                 {
-                    throw new CommandParsingException($"{string.Format(Context.TextOptions.ShowSubcommands, Name)}\n{SubcommandList()}");
+                    throw new CommandParsingException(
+                        $"{string.Format(Context.TextOptions.ShowSubcommands, Name)}\n{SubcommandList(sender)}");
                 }
             }
             else
@@ -93,7 +99,7 @@ namespace EasyCommands.Commands
                         throw new CommandParsingException(
                             string.Format(Context.TextOptions.CommandNotFound, $"{Name} {subcommand}") + "\n"
                             + string.Format(Context.TextOptions.ShowSubcommands, Name) + "\n"
-                            + SubcommandList());
+                            + SubcommandList(sender));
                     }
                 }
                 else
@@ -104,9 +110,17 @@ namespace EasyCommands.Commands
             }
         }
 
-        public string SubcommandList()
+        /// <summary>
+        /// Show all subcommands as a newline-separated string, filtering out commands the user shouldn't be
+        /// able to see using <see cref="CommandHandler{TSender}.CanSeeCommand"/>.
+        /// </summary>
+        public string SubcommandList(TSender sender)
         {
-            return string.Join("\n", subcommandList.Select(sub => sub.SyntaxDocumentation()));
+            return string.Join(
+                "\n",
+                subcommandList
+                    .Where(cmd => Context.CommandHandler.CanSeeCommand(sender, cmd))
+                    .Select(sub => sub.SyntaxDocumentation(sender)));
         }
 
         public BaseCommandDelegate<TSender> GetSubcommandDelegate(string subcommand)

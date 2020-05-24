@@ -244,11 +244,25 @@ namespace EasyCommands.Test.Tests
         [Description("Blank commands with subcommands show the available subcommands.")]
         public void TestSubCommand()
         {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
             CommandHandler.RunCommand(CurrentUser, "window");
+            ConsoleReader.ReadLine();
             Assert.AreEqual("window contains these subcommands:", ConsoleReader.ReadLine());
             ConsoleReader.AssertOutputContains(
                 "window resize <width> <height>",
                 "window move <left> <top>");
+        }
+
+        [TestMethod]
+        [Description(
+            "Blank commands with subcommands show the available subcommands, omitting those the user " +
+            "doesn't have access to.")]
+        public void TestInaccessibleSubCommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "window");
+            Assert.AreEqual("window contains these subcommands:", ConsoleReader.ReadLine());
+            Assert.AreEqual("window resize <width> <height>", ConsoleReader.ReadLine());
+            ConsoleReader.AssertEndOfOutput();
         }
 
         [TestMethod]
@@ -263,8 +277,34 @@ namespace EasyCommands.Test.Tests
         [Description("The window move subcommand works, inferring the command name from the method name.")]
         public void TestWindowMove()
         {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
             CommandHandler.RunCommand(CurrentUser, "window move 100 100");
+            ConsoleReader.ReadLine();
             Assert.AreEqual("Window position set to (100, 100).", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("If a subcommand is inaccessible due to access level, you can't use it.")]
+        public void TestPrivilegedSubcommandInaccessible()
+        {
+            CommandHandler.RunCommand(CurrentUser, "window move 100 100");
+            Assert.AreEqual("Command \"window move\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("If a subcommand is inaccessible due to access level, you can't use it.")]
+        public void TestPrivilegedSubcommandInaccessible2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "window move abc def");
+            Assert.AreEqual("Command \"window move\" does not exist.", ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description("If a subcommand is inaccessible due to access level, you can't use it.")]
+        public void TestPrivilegedSubcommandInaccessible3()
+        {
+            CommandHandler.RunCommand(CurrentUser, "window move");
+            Assert.AreEqual("Command \"window move\" does not exist.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
@@ -282,7 +322,7 @@ namespace EasyCommands.Test.Tests
                 "favorite-food <querying> [food]",
                 "favorite-foods <users>",
                 "add-user <name> <permissionLevel> <favoriteFood>",
-                "window <resize|move>",
+                "window <resize>",
                 "help [command] [subcommand]",
                 "permission-level <user>",
                 "superadmin-me <superSecretPassword>",
@@ -408,19 +448,46 @@ namespace EasyCommands.Test.Tests
         [Description("The help command shows the description for a subcommand.")]
         public void TestHelpWithSubcommand()
         {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
             CommandHandler.RunCommand(CurrentUser, "help window move");
-            Assert.AreEqual("Moves the window to a certain position. Syntax: window move <left> <top>", ConsoleReader.ReadLine());
+            ConsoleReader.ReadLine();
+            Assert.AreEqual(
+                "Moves the window to a certain position. Syntax: window move <left> <top>",
+                ConsoleReader.ReadLine());
+        }
+
+        [TestMethod]
+        [Description(
+            "The help command doesn't show a description for a subcommand the user doesn't have access to.")]
+        public void TestHelpWithInaccessibleSubcommand()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help window move");
+            Assert.AreEqual("Command \"window move\" does not exist.", ConsoleReader.ReadLine());
         }
 
         [TestMethod]
         [Description("The help command shows the description for a command with subcommands.")]
         public void TestHelpWithCommandWithSubcommands()
         {
+            CommandHandler.RunCommand(CurrentUser, "superadmin-me hunter2");
             CommandHandler.RunCommand(CurrentUser, "help window");
+            ConsoleReader.ReadLine();
             Assert.AreEqual("Manipulates the console window. Subcommands:", ConsoleReader.ReadLine());
             ConsoleReader.AssertOutputContains(
                 "window resize <width> <height>",
                 "window move <left> <top>");
+        }
+
+        [TestMethod]
+        [Description(
+            "The help command shows the description for a command with subcommands, ignoring commands you " +
+            "don't have access to use.")]
+        public void TestHelpWithCommandWithSubcommands2()
+        {
+            CommandHandler.RunCommand(CurrentUser, "help window");
+            Assert.AreEqual("Manipulates the console window. Subcommands:", ConsoleReader.ReadLine());
+            Assert.AreEqual("window resize <width> <height>", ConsoleReader.ReadLine());
+            ConsoleReader.AssertEndOfOutput();
         }
 
         [TestMethod]

@@ -50,11 +50,19 @@ namespace EasyCommands
 
         /// <summary> Runs before all commands. Can be used to run additional checks on the command. </summary>
         public virtual void PreCheck(TSender sender, CommandDelegate<TSender> command) { }
+
         /// <summary> The command repository to use. </summary>
         protected virtual Type CommandRepositoryToUse() => typeof(DefaultCommandRepository<TSender>);
 
         /// <summary> Handles when a command throws an unexpected exception. </summary>
         protected virtual void HandleCommandException(Exception e) => Console.WriteLine(e);
+
+        /// <summary>
+        /// Whether a command can show up, particularly for
+        /// <see cref="CommandGroupDelegate{TSender}.SubcommandList"/>.and
+        /// <see cref="CommandGroupDelegate{TSender}.SyntaxDocumentation"/>
+        /// </summary>
+        public virtual bool CanSeeCommand(TSender sender, CommandDelegate<TSender> command) => true;
 
         private CommandRepository<TSender> GetRepository()
         {

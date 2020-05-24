@@ -18,7 +18,7 @@ namespace EasyCommands.Commands
         protected Context<TSender> Context;
         protected Dictionary<Type, CustomAttribute> customAttributes = new Dictionary<Type, CustomAttribute>();
 
-        public abstract string SyntaxDocumentation();
+        public abstract string SyntaxDocumentation(TSender sender);
 
         public CommandDelegate(Context<TSender> context, string mainName, string[] allNames)
         {
