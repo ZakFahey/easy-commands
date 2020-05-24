@@ -50,10 +50,10 @@ namespace EasyCommands.Defaults
                 {
                     throw new CommandRegistrationException($"Failed to register command \"{name}\" because it is a duplicate.");
                 }
-                if(!Regex.IsMatch(name, @"^[a-z0-9\-]*$"))
+                if(!Regex.IsMatch(name, Context.TextOptions.CommandNameValidationRegex))
                 {
-                    throw new CommandRegistrationException($"Failed to register command \"{name}\". " +
-                        $"Commands may only contain lowercase letters, numbers, and the dash symbol.");
+                    throw new CommandRegistrationException(
+                        string.Format(Context.TextOptions.InvalidCommandNameErrorMessage, name));
                 }
                 commands[name] = command;
             }
