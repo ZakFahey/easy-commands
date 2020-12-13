@@ -69,12 +69,12 @@ namespace EasyCommands.Commands
 
         public override async Task Invoke(TSender sender, string args)
         {
-            if(args.Length == 0)
+            Context.CommandHandler.PreCheck(sender, this);
+            if (args.Length == 0)
             {
                 // Check for default command
                 if (defaultCommand != null)
                 {
-                    Context.CommandHandler.PreCheck(sender, this);
                     await defaultCommand.Invoke(sender, "");
                 }
                 else
@@ -91,7 +91,6 @@ namespace EasyCommands.Commands
                     // Check for default command
                     if (defaultCommand != null)
                     {
-                        Context.CommandHandler.PreCheck(sender, this);
                         await defaultCommand.Invoke(sender, args);
                     }
                     else
@@ -104,7 +103,6 @@ namespace EasyCommands.Commands
                 }
                 else
                 {
-                    Context.CommandHandler.PreCheck(sender, this);
                     await subcommands[subcommand].Invoke(sender, subcommandArgs);
                 }
             }
