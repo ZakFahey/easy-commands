@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>EasyCommands</id>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <title>EasyCommands</title>
     <authors>Zak Fahey</authors>
     <owners>Zak Fahey</owners>
@@ -10,7 +10,9 @@
     <projectUrl>https://github.com/ZakFahey/easy-commands</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reflection-based command line parsing for C#</description>
-    <releaseNotes>Fixed package</releaseNotes>
+	  <releaseNotes>
+		  Fix list of subcommands showing up when a user enters invalid syntax for a command they aren't authorized to use
+	  </releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>easy commands chat zak fahey</tags>
   </metadata>
