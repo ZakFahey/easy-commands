@@ -27,10 +27,22 @@ namespace EasyCommands
                     _allTypes = AppDomain
                         .CurrentDomain
                         .GetAssemblies()
-                        .SelectMany(t => t.GetTypes())
+                        .SelectMany(GetTypes)
                         .Where(t => t.IsClass);
                 }
                 return _allTypes;
+            }
+        }
+
+        private static Type[] GetTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                return new Type[0];
             }
         }
 
