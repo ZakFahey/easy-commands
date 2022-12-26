@@ -79,9 +79,9 @@ namespace EasyCommands
         private CommandRepository<TSender> GetRepository()
         {
             Type repositoryType = CommandRepositoryToUse();
-            if(repositoryType.BaseType != typeof(CommandRepository<TSender>))
+            if(!typeof(CommandRepository<TSender>).IsAssignableFrom(repositoryType))
             {
-                throw new ArgumentException($"The input in CommandRepositoryToUse must have the parent class CommandRepository<{typeof(TSender).Name}>.");
+                throw new ArgumentException($"The input in CommandRepositoryToUse must inherit from CommandRepository<{typeof(TSender).Name}>.");
             }
             return (CommandRepository<TSender>)Activator.CreateInstance(repositoryType, Context);
         }
