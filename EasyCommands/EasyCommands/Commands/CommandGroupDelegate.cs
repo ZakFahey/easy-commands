@@ -75,6 +75,7 @@ namespace EasyCommands.Commands
                 // Check for default command
                 if (defaultCommand != null)
                 {
+                    Context.CommandHandler.PreCheckAfterArgumentParsing(sender, this);
                     await defaultCommand.Invoke(sender, "");
                 }
                 else
@@ -91,6 +92,7 @@ namespace EasyCommands.Commands
                     // Check for default command
                     if (defaultCommand != null)
                     {
+                        Context.CommandHandler.PreCheckAfterArgumentParsing(sender, this);
                         await defaultCommand.Invoke(sender, args);
                     }
                     else
@@ -103,6 +105,7 @@ namespace EasyCommands.Commands
                 }
                 else
                 {
+                    Context.CommandHandler.PreCheckAfterArgumentParsing(sender, this);
                     await subcommands[subcommand].Invoke(sender, subcommandArgs);
                 }
             }

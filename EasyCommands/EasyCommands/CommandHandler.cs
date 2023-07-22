@@ -63,6 +63,11 @@ namespace EasyCommands
         /// <summary> Runs before all commands. Can be used to run additional checks on the command. </summary>
         public virtual void PreCheck(TSender sender, CommandDelegate<TSender> command) { }
 
+        /// <summary>
+        /// Runs before the command but after arguments have been parsed. Can be used to run additional checks on the command.
+        /// </summary>
+        public virtual void PreCheckAfterArgumentParsing(TSender sender, CommandDelegate<TSender> command) { }
+
         /// <summary> The command repository to use. </summary>
         protected virtual Type CommandRepositoryToUse() => typeof(DefaultCommandRepository<TSender>);
 

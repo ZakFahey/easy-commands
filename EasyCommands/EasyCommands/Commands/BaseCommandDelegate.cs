@@ -197,6 +197,7 @@ namespace EasyCommands.Commands
                     j++;
                 }
             }
+            Context.CommandHandler.PreCheckAfterArgumentParsing(sender, this);
             CommandCallbacks<TSender> instance = (CommandCallbacks<TSender>)Activator.CreateInstance(callback.DeclaringType);
             instance.Sender = sender;
             instance.RawCommandText = argText;
